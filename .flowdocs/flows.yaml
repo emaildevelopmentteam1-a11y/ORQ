@@ -198,45 +198,45 @@ stories:
     title: "Como equipo de desarrollo quiero definir el stack tecnológico y la estructura del proyecto para tener una base sólida antes de implementar vistas."
     module: "global_state"
     priority: "critical"
-    status: "pending"
+    status: "implemented"
     sprint: 1
     flow_ids: ["FLOW-P01", "FLOW-P02"]
     acceptance_criteria:
       - id: "AC-001"
         description: "El proyecto usa Next.js 15 con App Router + TypeScript strict. La raíz del proyecto es orq/ (no se crea subcarpeta)."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P01"]
       - id: "AC-002"
         description: "Se ha configurado Tailwind CSS como sistema de estilos, con tokens custom (colores, border-radius, tipografía) en tailwind.config."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P01"]
       - id: "AC-003"
         description: "Se ha instalado y configurado JSON Server como backend mock (db.json con datos iniciales, script en package.json)."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P01"]
       - id: "AC-004"
         description: "Se han instalado React Hook Form + Zod + @hookform/resolvers para validación de formularios."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P01"]
       - id: "AC-005"
         description: "El proyecto arranca en modo dev sin errores con npm run dev. JSON Server corre en paralelo (puerto 3001)."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P02"]
       - id: "AC-006"
         description: "Se ha definido la estructura de carpetas Next.js: app/ (rutas), components/, lib/, types/, mock/ (db.json)."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P01"]
       - id: "AC-007"
         description: "Se ha documentado la decisión de stack en un archivo STACK.md con justificación de cada elección."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P01"]
       - id: "AC-008"
         description: "Se ha configurado el App Router con rutas base: / (landing), /dashboard, /organizacion, /usuarios, /extensiones, /contacto."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P02"]
       - id: "AC-009"
         description: "Se ha configurado ESLint + path aliases (@/) en tsconfig.json."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P01"]
 
   # ═══════════════════════════════════════════
@@ -246,41 +246,41 @@ stories:
     title: "Como equipo de desarrollo quiero implementar el design system basado en el mockup de Figma para garantizar consistencia visual en toda la plataforma."
     module: "app_shell"
     priority: "critical"
-    status: "pending"
+    status: "implemented"
     sprint: 1
     flow_ids: ["FLOW-P03", "FLOW-P04"]
     acceptance_criteria:
       - id: "AC-001"
         description: "Se han definido los CSS custom properties del design system: --primary (#2563EB), --primary-light (#EEF2FF), --accent-green (#16A34A), --accent-red (#DC2626), --surface (#FFFFFF), --bg (#F0F4FF), --text-primary (#0F172A), --text-secondary (#64748B), --text-muted (#94A3B8), --border (#E2E8F0), --cta-dark (#0F172A)."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P03"]
       - id: "AC-002"
         description: "Se ha configurado la tipografía con fonte Inter (o similar sans-serif moderna) desde Google Fonts."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P03"]
       - id: "AC-003"
         description: "Se han creado componentes base reutilizables: Button (primary, outline, dark, disabled), Badge (pill con variantes de color), Card (border-radius 12px, shadow sutil), Input (con icono opcional)."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P04"]
       - id: "AC-004"
         description: "Los border-radius son 12px para cards y 999px (pill) para badges."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P03"]
       - id: "AC-005"
         description: "Se ha definido la iconografía con estilo outlined/linear, color --primary, tamaño 20px para sidebar."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P03"]
       - id: "AC-006"
         description: "Existe un archivo o página de showcase con todos los componentes base renderizados."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P04"]
       - id: "AC-007"
         description: "Los espaciados siguen el sistema del mockup: padding contenido 32px, gap entre cards 16px."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P03"]
       - id: "AC-008"
         description: "Se han implementado los patrones reutilizables: KPI Card, Extension Card, Table Row, Tree Item según mockup-figma.md."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-P04"]
 
   # ═══════════════════════════════════════════
@@ -1908,9 +1908,9 @@ flows:
     module: "global_state"
     actor: "system"
     priority: "critical"
-    status: "pending"
+    status: "implemented"
     test_status: "none"
-    sprint_status: "todo"
+    sprint_status: "done"
     story: "US-P01"
     story_points: 5
     entities: []
@@ -1934,9 +1934,9 @@ flows:
     module: "global_state"
     actor: "system"
     priority: "critical"
-    status: "pending"
+    status: "implemented"
     test_status: "none"
-    sprint_status: "todo"
+    sprint_status: "done"
     story: "US-P01"
     story_points: 3
     entities: []
@@ -1957,9 +1957,9 @@ flows:
     module: "app_shell"
     actor: "system"
     priority: "critical"
-    status: "pending"
+    status: "implemented"
     test_status: "none"
-    sprint_status: "todo"
+    sprint_status: "done"
     story: "US-P02"
     story_points: 3
     entities: []
@@ -1980,9 +1980,9 @@ flows:
     module: "app_shell"
     actor: "system"
     priority: "critical"
-    status: "pending"
+    status: "implemented"
     test_status: "none"
-    sprint_status: "todo"
+    sprint_status: "done"
     story: "US-P02"
     story_points: 5
     entities: []

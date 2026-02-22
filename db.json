@@ -1,0 +1,69 @@
+{
+  "users": [
+    {
+      "id": "usr-001",
+      "name": "Carlos Mendoza",
+      "email": "carlos@empresa.com",
+      "role": "directivo"
+    },
+    {
+      "id": "usr-002",
+      "name": "Ana Rodríguez",
+      "email": "ana@empresa.com",
+      "role": "responsable_area"
+    },
+    {
+      "id": "usr-003",
+      "name": "Luis García",
+      "email": "luis@empresa.com",
+      "role": "colaborador"
+    }
+  ],
+  "areas": [
+    {
+      "id": "area-001",
+      "name": "Dirección General",
+      "parent_id": null,
+      "kpis": []
+    },
+    {
+      "id": "area-002",
+      "name": "Operaciones",
+      "parent_id": "area-001",
+      "kpis": []
+    },
+    {
+      "id": "area-003",
+      "name": "Comercial",
+      "parent_id": "area-001",
+      "kpis": []
+    }
+  ],
+  "extensions": [
+    {
+      "id": "ext-kpi",
+      "name": "KPI Tracker",
+      "description": "Indicadores clave de rendimiento en tiempo real",
+      "icon": "bar-chart-3",
+      "active": false,
+      "category": "analytics"
+    },
+    {
+      "id": "ext-forms",
+      "name": "Formularios",
+      "description": "Crea y gestiona formularios personalizados",
+      "icon": "file-text",
+      "active": false,
+      "category": "productivity"
+    },
+    {
+      "id": "ext-reports",
+      "name": "Reportes",
+      "description": "Genera reportes ejecutivos automáticos",
+      "icon": "file-bar-chart",
+      "active": false,
+      "category": "analytics"
+    }
+  ],
+  "contacts": []
+}
