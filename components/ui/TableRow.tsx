@@ -15,12 +15,12 @@ export function TableRow({ cells, onClick, highlight, className }: TableRowProps
             className={clsx(
                 "border-b border-border transition-colors duration-150",
                 onClick && "cursor-pointer",
-                highlight ? "bg-primary-light/50" : "hover:bg-bg",
+                highlight ? "bg-primary-light/50" : "hover:bg-muted/30",
                 className
             )}
         >
             {cells.map((cell, i) => (
-                <td key={i} className="px-4 py-3 text-sm text-text-primary">
+                <td key={i} className="px-6 py-4 text-sm text-foreground">
                     {cell}
                 </td>
             ))}
@@ -32,24 +32,43 @@ export function TableRow({ cells, onClick, highlight, className }: TableRowProps
 interface TableProps {
     headers: string[];
     children: ReactNode;
+    title?: string;
+    actions?: ReactNode;
     className?: string;
 }
 
-export function Table({ headers, children, className }: TableProps) {
+export function Table({ headers, children, title, actions, className }: TableProps) {
     return (
-        <div className={clsx("overflow-x-auto rounded-card border border-border bg-surface", className)}>
-            <table className="w-full text-left">
-                <thead>
-                    <tr className="border-b border-border bg-bg">
-                        {headers.map((h) => (
-                            <th key={h} className="px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">
-                                {h}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>{children}</tbody>
-            </table>
+        <div className={clsx("bg-surface rounded-xl border border-border overflow-hidden", className)}>
+            {(title || actions) && (
+                <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+                    {title && (
+                        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+                    )}
+                    {actions && (
+                        <div className="flex items-center gap-2">{actions}</div>
+                    )}
+                </div>
+            )}
+            <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                    <thead>
+                        <tr className="border-b border-border bg-muted/40">
+                            {headers.map((h) => (
+                                <th
+                                    key={h}
+                                    className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"
+                                >
+                                    {h}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                        {children}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }

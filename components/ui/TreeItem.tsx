@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight, ChevronDown, Folder, FolderOpen } from "lucide-react";
+import { ChevronRight, Folder, FolderOpen } from "lucide-react";
 import clsx from "clsx";
 import type { ReactNode } from "react";
 
@@ -37,37 +37,41 @@ export function TreeItem({
             <button
                 onClick={handleToggle}
                 className={clsx(
-                    "w-full flex items-center gap-2 px-3 py-2 text-sm text-text-primary rounded-button transition-colors duration-150",
-                    "hover:bg-primary-light cursor-pointer",
+                    "w-full flex items-center gap-2 px-4 py-3 text-sm text-foreground transition-colors duration-150",
+                    "hover:bg-muted/30 cursor-pointer",
+                    level === 0 && "border-b border-border"
                 )}
-                style={{ paddingLeft: `${12 + level * 20}px` }}
+                style={{ paddingLeft: `${16 + level * 24}px` }}
             >
                 {/* Indicador expandible */}
-                <span className="w-4 h-4 flex items-center justify-center text-text-muted shrink-0">
+                <span className="size-4 flex items-center justify-center text-muted-foreground shrink-0">
                     {hasChildren ? (
-                        isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />
+                        <ChevronRight
+                            className={clsx(
+                                "size-4 transition-transform duration-200",
+                                isOpen && "rotate-90"
+                            )}
+                        />
                     ) : (
-                        <span className="w-1.5 h-1.5 rounded-full bg-text-muted" />
+                        <span className="size-1.5 rounded-full bg-muted-foreground/40" />
                     )}
                 </span>
 
                 {/* Icono */}
                 <span className="text-primary shrink-0">
-                    {icon || (hasChildren ? (isOpen ? <FolderOpen size={16} /> : <Folder size={16} />) : null)}
+                    {icon || (hasChildren ? (isOpen ? <FolderOpen className="size-4" /> : <Folder className="size-4" />) : null)}
                 </span>
 
                 {/* Label */}
-                <span className="flex-1 text-left truncate">{label}</span>
+                <span className="flex-1 text-left truncate font-medium">{label}</span>
 
-                {/* Trailing (badges, acciones) */}
-                {trailing && <span className="shrink-0">{trailing}</span>}
+                {/* Trailing (badges, contadores) */}
+                {trailing && <span className="shrink-0 text-xs text-muted-foreground">{trailing}</span>}
             </button>
 
             {/* Hijos */}
             {hasChildren && isOpen && (
-                <div className="animate-in slide-in-from-top-1 duration-200">
-                    {children}
-                </div>
+                <div>{children}</div>
             )}
         </div>
     );

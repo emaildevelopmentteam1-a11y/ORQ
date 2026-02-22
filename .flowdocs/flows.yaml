@@ -251,35 +251,51 @@ stories:
     flow_ids: ["FLOW-P03", "FLOW-P04"]
     acceptance_criteria:
       - id: "AC-001"
-        description: "Se han definido los CSS custom properties del design system: --primary (#2563EB), --primary-light (#EEF2FF), --accent-green (#16A34A), --accent-red (#DC2626), --surface (#FFFFFF), --bg (#F0F4FF), --text-primary (#0F172A), --text-secondary (#64748B), --text-muted (#94A3B8), --border (#E2E8F0), --cta-dark (#0F172A)."
+        description: "Se han definido 14 tokens de color en globals.css vía @theme inline de Tailwind v4: --color-primary (#2563EB), --color-primary-light (#EEF2FF), --color-primary-hover (#1D4ED8), --color-accent-green (#16A34A), --color-accent-green-light (#F0FDF4), --color-accent-red (#DC2626), --color-accent-red-light (#FEF2F2), --color-accent-amber (#D97706), --color-accent-amber-light (#FFFBEB), --color-surface (#FFFFFF), --color-bg (#F0F4FF), --color-border (#E2E8F0), --color-cta-dark (#0F172A), --color-text-primary (#0F172A), --color-text-secondary (#64748B), --color-text-muted (#94A3B8)."
         validated: true
         flow_ids: ["FLOW-P03"]
       - id: "AC-002"
-        description: "Se ha configurado la tipografía con fonte Inter (o similar sans-serif moderna) desde Google Fonts."
+        description: "Se ha configurado la tipografía con --font-sans: 'Inter' importada desde Google Fonts en layout.tsx, con escalas de tamaño de referencia: 32px hero H1, 24px page H1, 14px body, 13px card labels, 12px badges."
         validated: true
         flow_ids: ["FLOW-P03"]
       - id: "AC-003"
-        description: "Se han creado componentes base reutilizables: Button (primary, outline, dark, disabled), Badge (pill con variantes de color), Card (border-radius 12px, shadow sutil), Input (con icono opcional)."
+        description: "Se han definido 4 tokens de border-radius en globals.css: --radius-card (12px), --radius-pill (999px), --radius-button (8px), --radius-input (8px)."
         validated: true
-        flow_ids: ["FLOW-P04"]
+        flow_ids: ["FLOW-P03"]
       - id: "AC-004"
-        description: "Los border-radius son 12px para cards y 999px (pill) para badges."
+        description: "Se han definido 2 tokens de sombra en globals.css: --shadow-card (0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)) y --shadow-card-hover (0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04))."
         validated: true
         flow_ids: ["FLOW-P03"]
       - id: "AC-005"
-        description: "Se ha definido la iconografía con estilo outlined/linear, color --primary, tamaño 20px para sidebar."
+        description: "Se ha definido la iconografía con lucide-react, estilo outlined, color --color-primary, tamaño 20px para sidebar y 24px para cards."
         validated: true
         flow_ids: ["FLOW-P03"]
       - id: "AC-006"
-        description: "Existe un archivo o página de showcase con todos los componentes base renderizados."
+        description: "Componente Button (components/ui/Button.tsx) con 4 variantes (primary, outline, dark, ghost), 3 tamaños (sm, md, lg), estado disabled con opacity 50%, forwardRef y clsx para composición de clases."
         validated: true
         flow_ids: ["FLOW-P04"]
       - id: "AC-007"
-        description: "Los espaciados siguen el sistema del mockup: padding contenido 32px, gap entre cards 16px."
+        description: "Componente Badge (components/ui/Badge.tsx) con 5 variantes (info, success, warning, error, neutral), forma pill (rounded-pill), padding horizontal 10px (px-2.5), tipografía 12px font-medium."
         validated: true
-        flow_ids: ["FLOW-P03"]
+        flow_ids: ["FLOW-P04"]
       - id: "AC-008"
-        description: "Se han implementado los patrones reutilizables: KPI Card, Extension Card, Table Row, Tree Item según mockup-figma.md."
+        description: "Componente Card (components/ui/Card.tsx) base con border-radius 12px (rounded-card), shadow --shadow-card, prop hover para shadow elevada (--shadow-card-hover), borde 1px --color-border y padding 24px (p-6)."
+        validated: true
+        flow_ids: ["FLOW-P04"]
+      - id: "AC-009"
+        description: "Componente Input (components/ui/Input.tsx) con slot de icono izquierdo opcional, border-radius 8px (rounded-input), focus ring azul (ring-primary), padding adaptativo cuando hay icono (pl-10)."
+        validated: true
+        flow_ids: ["FLOW-P04"]
+      - id: "AC-010"
+        description: "Componente KpiCard (components/ui/KpiCard.tsx) que compone Card + Badge + iconos Lucide (TrendingUp/TrendingDown/Minus), con props: title (string), value (string|number), change (string), trend (up/down/neutral), icon (ReactNode)."
+        validated: true
+        flow_ids: ["FLOW-P04"]
+      - id: "AC-011"
+        description: "Componente ExtensionCard (components/ui/ExtensionCard.tsx) con resolución dinámica de iconos Lucide por nombre, statusConfig (available/active/coming-soon → badge + botón), props: name, description, iconName, status, category, onToggle."
+        validated: true
+        flow_ids: ["FLOW-P04"]
+      - id: "AC-012"
+        description: "Componentes TableRow (components/ui/TableRow.tsx) y TreeItem (components/ui/TreeItem.tsx) para tablas de usuarios y árbol organizacional. Existe página de showcase (app/(app)/showcase/page.tsx) renderizando todos los componentes con sus variantes."
         validated: true
         flow_ids: ["FLOW-P04"]
 
@@ -1966,11 +1982,11 @@ flows:
     trigger: "FLOW-P01 completado"
     preconditions: ["Proyecto base configurado"]
     steps:
-      - "Definir CSS custom properties: --primary, --primary-light, --accent-green, --accent-red, --surface, --bg, --text-primary, --text-secondary, --border"
-      - "Importar fuente Inter desde Google Fonts"
-      - "Definir sistema de espaciado (4px base, 8/16/24/32px escalas)"
-      - "Definir border-radius: 12px cards, 999px pills/badges"
-      - "Definir iconografía: Lucide React, outlined, 20px sidebar"
+      - "Crear globals.css con directiva @theme inline de Tailwind v4 conteniendo 14 tokens de color: --color-primary (#2563EB), --color-primary-light (#EEF2FF), --color-primary-hover (#1D4ED8), --color-accent-green (#16A34A), --color-accent-green-light (#F0FDF4), --color-accent-red (#DC2626), --color-accent-red-light (#FEF2F2), --color-accent-amber (#D97706), --color-accent-amber-light (#FFFBEB), --color-surface (#FFFFFF), --color-bg (#F0F4FF), --color-border (#E2E8F0), --color-cta-dark (#0F172A), --color-text-primary (#0F172A), --color-text-secondary (#64748B), --color-text-muted (#94A3B8)"
+      - "Definir token de tipografía --font-sans: 'Inter' e importar fuente vía Google Fonts en layout.tsx raíz con next/font/google"
+      - "Definir 4 tokens de border-radius: --radius-card (12px), --radius-pill (999px), --radius-button (8px), --radius-input (8px)"
+      - "Definir 2 tokens de sombra: --shadow-card (0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)) y --shadow-card-hover (0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04))"
+      - "Configurar body global con background: var(--color-bg), color: var(--color-text-primary), font-family: var(--font-sans), -webkit-font-smoothing: antialiased"
     alternatives: []
     errors: []
 
@@ -1989,13 +2005,15 @@ flows:
     trigger: "FLOW-P03 completado"
     preconditions: ["Tokens del design system definidos"]
     steps:
-      - "Crear componente Button con variantes: primary (azul), outline, dark (#0F172A), disabled"
-      - "Crear componente Badge (pill) con variantes de color"
-      - "Crear componente Card con border-radius 12px y shadow sutil"
-      - "Crear componente Input con icono opcional (ej: lupa de búsqueda)"
-      - "Crear patrón KPI Card: icono + label + valor + % cambio + color semáforo"
-      - "Crear patrón Extension Card: icono + nombre + descripción + badge estado + botón activar"
-      - "Crear página de showcase con todos los componentes renderizados"
+      - "Crear components/ui/Button.tsx con variantes primary/outline/dark/ghost, tamaños sm/md/lg, forwardRef, clsx, disabled con opacity-50 y pointer-events-none"
+      - "Crear components/ui/Badge.tsx con 5 variantes (info/success/warning/error/neutral) mapeadas a colores del design system, forma pill (rounded-pill), px-2.5 py-0.5"
+      - "Crear components/ui/Card.tsx base con border rounded-card, shadow-card, prop hover booleano para shadow-card-hover al hacer hover, borde border-color, padding p-6"
+      - "Crear components/ui/Input.tsx con slot de icono izquierdo (absolute positioned), border-radius rounded-input, focus ring ring-primary, padding adaptativo pl-10 cuando hay icono"
+      - "Crear components/ui/KpiCard.tsx componiendo Card + Badge + iconos Lucide (TrendingUp/TrendingDown/Minus), props tipados: title, value, change, trend (up/down/neutral), icon"
+      - "Crear components/ui/ExtensionCard.tsx con función getIcon() para resolución dinámica de Lucide por nombre, statusConfig Record, props: name, description, iconName, status, category, onToggle"
+      - "Crear components/ui/TableRow.tsx para filas de tabla de usuarios con columnas avatar, nombre, email, rol y estado"
+      - "Crear components/ui/TreeItem.tsx para nodos del árbol organizacional con chevron rotable, indentación progresiva y slots para responsable y empleados"
+      - "Crear app/(app)/showcase/page.tsx renderizando todos los componentes (Button, Badge, Card, Input, KpiCard, ExtensionCard, TableRow, TreeItem) con todas sus variantes"
     alternatives: []
     errors: []
 

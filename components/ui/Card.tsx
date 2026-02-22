@@ -17,9 +17,9 @@ export function Card({
     return (
         <div
             className={clsx(
-                "bg-surface rounded-card border border-border shadow-card",
+                "bg-surface rounded-xl border border-border shadow-card",
                 hover && "transition-shadow duration-200 hover:shadow-card-hover",
-                padding && "p-6",
+                padding && "p-5",
                 className
             )}
             {...props}
