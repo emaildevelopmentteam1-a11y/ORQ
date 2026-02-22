@@ -1,19 +1,19 @@
 meta:
   app: "Orquestra"
-  version: "0.1.0"
-  description: "Plataforma enterprise modular con marketplace de extensiones, gestión de usuarios/roles y módulos dinámicos (KPI, Encuestas, BI)."
-  updated_at: "2026-02-21"
+  version: "0.2.0"
+  description: "Plataforma enterprise modular con marketplace de extensiones, gestión organizacional, usuarios/roles y módulos dinámicos (KPI, Encuestas, Formularios, BI)."
+  updated_at: "2026-02-22"
   sprint:
     number: 1
-    goal: "MVP del demo enterprise funcional"
-    start: "2026-02-21"
+    goal: "Fundamentos: stack, design system y layout base"
+    start: "2026-02-22"
     end: "2026-03-07"
-    days_left: 14
+    days_left: 13
   stats:
-    total: 40
+    total: 54
     implemented: 0
     partial: 0
-    pending: 40
+    pending: 54
     with_tests: 0
     coverage_pct: 0
 
@@ -72,6 +72,21 @@ modules:
     name: "Estado Global"
     description: "Infraestructura de estado con Zustand. Maneja rol actual, extensiones activas, usuario actual y organización. Permite activar extensión, refrescar sidebar y cambiar rol en tiempo real."
     actors: ["system"]
+
+  - id: "organization_mgmt"
+    name: "Gestión de Organización"
+    description: "Módulo para gestionar la estructura jerárquica de la empresa: áreas, departamentos, responsables y empleados. Vista de árbol expandible con CRUD de áreas."
+    actors: ["admin", "manager"]
+
+  - id: "contact"
+    name: "Página de Contacto"
+    description: "Formulario público de captación de leads y solicitud de demo. Layout a 2 columnas con formulario + info de contacto, horarios y CTA de demo personalizada."
+    actors: ["visitante"]
+
+  - id: "forms"
+    name: "Formularios"
+    description: "Módulo de extensión para crear formularios personalizados y recopilar información del equipo. Incluye constructor de formularios y visualización de respuestas."
+    actors: ["admin", "manager"]
 
 entities:
   - id: "user"
@@ -149,7 +164,173 @@ entities:
         to: "shared"
         action: "Compartir reporte"
 
+  - id: "area"
+    name: "Área Organizacional"
+    states: ["active", "archived"]
+    transitions:
+      - from: "active"
+        to: "archived"
+        action: "Archivar área"
+      - from: "archived"
+        to: "active"
+        action: "Reactivar área"
+
+  - id: "contact_lead"
+    name: "Lead de Contacto"
+    states: ["received", "contacted", "converted"]
+    transitions:
+      - from: "received"
+        to: "contacted"
+        action: "Contactar lead"
+      - from: "contacted"
+        to: "converted"
+        action: "Convertir a cliente"
+
 stories:
+  # ═══════════════════════════════════════════
+  # FASE 0 — PREPARACIÓN (secuencial, antes de cualquier vista)
+  # ═══════════════════════════════════════════
+
+  # ═══════════════════════════════════════════
+  # US-P01: Definición de Stack Tecnológico
+  # ═══════════════════════════════════════════
+  - id: "US-P01"
+    title: "Como equipo de desarrollo quiero definir el stack tecnológico y la estructura del proyecto para tener una base sólida antes de implementar vistas."
+    module: "global_state"
+    priority: "critical"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-P01", "FLOW-P02"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "El proyecto usa Next.js 15 con App Router + TypeScript strict. La raíz del proyecto es orq/ (no se crea subcarpeta)."
+        validated: false
+        flow_ids: ["FLOW-P01"]
+      - id: "AC-002"
+        description: "Se ha configurado Tailwind CSS como sistema de estilos, con tokens custom (colores, border-radius, tipografía) en tailwind.config."
+        validated: false
+        flow_ids: ["FLOW-P01"]
+      - id: "AC-003"
+        description: "Se ha instalado y configurado JSON Server como backend mock (db.json con datos iniciales, script en package.json)."
+        validated: false
+        flow_ids: ["FLOW-P01"]
+      - id: "AC-004"
+        description: "Se han instalado React Hook Form + Zod + @hookform/resolvers para validación de formularios."
+        validated: false
+        flow_ids: ["FLOW-P01"]
+      - id: "AC-005"
+        description: "El proyecto arranca en modo dev sin errores con npm run dev. JSON Server corre en paralelo (puerto 3001)."
+        validated: false
+        flow_ids: ["FLOW-P02"]
+      - id: "AC-006"
+        description: "Se ha definido la estructura de carpetas Next.js: app/ (rutas), components/, lib/, types/, mock/ (db.json)."
+        validated: false
+        flow_ids: ["FLOW-P01"]
+      - id: "AC-007"
+        description: "Se ha documentado la decisión de stack en un archivo STACK.md con justificación de cada elección."
+        validated: false
+        flow_ids: ["FLOW-P01"]
+      - id: "AC-008"
+        description: "Se ha configurado el App Router con rutas base: / (landing), /dashboard, /organizacion, /usuarios, /extensiones, /contacto."
+        validated: false
+        flow_ids: ["FLOW-P02"]
+      - id: "AC-009"
+        description: "Se ha configurado ESLint + path aliases (@/) en tsconfig.json."
+        validated: false
+        flow_ids: ["FLOW-P01"]
+
+  # ═══════════════════════════════════════════
+  # US-P02: Design System y Look & Feel
+  # ═══════════════════════════════════════════
+  - id: "US-P02"
+    title: "Como equipo de desarrollo quiero implementar el design system basado en el mockup de Figma para garantizar consistencia visual en toda la plataforma."
+    module: "app_shell"
+    priority: "critical"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-P03", "FLOW-P04"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "Se han definido los CSS custom properties del design system: --primary (#2563EB), --primary-light (#EEF2FF), --accent-green (#16A34A), --accent-red (#DC2626), --surface (#FFFFFF), --bg (#F0F4FF), --text-primary (#0F172A), --text-secondary (#64748B), --text-muted (#94A3B8), --border (#E2E8F0), --cta-dark (#0F172A)."
+        validated: false
+        flow_ids: ["FLOW-P03"]
+      - id: "AC-002"
+        description: "Se ha configurado la tipografía con fonte Inter (o similar sans-serif moderna) desde Google Fonts."
+        validated: false
+        flow_ids: ["FLOW-P03"]
+      - id: "AC-003"
+        description: "Se han creado componentes base reutilizables: Button (primary, outline, dark, disabled), Badge (pill con variantes de color), Card (border-radius 12px, shadow sutil), Input (con icono opcional)."
+        validated: false
+        flow_ids: ["FLOW-P04"]
+      - id: "AC-004"
+        description: "Los border-radius son 12px para cards y 999px (pill) para badges."
+        validated: false
+        flow_ids: ["FLOW-P03"]
+      - id: "AC-005"
+        description: "Se ha definido la iconografía con estilo outlined/linear, color --primary, tamaño 20px para sidebar."
+        validated: false
+        flow_ids: ["FLOW-P03"]
+      - id: "AC-006"
+        description: "Existe un archivo o página de showcase con todos los componentes base renderizados."
+        validated: false
+        flow_ids: ["FLOW-P04"]
+      - id: "AC-007"
+        description: "Los espaciados siguen el sistema del mockup: padding contenido 32px, gap entre cards 16px."
+        validated: false
+        flow_ids: ["FLOW-P03"]
+      - id: "AC-008"
+        description: "Se han implementado los patrones reutilizables: KPI Card, Extension Card, Table Row, Tree Item según mockup-figma.md."
+        validated: false
+        flow_ids: ["FLOW-P04"]
+
+  # ═══════════════════════════════════════════
+  # US-P03: Datos Mock Realistas
+  # ═══════════════════════════════════════════
+  - id: "US-P03"
+    title: "Como equipo quiero datos mock realistas y coherentes para que todas las vistas se puedan implementar con datos representativos desde el inicio."
+    module: "global_state"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-P05", "FLOW-P06"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "Existen al menos 10 usuarios mock con nombres españoles, emails @orquestra.com y teléfonos +34 600 XXX XXX."
+        validated: false
+        flow_ids: ["FLOW-P05"]
+      - id: "AC-002"
+        description: "Existen al menos 14 áreas organizacionales mock con jerarquía (Dirección General como raíz), empleados y responsables."
+        validated: false
+        flow_ids: ["FLOW-P05"]
+      - id: "AC-003"
+        description: "Existen 5 extensiones mock: 3 disponibles (KPI, Formularios, Encuestas) y 2 próximamente (Colaboración, BI)."
+        validated: false
+        flow_ids: ["FLOW-P05"]
+      - id: "AC-004"
+        description: "Existen 3 roles mock: Directivo (todos los permisos), Responsable de área (parcial), Colaborador (solo lectura)."
+        validated: false
+        flow_ids: ["FLOW-P06"]
+      - id: "AC-005"
+        description: "Los KPIs mock incluyen: Resumen organización (12 áreas, 148 colaboradores), Actividad reciente (24 hoy, +18%), Estado del sistema (100% operativo)."
+        validated: false
+        flow_ids: ["FLOW-P05"]
+      - id: "AC-006"
+        description: "Cada entidad mock tiene IDs únicos y relaciones coherentes (usuarios asignados a áreas, áreas con responsables)."
+        validated: false
+        flow_ids: ["FLOW-P05"]
+      - id: "AC-007"
+        description: "Los datos se exportan desde un archivo centralizado (mock/data.ts) con tipos TypeScript."
+        validated: false
+        flow_ids: ["FLOW-P06"]
+      - id: "AC-008"
+        description: "El store React Context se inicializa con estos datos mock al montar la app."
+        validated: false
+        flow_ids: ["FLOW-P06"]
+
+  # ═══════════════════════════════════════════
+  # FASE 1 — VISTAS PRINCIPALES (secuencial)
+  # ═══════════════════════════════════════════
+
   # ═══════════════════════════════════════════
   # US-001: Landing Page Enterprise
   # ═══════════════════════════════════════════
@@ -162,27 +343,27 @@ stories:
     flow_ids: ["FLOW-001", "FLOW-002", "FLOW-003"]
     acceptance_criteria:
       - id: "AC-001"
-        description: "La landing muestra un hero con título, subtítulo y CTA principal ('Comenzar ahora')."
+        description: "La landing muestra un hero con H1 ('Convierte la operación de tu empresa en un sistema medible'), subtítulo descriptivo, mockup decorativo del dashboard y 2 CTAs."
         validated: false
         flow_ids: ["FLOW-001"]
       - id: "AC-002"
-        description: "Al hacer clic en el CTA principal, el usuario navega a /marketplace."
+        description: "CTA primario 'Ver demo' (botón azul #2563EB pill) navega a /dashboard. CTA secundario 'Solicitar información' (outline blanco) navega a /contacto."
         validated: false
         flow_ids: ["FLOW-001"]
       - id: "AC-003"
-        description: "Existe una sección de beneficios con al menos 6 cards (icono, título, descripción)."
+        description: "Existe una sección 'Capacidades que se adaptan a tu operación' con 3 cards (icono lineal azul, título, descripción): Estructura empresarial, Indicadores KPI, Activación inmediata."
         validated: false
         flow_ids: ["FLOW-002"]
       - id: "AC-004"
-        description: "Existe una sección de 'Cómo Funciona' con 3 pasos numerados."
+        description: "Existe una sección CTA final con título '¿Listo para transformar tu operación?' y botón 'Solicitar información'."
         validated: false
         flow_ids: ["FLOW-002"]
       - id: "AC-005"
-        description: "Existe una sección de extensiones destacadas con preview de KPI, Encuestas y BI."
+        description: "El fondo general tiene gradiente azul sutil (#F0F4FF → blanco)."
         validated: false
         flow_ids: ["FLOW-002"]
       - id: "AC-006"
-        description: "La navegación sticky contiene el logo de Orquestra y un enlace 'Ir al Demo'."
+        description: "La navbar sticky contiene logo 🔵 Orquestra + 3 enlaces: Producto, Capacidades, Contacto."
         validated: false
         flow_ids: ["FLOW-003"]
       - id: "AC-007"
@@ -210,7 +391,7 @@ stories:
         validated: false
         flow_ids: ["FLOW-004"]
       - id: "AC-002"
-        description: "El sidebar muestra ítems de navegación fijos: Dashboard, Marketplace, Usuarios."
+        description: "El sidebar muestra 5 ítems fijos de navegación: Inicio, Organización, Usuarios, Contenidos, Extensiones."
         validated: false
         flow_ids: ["FLOW-004"]
       - id: "AC-003"
@@ -218,19 +399,19 @@ stories:
         validated: false
         flow_ids: ["FLOW-005"]
       - id: "AC-004"
-        description: "El ítem activo del sidebar se resalta visualmente con fondo y borde lateral."
+        description: "El ítem activo del sidebar se resalta con fondo azul claro #EEF2FF, texto e icono #2563EB."
         validated: false
         flow_ids: ["FLOW-004"]
       - id: "AC-005"
-        description: "El sidebar puede colapsarse/expandirse a solo íconos."
+        description: "El sidebar ocupa ~240px con fondo blanco y borde derecho sutil."
         validated: false
         flow_ids: ["FLOW-006"]
       - id: "AC-006"
-        description: "El header muestra el nombre de la organización actual."
+        description: "El logo 🔵 Orquestra aparece en la esquina superior izquierda del sidebar y es clickeable."
         validated: false
         flow_ids: ["FLOW-007"]
       - id: "AC-007"
-        description: "El header contiene un selector de rol (Admin/Gestor/Viewer) para cambiar permisos en tiempo real."
+        description: "El header contiene un selector de rol/perfil 'Directivo ▼' (dropdown) + icono ayuda (?) + icono mensajes (✉️)."
         validated: false
         flow_ids: ["FLOW-007"]
       - id: "AC-008"
@@ -602,7 +783,7 @@ stories:
   # US-011: Estado Global y Reactividad
   # ═══════════════════════════════════════════
   - id: "US-011"
-    title: "Como desarrollador quiero un estado global reactivo (Zustand) para que los cambios de rol, extensiones y usuario se reflejen inmediatamente en toda la aplicación."
+    title: "Como desarrollador quiero un estado global reactivo (React Context) para que los cambios de rol, extensiones y usuario se reflejen inmediatamente en toda la aplicación."
     module: "global_state"
     priority: "high"
     status: "pending"
@@ -610,7 +791,7 @@ stories:
     flow_ids: ["FLOW-035", "FLOW-036", "FLOW-037", "FLOW-038"]
     acceptance_criteria:
       - id: "AC-001"
-        description: "El store Zustand expone: currentUser, currentRole, activeExtensions, organization."
+        description: "El store React Context expone: currentUser, currentRole, activeExtensions, organization."
         validated: false
         flow_ids: ["FLOW-035"]
       - id: "AC-002"
@@ -685,6 +866,126 @@ stories:
         description: "Cada entidad mock tiene IDs únicos y relaciones coherentes entre sí."
         validated: false
         flow_ids: ["FLOW-039"]
+
+  # ═══════════════════════════════════════════
+  # FASE 2 — MÓDULOS NUEVOS (del mockup Figma)
+  # ═══════════════════════════════════════════
+
+  # ═══════════════════════════════════════════
+  # US-013: Gestión de Organización
+  # ═══════════════════════════════════════════
+  - id: "US-013"
+    title: "Como administrador quiero gestionar la estructura jerárquica de la organización (áreas, departamentos) para reflejar el organigrama real de la empresa."
+    module: "organization_mgmt"
+    priority: "high"
+    status: "pending"
+    sprint: 2
+    flow_ids: ["FLOW-041", "FLOW-042", "FLOW-043", "FLOW-044"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La ruta /organizacion muestra H1 'Organización', subtítulo 'Gestiona la estructura jerárquica' y 3 KPI cards (Total áreas: 12, Colaboradores: 148, Actividad reciente: 24 hoy)."
+        validated: false
+        flow_ids: ["FLOW-041"]
+      - id: "AC-002"
+        description: "Existe un tree list expandible con áreas jerárquicas: raíz 'Dirección General' y sub-áreas como Recursos Humanos, Finanzas, etc."
+        validated: false
+        flow_ids: ["FLOW-041"]
+      - id: "AC-003"
+        description: "Cada nodo del árbol muestra: nombre del área, nombre del responsable, número de empleados y chevron para expandir/colapsar."
+        validated: false
+        flow_ids: ["FLOW-041"]
+      - id: "AC-004"
+        description: "Al expandir un área, se muestran sus sub-áreas con indentación visual progresiva."
+        validated: false
+        flow_ids: ["FLOW-042"]
+      - id: "AC-005"
+        description: "Existe un botón 'Nueva Área' que abre un formulario para crear área con: nombre, responsable, área padre."
+        validated: false
+        flow_ids: ["FLOW-043"]
+      - id: "AC-006"
+        description: "Los datos mock incluyen al menos 14 áreas con jerarquía de 3 niveles de profundidad."
+        validated: false
+        flow_ids: ["FLOW-041"]
+      - id: "AC-007"
+        description: "Solo usuarios con rol Directivo o Responsable de área pueden editar la estructura."
+        validated: false
+        flow_ids: ["FLOW-044"]
+      - id: "AC-008"
+        description: "Se puede hacer clic en un área para ver detalle con lista de empleados asignados."
+        validated: false
+        flow_ids: ["FLOW-044"]
+
+  # ═══════════════════════════════════════════
+  # US-014: Página de Contacto
+  # ═══════════════════════════════════════════
+  - id: "US-014"
+    title: "Como visitante o usuario quiero acceder a una página de contacto para solicitar información, agendar una demo o comunicarme con el equipo."
+    module: "contact"
+    priority: "medium"
+    status: "pending"
+    sprint: 2
+    flow_ids: ["FLOW-045", "FLOW-046"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La ruta /contacto muestra un layout a 2 columnas: formulario (izq) + info de contacto (der)."
+        validated: false
+        flow_ids: ["FLOW-045"]
+      - id: "AC-002"
+        description: "El formulario incluye campos: Nombre completo, Correo electrónico, Empresa, Mensaje (textarea), todos obligatorios."
+        validated: false
+        flow_ids: ["FLOW-045"]
+      - id: "AC-003"
+        description: "Botón submit 'Enviar mensaje' (azul #2563EB, pill, ancho completo). Al enviar muestra feedback de éxito."
+        validated: false
+        flow_ids: ["FLOW-045"]
+      - id: "AC-004"
+        description: "La columna derecha muestra: horario de atención (Lunes a Viernes, 9:00 - 18:00), email info@orquestra.com, teléfono +34 900 123 456."
+        validated: false
+        flow_ids: ["FLOW-046"]
+      - id: "AC-005"
+        description: "Existe un CTA adicional '¿Prefieres una demo personalizada?' con enlace para agendar."
+        validated: false
+        flow_ids: ["FLOW-046"]
+      - id: "AC-006"
+        description: "Los campos tienen validación frontend: email válido, campos no vacíos."
+        validated: false
+        flow_ids: ["FLOW-045"]
+
+  # ═══════════════════════════════════════════
+  # US-015: Extensión Formularios
+  # ═══════════════════════════════════════════
+  - id: "US-015"
+    title: "Como administrador quiero una extensión de Formularios en el marketplace para recopilar información del equipo mediante formularios personalizados."
+    module: "forms"
+    priority: "medium"
+    status: "pending"
+    sprint: 2
+    flow_ids: ["FLOW-047", "FLOW-048"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La extensión 'Formularios' aparece en el marketplace con card: icono, descripción 'Crea formularios personalizados', badge 'Disponible'."
+        validated: false
+        flow_ids: ["FLOW-047"]
+      - id: "AC-002"
+        description: "Al activar la extensión, aparece 'Formularios' como sub-ítem en el sidebar bajo 'Contenidos'."
+        validated: false
+        flow_ids: ["FLOW-047"]
+      - id: "AC-003"
+        description: "La vista /formularios muestra lista de formularios creados con nombre, estado y fecha."
+        validated: false
+        flow_ids: ["FLOW-048"]
+      - id: "AC-004"
+        description: "Existe botón 'Nuevo formulario' para crear formularios con título y campos configurables."
+        validated: false
+        flow_ids: ["FLOW-048"]
+      - id: "AC-005"
+        description: "Los datos mock incluyen al menos 2 formularios: 'Encuesta de clima laboral' y 'Solicitud de vacaciones'."
+        validated: false
+        flow_ids: ["FLOW-048"]
+      - id: "AC-006"
+        description: "Al desactivar la extensión, 'Formularios' desaparece del sidebar y redirige a /dashboard."
+        validated: false
+        flow_ids: ["FLOW-047"]
 
 flows:
   # ─── LANDING PAGE ────────────────────────────
@@ -1597,4 +1898,343 @@ flows:
       - "Los permisos incluyen: view_kpi, edit_kpi, view_surveys, edit_surveys, view_bi, activate_extensions, manage_users, manage_roles"
       - "Relaciones entre usuarios y roles son coherentes"
     alternatives: []
+    errors: []
+
+  # ─── FLUJOS PREPARATORIOS ────────────────────
+
+  - id: "FLOW-P01"
+    name: "Configurar proyecto y dependencias"
+    type: "system_flow"
+    module: "global_state"
+    actor: "system"
+    priority: "critical"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-P01"
+    story_points: 5
+    entities: []
+    trigger: "Inicio del proyecto"
+    preconditions: ["Node.js >= 18 instalado"]
+    steps:
+      - "Inicializar Next.js 15 con App Router directamente en orq/ (raíz), NO crear subcarpeta: npx create-next-app@latest ./ --ts --tailwind --app --eslint"
+      - "Configurar TypeScript strict + path aliases (@/) en tsconfig.json"
+      - "Instalar dependencias: react-hook-form, @hookform/resolvers, zod, json-server, lucide-react, clsx"
+      - "Crear db.json con datos mock iniciales en raíz para JSON Server"
+      - "Agregar script en package.json: 'mock-api': 'json-server --watch db.json --port 3001'"
+      - "Definir estructura de carpetas: app/ (rutas), components/ (UI reutilizable), lib/ (utils, servicios), types/ (interfaces TS)"
+      - "Configurar tokens del design system en tailwind.config.ts (colores, fuentes, border-radius)"
+      - "Documentar decisiones en STACK.md"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-P02"
+    name: "Configurar routing y store base"
+    type: "system_flow"
+    module: "global_state"
+    actor: "system"
+    priority: "critical"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-P01"
+    story_points: 3
+    entities: []
+    trigger: "Proyecto base creado"
+    preconditions: ["FLOW-P01 completado"]
+    steps:
+      - "Crear layout.tsx raíz con <html>, <body> y fuente Inter de Google Fonts"
+      - "Crear rutas con App Router: app/(landing)/page.tsx, app/(app)/dashboard/page.tsx, app/(app)/organizacion/page.tsx, app/(app)/usuarios/page.tsx, app/(app)/extensiones/page.tsx, app/contacto/page.tsx"
+      - "Crear un React Context (AppContext) con estado: currentUser, currentRole, activeExtensions"
+      - "Crear hook useAppContext() para acceso global al estado"
+      - "Verificar que npm run dev arranca sin errores y JSON Server corre en paralelo"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-P03"
+    name: "Implementar tokens del design system"
+    type: "system_flow"
+    module: "app_shell"
+    actor: "system"
+    priority: "critical"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-P02"
+    story_points: 3
+    entities: []
+    trigger: "FLOW-P01 completado"
+    preconditions: ["Proyecto base configurado"]
+    steps:
+      - "Definir CSS custom properties: --primary, --primary-light, --accent-green, --accent-red, --surface, --bg, --text-primary, --text-secondary, --border"
+      - "Importar fuente Inter desde Google Fonts"
+      - "Definir sistema de espaciado (4px base, 8/16/24/32px escalas)"
+      - "Definir border-radius: 12px cards, 999px pills/badges"
+      - "Definir iconografía: Lucide React, outlined, 20px sidebar"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-P04"
+    name: "Crear componentes base reutilizables"
+    type: "system_flow"
+    module: "app_shell"
+    actor: "system"
+    priority: "critical"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-P02"
+    story_points: 5
+    entities: []
+    trigger: "FLOW-P03 completado"
+    preconditions: ["Tokens del design system definidos"]
+    steps:
+      - "Crear componente Button con variantes: primary (azul), outline, dark (#0F172A), disabled"
+      - "Crear componente Badge (pill) con variantes de color"
+      - "Crear componente Card con border-radius 12px y shadow sutil"
+      - "Crear componente Input con icono opcional (ej: lupa de búsqueda)"
+      - "Crear patrón KPI Card: icono + label + valor + % cambio + color semáforo"
+      - "Crear patrón Extension Card: icono + nombre + descripción + badge estado + botón activar"
+      - "Crear página de showcase con todos los componentes renderizados"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-P05"
+    name: "Crear datos mock de entidades"
+    type: "data_flow"
+    module: "global_state"
+    actor: "system"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-P03"
+    story_points: 5
+    entities: ["user", "extension", "area"]
+    trigger: "FLOW-P01 y FLOW-P03 completados"
+    preconditions: ["Estructura del proyecto definida"]
+    steps:
+      - "Crear mock/data.ts con tipos TypeScript para User, Area, Extension, KPI, Role"
+      - "Generar 10+ usuarios mock con nombres españoles, emails @orquestra.com"
+      - "Generar 14+ áreas mock con jerarquía de 3 niveles (Dirección General como raíz)"
+      - "Generar 5 extensiones: KPI (activa), Formularios (disponible), Encuestas (disponible), Colaboración (próximamente), BI (próximamente)"
+      - "Generar KPIs mock: Total áreas (12), Colaboradores (148), Actividad reciente (24 hoy, +18%)"
+      - "Asegurar IDs únicos y relaciones coherentes entre entidades"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-P06"
+    name: "Configurar store con mock data y roles"
+    type: "data_flow"
+    module: "global_state"
+    actor: "system"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-P03"
+    story_points: 3
+    entities: ["role", "permission"]
+    trigger: "FLOW-P05 completado"
+    preconditions: ["Datos mock creados"]
+    steps:
+      - "Crear 3 roles mock: Directivo (todos), Responsable de área (parcial), Colaborador (lectura)"
+      - "Importar datos mock en el React Context como estado inicial"
+      - "Proveer acciones: setRole(), toggleExtension(), getAreasByParent()"
+      - "Exportar datos tipados desde mock/data.ts"
+    alternatives: []
+    errors: []
+
+  # ─── ORGANIZACIÓN ────────────────────────────
+
+  - id: "FLOW-041"
+    name: "Visualizar estructura organizacional"
+    type: "user_flow"
+    module: "organization_mgmt"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-013"
+    story_points: 5
+    entities: ["area"]
+    trigger: "El usuario navega a /organizacion"
+    preconditions: ["Usuario autenticado con rol Directivo o Responsable"]
+    steps:
+      - "El usuario hace clic en 'Organización' en el sidebar"
+      - "El sistema renderiza H1 'Organización' + subtítulo"
+      - "Se muestran 3 KPI cards: Total áreas (12), Colaboradores (148), Actividad reciente (24 hoy, +18%)"
+      - "Se renderiza un tree list con áreas jerárquicas, 'Dirección General' como raíz"
+      - "Cada nodo muestra: nombre del área, responsable, N° empleados, chevron ›"
+    alternatives:
+      - "Si no hay áreas, se muestra empty state con CTA 'Crear primera área'"
+    errors: []
+
+  - id: "FLOW-042"
+    name: "Expandir y navegar jerarquía de áreas"
+    type: "user_flow"
+    module: "organization_mgmt"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-013"
+    story_points: 3
+    entities: ["area"]
+    trigger: "El usuario hace clic en el chevron de un área"
+    preconditions: ["FLOW-041 renderizado"]
+    steps:
+      - "El usuario hace clic en el chevron de un área"
+      - "El nodo se expande mostrando sub-áreas con indentación progresiva"
+      - "El chevron rota 90° indicando estado expandido"
+      - "Los sub-nodos muestran la misma estructura (área, responsable, empleados)"
+    alternatives:
+      - "Si el área no tiene sub-áreas, el chevron no aparece"
+    errors: []
+
+  - id: "FLOW-043"
+    name: "Crear nueva área"
+    type: "user_flow"
+    module: "organization_mgmt"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-013"
+    story_points: 3
+    entities: ["area"]
+    trigger: "El usuario hace clic en 'Nueva Área'"
+    preconditions: ["Usuario con rol Directivo"]
+    steps:
+      - "El usuario hace clic en 'Nueva Área'"
+      - "Se abre modal/formulario con campos: nombre, responsable (select), área padre (select)"
+      - "El usuario llena los campos y hace clic en 'Guardar'"
+      - "El sistema agrega el área al árbol y actualiza los KPIs"
+    alternatives:
+      - "Si el usuario cancela, el formulario se cierra sin cambios"
+    errors:
+      - "Si el nombre está vacío, se muestra error de validación"
+
+  - id: "FLOW-044"
+    name: "Ver detalle de área"
+    type: "user_flow"
+    module: "organization_mgmt"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-013"
+    story_points: 2
+    entities: ["area", "user"]
+    trigger: "El usuario hace clic en el nombre de un área"
+    preconditions: ["FLOW-041 renderizado"]
+    steps:
+      - "El usuario hace clic en el nombre de un área"
+      - "Se abre panel lateral o vista de detalle"
+      - "Se muestra: nombre, responsable, lista de empleados asignados"
+      - "Si el usuario tiene permisos, aparecen botones de edición"
+    alternatives: []
+    errors: []
+
+  # ─── CONTACTO ────────────────────────────
+
+  - id: "FLOW-045"
+    name: "Enviar formulario de contacto"
+    type: "user_flow"
+    module: "contact"
+    actor: "visitante"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-014"
+    story_points: 3
+    entities: ["contact_lead"]
+    trigger: "El usuario navega a /contacto"
+    preconditions: ["Ninguna"]
+    steps:
+      - "El usuario accede a /contacto"
+      - "Se renderiza layout 2 columnas: formulario (izq) + info contacto (der)"
+      - "El usuario llena: Nombre completo, Correo electrónico, Empresa, Mensaje"
+      - "El usuario hace clic en 'Enviar mensaje'"
+      - "El sistema valida campos (email válido, campos no vacíos)"
+      - "Se muestra feedback de éxito (toast o mensaje en pantalla)"
+    alternatives:
+      - "Si hay errores de validación, se resaltan los campos con error"
+    errors:
+      - "Si el email no es válido, se muestra mensaje de error inline"
+
+  - id: "FLOW-046"
+    name: "Visualizar info de contacto y CTA de demo"
+    type: "user_flow"
+    module: "contact"
+    actor: "visitante"
+    priority: "low"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-014"
+    story_points: 2
+    entities: []
+    trigger: "El usuario navega a /contacto"
+    preconditions: ["Ninguna"]
+    steps:
+      - "La columna derecha muestra horario: 'Lunes a Viernes, 9:00 - 18:00'"
+      - "Se muestra email de contacto: info@orquestra.com"
+      - "Se muestra teléfono: +34 900 123 456"
+      - "Se muestra CTA: '¿Prefieres una demo personalizada?' con enlace"
+    alternatives: []
+    errors: []
+
+  # ─── FORMULARIOS ────────────────────────────
+
+  - id: "FLOW-047"
+    name: "Activar extensión Formularios"
+    type: "user_flow"
+    module: "forms"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-015"
+    story_points: 3
+    entities: ["extension"]
+    trigger: "El admin activa 'Formularios' desde el marketplace"
+    preconditions: ["Marketplace renderizado, extensión disponible"]
+    steps:
+      - "El admin navega a /extensiones"
+      - "Localiza la card 'Formularios' con badge 'Disponible'"
+      - "Hace clic en 'Activar'"
+      - "El sistema agrega 'Formularios' como sub-ítem en sidebar bajo 'Contenidos'"
+      - "La card cambia a badge 'Activa' con botón 'Desactivar'"
+    alternatives:
+      - "Si desactiva, 'Formularios' desaparece del sidebar y redirige a /dashboard"
+    errors: []
+
+  - id: "FLOW-048"
+    name: "Gestionar formularios creados"
+    type: "user_flow"
+    module: "forms"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-015"
+    story_points: 3
+    entities: []
+    trigger: "El usuario navega a /formularios"
+    preconditions: ["Extensión Formularios activada"]
+    steps:
+      - "El usuario hace clic en 'Formularios' en el sidebar"
+      - "Se renderiza lista de formularios mock con nombre, estado y fecha"
+      - "Existe botón 'Nuevo formulario' para crear uno nuevo"
+      - "Los datos mock incluyen: 'Encuesta de clima laboral' (activo) y 'Solicitud de vacaciones' (borrador)"
+    alternatives:
+      - "Si no hay formularios, se muestra empty state"
     errors: []
