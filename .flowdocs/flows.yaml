@@ -350,51 +350,387 @@ stories:
   # ═══════════════════════════════════════════
   # US-001: Landing Page Enterprise
   # ═══════════════════════════════════════════
+  
   - id: "US-001"
-    title: "Como visitante quiero ver una landing page enterprise para entender las capacidades de Orquestra y acceder al demo."
+    title: "Landing enterprise orientada a decisión ejecutiva"
     module: "landing"
     priority: "high"
     status: "implemented"
     sprint: 1
-    flow_ids: ["FLOW-001", "FLOW-002", "FLOW-003"]
+    story_points: 8
+    actors: ["visitante", "director", "tomador_decision"]
+
+    narrative: >
+      Como director o responsable de transformación digital,
+      quiero ingresar a la landing de Orquestra y comprender en segundos
+      que se trata de una plataforma empresarial modular, confiable y escalable,
+      para evaluar rápidamente su adopción y acceder a una demostración.
+
+    business_context:
+      product_positioning: "Plataforma enterprise modular tipo ecosystem-driven (similar a Salesforce AppExchange mindset)"
+      key_message: "Activa solo las capacidades que tu organización necesita"
+      differentiation:
+        - "Arquitectura por extensiones activables"
+        - "Marketplace integrado"
+        - "Enfoque enterprise-first"
+        - "Time-to-value acelerado"
+
+    ux_intent:
+      primary_goal: "Conversión a demo"
+      secondary_goal: "Confianza ejecutiva"
+      tertiary_goal: "Comprensión del modelo modular"
+      emotional_tone:
+        - "corporativo"
+        - "confiable"
+        - "moderno"
+        - "tecnológicamente sólido"
+
+    information_architecture:
+      required_sections:
+        - "Hero estratégico"
+        - "Propuesta de valor empresarial"
+        - "Modelo de plataforma modular"
+        - "Capacidades clave"
+        - "Extensiones destacadas"
+        - "Beneficios enterprise/cloud"
+        - "CTA de conversión"
+        - "Footer institucional"
+
     acceptance_criteria:
+
       - id: "AC-001"
-        description: "La landing muestra un hero con H1 ('Convierte la operación de tu empresa en un sistema medible'), subtítulo descriptivo, mockup decorativo del dashboard y 2 CTAs."
+        name: "Hero con posicionamiento ejecutivo"
+        description: >
+          La sección hero comunica inmediatamente que Orquestra es
+          una plataforma empresarial modular. Debe incluir:
+          - H1 orientado a transformación operativa medible
+          - Subtítulo que mencione explícitamente el modelo por extensiones
+          - Mockup limpio tipo dashboard enterprise
+          - CTA primario hacia demo
+          - CTA secundario informativo
+        validations:
+          - "El valor modular se entiende en ≤5 segundos"
+          - "Existe exactamente un H1"
+          - "El hero es above-the-fold en desktop"
+          - "El diseño transmite estética enterprise (no startup genérica)"
         validated: true
         flow_ids: ["FLOW-001"]
+
       - id: "AC-002"
-        description: "CTA primario 'Ver demo' (botón azul #2563EB rounded-lg) navega a /dashboard. CTA secundario 'Solicitar información' (outline blanco rounded-lg) navega a /contacto."
+        name: "Sección de propuesta de valor"
+        description: >
+          Existe una sección que explica claramente que Orquestra permite
+          construir soluciones empresariales mediante la activación de
+          extensiones bajo demanda.
+        validations:
+          - "Se menciona explícitamente el concepto de extensiones"
+          - "Se comunica el beneficio de usar solo lo necesario"
+          - "El lenguaje es corporativo, no técnico excesivo"
+          - "La jerarquía visual guía la lectura ejecutiva"
         validated: true
-        flow_ids: ["FLOW-001"]
+        flow_ids: ["FLOW-002"]
+
       - id: "AC-003"
-        description: "Existe una sección 'Capacidades que se adaptan a tu operación' con 3 cards (icono lineal azul, título, descripción): Estructura empresarial, Indicadores KPI, Activación inmediata."
+        name: "Modelo de plataforma modular"
+        description: >
+          Existe una sección visual que explique el flujo:
+          Organización → Activación de extensiones → Solución operativa.
+        validations:
+          - "El flujo se entiende sin leer texto largo"
+          - "Existe apoyo visual (diagrama, steps o visual flow)"
+          - "Refuerza el concepto de escalabilidad"
         validated: true
         flow_ids: ["FLOW-002"]
+
       - id: "AC-004"
-        description: "Existe una sección CTA final con título '¿Listo para transformar tu operación?' y botón 'Solicitar información'."
+        name: "Capacidades empresariales"
+        description: >
+          Existe una sección de capacidades clave con cards
+          (ej. multi-organización, KPI, automatización, gobierno de datos).
+        validations:
+          - "Las capacidades están orientadas a empresa, no a usuario individual"
+          - "Iconografía consistente"
+          - "Grid responsive"
+          - "Hover states en desktop"
         validated: true
         flow_ids: ["FLOW-002"]
+
       - id: "AC-005"
-        description: "El fondo general tiene gradiente azul sutil (#F5F7FF) con sección de capacidades en blanco."
+        name: "Extensiones destacadas como marketplace"
+        description: >
+          La landing muestra extensiones (KPI, Encuestas, BI) claramente
+          etiquetadas como 'Extensión' o 'Módulo activable', reforzando
+          el modelo tipo marketplace.
+        validations:
+          - "Cada item tiene badge de extensión"
+          - "Se entiende que pueden activarse bajo demanda"
+          - "La sección transmite mentalidad de ecosystem"
         validated: true
         flow_ids: ["FLOW-002"]
+
       - id: "AC-006"
-        description: "La navbar sticky contiene logo 🔵 Orquestra + 3 enlaces: Producto, Capacidades, Contacto."
+        name: "Beneficios enterprise y cloud"
+        description: >
+          Existe una sección que comunique atributos enterprise:
+          seguridad, escalabilidad, multi-tenant, alta disponibilidad.
+        validations:
+          - "Lenguaje orientado a TI/directores"
+          - "Diseño visual diferenciado (sección premium)"
+          - "No usa claims vacíos sin contexto"
         validated: true
-        flow_ids: ["FLOW-003"]
+        flow_ids: ["FLOW-002"]
+
       - id: "AC-007"
-        description: "La página es responsive y se adapta a móvil (>=320px) y desktop."
-        validated: true
-        flow_ids: ["FLOW-001"]
-      - id: "AC-008"
-        description: "El footer muestra copyright y año actual (© 2026 Orquestra)."
+        name: "Navegación corporativa"
+        description: >
+          La navbar sticky muestra logo Orquestra y navegación clara
+          orientada a exploración ejecutiva.
+        validations:
+          - "Sticky funcional"
+          - "Responsive con menú móvil"
+          - "Estados hover y focus"
+          - "Accesible por teclado"
         validated: true
         flow_ids: ["FLOW-003"]
 
+      - id: "AC-008"
+        name: "Experiencia responsive premium"
+        description: >
+          La landing mantiene calidad visual y legibilidad
+          en móvil, tablet y desktop.
+        validations:
+          - "Sin scroll horizontal en 320px"
+          - "CTAs táctiles ≥44px"
+          - "Tipografía escala correctamente"
+          - "Las secciones mantienen jerarquía visual"
+        validated: true
+        flow_ids: ["FLOW-001"]
+
+      - id: "AC-009"
+        name: "CTA final orientado a decisión"
+        description: >
+          La página cierra con un bloque de conversión que invite
+          a solicitar demo o información, reforzando confianza enterprise.
+        validations:
+          - "Ubicado antes del footer"
+          - "Mensaje orientado a valor de negocio"
+          - "Botón primario consistente con design system"
+        validated: true
+        flow_ids: ["FLOW-002"]
+
+    non_functional_requirements:
+      performance:
+        - "Lighthouse ≥ 90"
+        - "LCP < 2.5s"
+        - "CLS < 0.1"
+      accessibility:
+        - "WCAG 2.1 AA básico"
+        - "Navegación por teclado"
+      seo:
+        - "Metadata completa"
+        - "OpenGraph"
+        - "Estructura semántica correcta"
+
+    definition_of_done:
+      - "La propuesta modular se entiende claramente"
+      - "La página transmite confianza enterprise"
+      - "Todos los AC validados"
+      - "Build de producción exitoso"
+      - "Revisión UX aprobada"
+  
   # ═══════════════════════════════════════════
-  # US-002: App Shell y Layout Autenticado
+  # US-002: Página de contacto corporativa con confirmación de envío
   # ═══════════════════════════════════════════
   - id: "US-002"
+    title: "Página de contacto corporativa con confirmación de envío"
+    module: "landing"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    story_points: 8
+    actors: ["visitante", "cto", "director", "tomador_decision"]
+
+    narrative: >
+      Como Director de Tecnología o responsable de evaluar plataformas,
+      quiero acceder a una página de contacto clara, moderna y confiable
+      para solicitar información sobre precios, planes y capacidades de Orquestra,
+      y recibir confirmación inmediata de que mi mensaje fue enviado correctamente.
+
+    business_goal:
+      - "Capturar leads calificados enterprise"
+      - "Reducir fricción en el primer contacto"
+      - "Transmitir confianza corporativa"
+      - "Preparar pipeline comercial"
+
+    ux_intent:
+      primary_goal: "Envío exitoso del formulario"
+      secondary_goal: "Generar confianza post-envío"
+      emotional_tone:
+        - "profesional"
+        - "moderno"
+        - "enterprise"
+        - "confiable"
+        - "sin fricción"
+
+    functional_scope:
+
+      form_fields_required:
+        - "Nombre completo"
+        - "Correo corporativo"
+        - "Organización"
+        - "Rol"
+        - "Mensaje"
+      optional_fields:
+        - "Teléfono"
+        - "Tamaño de la organización"
+        - "Interés principal (planes, demo, partnership, etc.)"
+
+      system_behaviors:
+        - "Validación en tiempo real"
+        - "Estado de carga al enviar"
+        - "Mensaje de éxito visible"
+        - "Envío de correo al equipo comercial"
+        - "Correo de confirmación al usuario"
+        - "Prevención de spam básica"
+
+    acceptance_criteria:
+
+      - id: "AC-001"
+        name: "Diseño corporativo de la página"
+        description: >
+          La página de contacto presenta un layout moderno,
+          limpio y alineado al design system enterprise de Orquestra.
+        validations:
+          - "Jerarquía visual clara"
+          - "Espaciado consistente"
+          - "Tipografía enterprise"
+          - "Responsive completo"
+        validated: false
+
+      - id: "AC-002"
+        name: "Formulario intuitivo"
+        description: >
+          El formulario es fácil de completar para un ejecutivo,
+          con labels claros, placeholders útiles y agrupación lógica.
+        validations:
+          - "Tiempo estimado de llenado ≤ 60 segundos"
+          - "Campos obligatorios marcados"
+          - "Errores visibles inline"
+          - "Navegación por teclado funcional"
+        validated: false
+
+      - id: "AC-003"
+        name: "Sugerencias inteligentes de mensaje"
+        description: >
+          La UI muestra ejemplos o chips de ayuda sobre
+          qué puede solicitar el usuario (ej. precios, demo, arquitectura).
+        validations:
+          - "Existen al menos 4 sugerencias visibles"
+          - "Al hacer click se insertan en el textarea"
+          - "No interfieren con escritura manual"
+        validated: false
+
+      - id: "AC-004"
+        name: "Envío funcional del formulario"
+        description: >
+          Al enviar, el sistema procesa la solicitud de forma asíncrona
+          y muestra estado de carga.
+        validations:
+          - "Botón muestra loading state"
+          - "Se evita doble envío"
+          - "Timeout manejado correctamente"
+          - "Errores de red manejados"
+        validated: false
+
+      - id: "AC-005"
+        name: "Confirmación visual inmediata"
+        description: >
+          Tras envío exitoso, el usuario ve un mensaje claro de confirmación
+          sin abandonar la página.
+        validations:
+          - "Mensaje de éxito visible"
+          - "Tono corporativo y tranquilizador"
+          - "Incluye expectativa de tiempo de respuesta"
+          - "Accesible por lectores de pantalla"
+        validated: false
+
+      - id: "AC-006"
+        name: "Correo recibido por el equipo"
+        description: >
+          El sistema envía un email estructurado al equipo comercial
+          con la información del lead.
+        validations:
+          - "Incluye todos los campos"
+          - "Formato legible"
+          - "Timestamp incluido"
+          - "Ambiente configurable (dev/prod)"
+        validated: false
+
+      - id: "AC-007"
+        name: "Correo de confirmación al usuario"
+        description: >
+          El usuario recibe un correo automático confirmando
+          la recepción de su solicitud.
+        validations:
+          - "Enviado al correo capturado"
+          - "Incluye resumen del mensaje"
+          - "Branding de Orquestra"
+          - "Tiempo estimado de respuesta"
+        validated: false
+
+      - id: "AC-008"
+        name: "Experiencia responsive premium"
+        description: >
+          La página mantiene usabilidad y estética en móvil,
+          tablet y desktop.
+        validations:
+          - "Sin scroll horizontal en 320px"
+          - "Campos táctiles ≥44px"
+          - "CTA visible en viewport móvil"
+        validated: false
+
+      - id: "AC-009"
+        name: "Protección básica anti-spam"
+        description: >
+          El formulario implementa al menos una medida anti-spam.
+        validations:
+          - "Honeypot o equivalente"
+          - "Rate limiting básico"
+          - "Validación de dominio de correo"
+        validated: false
+
+    non_functional_requirements:
+      performance:
+        - "Tiempo de envío percibido < 2s"
+        - "Sin bloqueo del main thread"
+      accessibility:
+        - "WCAG 2.1 AA"
+        - "ARIA live en mensaje de éxito"
+      security:
+        - "Sanitización de inputs"
+        - "Protección contra XSS"
+        - "Validación server-side obligatoria"
+
+    analytics_events:
+      - "contact_form_view"
+      - "contact_form_submit"
+      - "contact_form_success"
+      - "contact_form_error"
+
+    definition_of_done:
+      - "Formulario envía correctamente"
+      - "Usuario recibe correo de confirmación"
+      - "Equipo recibe lead"
+      - "UX aprobada por diseño"
+      - "Tests básicos pasando"
+      - "Sin errores en consola"
+
+
+
+# ═══════════════════════════════════════════
+# US-003: App Shell y Layout Autenticado
+# ═══════════════════════════════════════════
+  - id: "US-003"
     title: "Como usuario autenticado quiero una estructura de layout con sidebar y header para navegar entre los módulos de la plataforma."
     module: "app_shell"
     priority: "high"

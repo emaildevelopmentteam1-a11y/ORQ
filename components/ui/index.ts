@@ -11,7 +11,7 @@ export { Input } from "./Input";
 export type { InputProps } from "./Input";
 
 export { KpiCard } from "./KpiCard";
-export type { KpiCardProps, KpiTrend } from "./KpiCard";
+export type { KpiCardProps } from "./KpiCard";
 
 export { ExtensionCard } from "./ExtensionCard";
 export type { ExtensionCardProps, ExtensionStatus } from "./ExtensionCard";

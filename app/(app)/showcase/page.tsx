@@ -97,22 +97,22 @@ export default function ShowcasePage() {
                     <KpiCard
                         title="Usuarios activos"
                         value="1,284"
-                        change="+12.5%"
-                        trend="up"
+                        subtitle="Últimos 30 días"
+                        detail={<span className="text-accent-green font-medium">+12.5%</span>}
                         icon={<Users size={20} />}
                     />
                     <KpiCard
                         title="KPIs definidos"
                         value="48"
-                        change="+3"
-                        trend="up"
+                        subtitle="En seguimiento"
+                        detail={<span className="text-accent-green font-medium">+3 nuevos</span>}
                         icon={<BarChart3 size={20} />}
                     />
                     <KpiCard
                         title="Áreas"
                         value="12"
-                        change="0%"
-                        trend="neutral"
+                        subtitle="Áreas activas"
+                        detail={<span className="text-muted-foreground">Sin cambios</span>}
                         icon={<Building2 size={20} />}
                     />
                 </div>
