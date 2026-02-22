@@ -1,0 +1,22 @@
+meta:
+  app: "orq"
+  version: "0.1.0"
+  description: "Descripción del sistema"
+  updated_at: "2026-02-21"
+  sprint:
+    number: 1
+    goal: "Documentar el proyecto con @discover.md"
+    start: "2026-02-21"
+    end: "2026-02-21"
+    days_left: 0
+  stats:
+    total: 0
+    implemented: 0
+    partial: 0
+    pending: 0
+    with_tests: 0
+    coverage_pct: 0
+modules: []
+entities: []
+stories: []
+flows: []
