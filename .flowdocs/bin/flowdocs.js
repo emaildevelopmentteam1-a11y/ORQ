@@ -3,9 +3,9 @@
 'use strict';
 
 const https = require('https');
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+const http  = require('http');
+const fs    = require('fs');
+const path  = require('path');
 const { execSync } = require('child_process');
 
 // ─── Configuración ────────────────────────────────────────────────────────────
@@ -13,7 +13,7 @@ const { execSync } = require('child_process');
 const REPO_BASE = 'https://raw.githubusercontent.com/emaildevelopmentteam1-a11y/flowdocs/main';
 
 const FILES = {
-  viewer: 'viewer.html',
+  viewer:   'viewer.html',
   cursorrules: '.cursorrules',
   prompts: [
     'prompts/adapt.md',
@@ -43,22 +43,22 @@ function getLocalSourcePath() {
 // ─── Colores ──────────────────────────────────────────────────────────────────
 
 const c = {
-  reset: '\x1b[0m',
-  bold: '\x1b[1m',
-  dim: '\x1b[2m',
-  green: '\x1b[32m',
-  blue: '\x1b[34m',
+  reset:  '\x1b[0m',
+  bold:   '\x1b[1m',
+  dim:    '\x1b[2m',
+  green:  '\x1b[32m',
+  blue:   '\x1b[34m',
   yellow: '\x1b[33m',
-  red: '\x1b[31m',
-  cyan: '\x1b[36m',
-  gray: '\x1b[90m',
+  red:    '\x1b[31m',
+  cyan:   '\x1b[36m',
+  gray:   '\x1b[90m',
 };
 
-const ok = (msg) => console.log(`  ${c.green}✓${c.reset} ${msg}`);
+const ok  = (msg) => console.log(`  ${c.green}✓${c.reset} ${msg}`);
 const err = (msg) => console.log(`  ${c.red}✗${c.reset} ${msg}`);
 const info = (msg) => console.log(`  ${c.blue}→${c.reset} ${msg}`);
 const warn = (msg) => console.log(`  ${c.yellow}!${c.reset} ${msg}`);
-const dim = (msg) => console.log(`${c.gray}${msg}${c.reset}`);
+const dim  = (msg) => console.log(`${c.gray}${msg}${c.reset}`);
 
 // ─── Utilidades ───────────────────────────────────────────────────────────────
 
@@ -126,7 +126,7 @@ function isFlowdocsRepoRoot(dir) {
 async function cmdInit() {
   const cwd = process.cwd();
   const flowdocsDir = path.join(cwd, '.flowdocs');
-  const promptsDir = path.join(flowdocsDir, 'prompts');
+  const promptsDir  = path.join(flowdocsDir, 'prompts');
 
   console.log('');
   console.log(`${c.bold}${c.cyan}  FlowDocs${c.reset} — inicializando en este proyecto`);
@@ -207,7 +207,7 @@ async function cmdInit() {
       const rulesContent = fs.readFileSync(path.join(flowdocsDir, '.cursorrules'), 'utf8');
       writeFile(rootRules, rulesContent);
       ok('.cursorrules copiado a la raíz del proyecto');
-    } catch (e) {
+    } catch(e) {
       warn('No se pudo copiar .cursorrules a la raíz');
     }
   } else {
@@ -244,7 +244,7 @@ async function cmdUpdate() {
 
   const localSource = getLocalSourcePath();
   let updated = 0;
-  let failed = 0;
+  let failed  = 0;
 
   if (localSource) {
     if (!fileExists(path.join(localSource, 'viewer.html'))) {
@@ -260,9 +260,9 @@ async function cmdUpdate() {
   } else {
     // Actualizar viewer, prompts, CLI (NO flows.yaml) desde la red
     const toUpdate = [
-      { remote: 'viewer.html', local: path.join(flowdocsDir, 'viewer.html') },
-      { remote: '.cursorrules', local: path.join(flowdocsDir, '.cursorrules') },
-      { remote: 'bin/flowdocs.js', local: path.join(flowdocsDir, 'bin', 'flowdocs.js') },
+      { remote: 'viewer.html',           local: path.join(flowdocsDir, 'viewer.html') },
+      { remote: '.cursorrules',          local: path.join(flowdocsDir, '.cursorrules') },
+      { remote: 'bin/flowdocs.js',       local: path.join(flowdocsDir, 'bin', 'flowdocs.js') },
       ...FILES.prompts.map(p => ({
         remote: p,
         local: path.join(flowdocsDir, p)
@@ -290,7 +290,7 @@ async function cmdUpdate() {
       try {
         fs.copyFileSync(localCli, globalCli);
         ok('Comando global flowdocs actualizado');
-      } catch (e) { }
+      } catch (e) {}
     }
   }
 
@@ -365,29 +365,29 @@ function cmdStatus() {
     const content = fs.readFileSync(yamlPath, 'utf8');
 
     // Parse básico sin dependencias externas
-    const appMatch = content.match(/^\s+app:\s+"?([^"\n]+)"?/m);
-    const versionMatch = content.match(/^\s+version:\s+"?([^"\n]+)"?/m);
-    const totalMatch = content.match(/^\s+total:\s+(\d+)/m);
-    const implMatch = content.match(/^\s+implemented:\s+(\d+)/m);
-    const partialMatch = content.match(/^\s+partial:\s+(\d+)/m);
-    const pendingMatch = content.match(/^\s+pending:\s+(\d+)/m);
-    const testsMatch = content.match(/^\s+with_tests:\s+(\d+)/m);
-    const coverMatch = content.match(/^\s+coverage_pct:\s+(\d+)/m);
-    const sprintMatch = content.match(/^\s+number:\s+(\d+)/m);
-    const goalMatch = content.match(/^\s+goal:\s+"?([^"\n]+)"?/m);
-    const daysMatch = content.match(/^\s+days_left:\s+(\d+)/m);
+    const appMatch      = content.match(/^\s+app:\s+"?([^"\n]+)"?/m);
+    const versionMatch  = content.match(/^\s+version:\s+"?([^"\n]+)"?/m);
+    const totalMatch    = content.match(/^\s+total:\s+(\d+)/m);
+    const implMatch     = content.match(/^\s+implemented:\s+(\d+)/m);
+    const partialMatch  = content.match(/^\s+partial:\s+(\d+)/m);
+    const pendingMatch  = content.match(/^\s+pending:\s+(\d+)/m);
+    const testsMatch    = content.match(/^\s+with_tests:\s+(\d+)/m);
+    const coverMatch    = content.match(/^\s+coverage_pct:\s+(\d+)/m);
+    const sprintMatch   = content.match(/^\s+number:\s+(\d+)/m);
+    const goalMatch     = content.match(/^\s+goal:\s+"?([^"\n]+)"?/m);
+    const daysMatch     = content.match(/^\s+days_left:\s+(\d+)/m);
 
-    const app = appMatch?.[1] || 'Sin nombre';
-    const version = versionMatch?.[1] || '?';
-    const total = parseInt(totalMatch?.[1] || '0');
-    const impl = parseInt(implMatch?.[1] || '0');
-    const partial = parseInt(partialMatch?.[1] || '0');
-    const pending = parseInt(pendingMatch?.[1] || '0');
-    const tests = parseInt(testsMatch?.[1] || '0');
-    const cover = parseInt(coverMatch?.[1] || '0');
-    const sprint = sprintMatch?.[1] || '?';
-    const goal = goalMatch?.[1] || 'Sin objetivo';
-    const days = daysMatch?.[1] || '?';
+    const app      = appMatch?.[1]     || 'Sin nombre';
+    const version  = versionMatch?.[1] || '?';
+    const total    = parseInt(totalMatch?.[1]   || '0');
+    const impl     = parseInt(implMatch?.[1]    || '0');
+    const partial  = parseInt(partialMatch?.[1] || '0');
+    const pending  = parseInt(pendingMatch?.[1] || '0');
+    const tests    = parseInt(testsMatch?.[1]   || '0');
+    const cover    = parseInt(coverMatch?.[1]   || '0');
+    const sprint   = sprintMatch?.[1]  || '?';
+    const goal     = goalMatch?.[1]    || 'Sin objetivo';
+    const days     = daysMatch?.[1]    || '?';
 
     const impPct = total > 0 ? Math.round(impl / total * 100) : 0;
     const bar = buildBar(impPct, 30);
@@ -422,7 +422,7 @@ function cmdStatus() {
   console.log('');
 }
 
-const FLOWDOCS_PORT = 3848;
+const FLOWDOCS_PORT = 3847;
 const MIME = { '.html': 'text/html', '.yaml': 'text/yaml', '.yml': 'text/yaml', '.json': 'application/json', '.md': 'text/markdown', '.txt': 'text/plain' };
 
 function cmdOpen() {
@@ -457,7 +457,7 @@ function cmdOpen() {
         else if (process.platform === 'win32') execSync(`start "" "${url}"`, { stdio: 'ignore' });
         else execSync(`xdg-open "${url}"`, { stdio: 'ignore' });
       }, 300);
-    } catch (_) { }
+    } catch (_) {}
     ok('Viewer abierto — ' + url);
     dim('  El servidor sirve tu flows.yaml automáticamente. Ctrl+C para cerrar.');
     console.log('');
@@ -535,11 +535,11 @@ function cmdHelp() {
 function detectProjectName(cwd) {
   // Intenta leer el nombre desde package.json, Gemfile, composer.json, etc.
   const files = [
-    { path: 'package.json', parse: (c) => JSON.parse(c).name },
-    { path: 'composer.json', parse: (c) => JSON.parse(c).name },
-    { path: 'pubspec.yaml', parse: (c) => c.match(/^name:\s+(.+)/m)?.[1] },
-    { path: 'Cargo.toml', parse: (c) => c.match(/^name\s*=\s*"(.+)"/m)?.[1] },
-    { path: 'pyproject.toml', parse: (c) => c.match(/^name\s*=\s*"(.+)"/m)?.[1] },
+    { path: 'package.json',    parse: (c) => JSON.parse(c).name },
+    { path: 'composer.json',   parse: (c) => JSON.parse(c).name },
+    { path: 'pubspec.yaml',    parse: (c) => c.match(/^name:\s+(.+)/m)?.[1] },
+    { path: 'Cargo.toml',      parse: (c) => c.match(/^name\s*=\s*"(.+)"/m)?.[1] },
+    { path: 'pyproject.toml',  parse: (c) => c.match(/^name\s*=\s*"(.+)"/m)?.[1] },
   ];
 
   for (const f of files) {
@@ -547,7 +547,7 @@ function detectProjectName(cwd) {
       const content = fs.readFileSync(path.join(cwd, f.path), 'utf8');
       const name = f.parse(content);
       if (name) return name;
-    } catch { }
+    } catch {}
   }
 
   // Fallback: nombre de la carpeta
@@ -597,13 +597,13 @@ function updateGitignore(cwd) {
         ok('.gitignore actualizado — viewer y prompts ignorados, flows.yaml se commitea');
       }
     }
-  } catch { }
+  } catch {}
 }
 
 function buildBar(pct, width) {
   const filled = Math.round(pct / 100 * width);
-  const empty = width - filled;
-  const color = pct === 100 ? c.green : pct > 50 ? c.cyan : c.yellow;
+  const empty  = width - filled;
+  const color  = pct === 100 ? c.green : pct > 50 ? c.cyan : c.yellow;
   return `${color}${'█'.repeat(filled)}${c.gray}${'░'.repeat(empty)}${c.reset}`;
 }
 
@@ -613,13 +613,13 @@ const cmd = process.argv[2];
 
 (async () => {
   switch (cmd) {
-    case 'init': await cmdInit(); break;
-    case 'update': await cmdUpdate(); break;
-    case 'status': cmdStatus(); break;
-    case 'open': cmdOpen(); break;
+    case 'init':    await cmdInit();    break;
+    case 'update':  await cmdUpdate();  break;
+    case 'status':  cmdStatus();       break;
+    case 'open':    cmdOpen();         break;
     case 'publish': await cmdPublish(); break;
-    case 'usage': cmdUsage(); break;
-    default: cmdHelp(); break;
+    case 'usage':   cmdUsage();        break;
+    default:        cmdHelp();         break;
   }
 })().catch(e => {
   console.error(`\n  ${c.red}Error:${c.reset} ${e.message}\n`);
