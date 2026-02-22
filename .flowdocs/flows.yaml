@@ -1,22 +1,1600 @@
 meta:
-  app: "orq"
+  app: "Orquestra"
   version: "0.1.0"
-  description: "Descripción del sistema"
+  description: "Plataforma enterprise modular con marketplace de extensiones, gestión de usuarios/roles y módulos dinámicos (KPI, Encuestas, BI)."
   updated_at: "2026-02-21"
   sprint:
     number: 1
-    goal: "Documentar el proyecto con @discover.md"
+    goal: "MVP del demo enterprise funcional"
     start: "2026-02-21"
-    end: "2026-02-21"
-    days_left: 0
+    end: "2026-03-07"
+    days_left: 14
   stats:
-    total: 0
+    total: 40
     implemented: 0
     partial: 0
-    pending: 0
+    pending: 40
     with_tests: 0
     coverage_pct: 0
-modules: []
-entities: []
-stories: []
-flows: []
+
+modules:
+  - id: "landing"
+    name: "Landing Page"
+    description: "Página de aterrizaje pública del producto. Incluye hero con CTA, sección de beneficios, pasos de funcionamiento, extensiones destacadas, beneficios cloud y CTA final. Debe verse enterprise y profesional."
+    actors: ["visitante"]
+
+  - id: "app_shell"
+    name: "App Shell (Layout)"
+    description: "Estructura general de la aplicación autenticada: AppLayout con sidebar dinámica, header superior con selector de rol, área de contenido principal. Controla la inyección de módulos y menú por roles/extensiones."
+    actors: ["admin", "manager", "viewer"]
+
+  - id: "marketplace"
+    name: "Marketplace de Extensiones"
+    description: "Catálogo de extensiones disponibles y activas. Permite habilitar/deshabilitar módulos (KPI, Encuestas, BI). Cada extensión muestra badge de estado, descripción y botón de activación. Al activar, el sidebar se actualiza dinámicamente."
+    actors: ["admin"]
+
+  - id: "kpi"
+    name: "Indicadores KPI"
+    description: "Módulo de extensión para gestión y monitoreo de indicadores clave de rendimiento. Incluye listado de KPIs, creación via modal, widget para dashboard y lógica de semáforo (critical/warning/stable)."
+    actors: ["admin", "manager", "viewer"]
+
+  - id: "surveys"
+    name: "Encuestas"
+    description: "Módulo de extensión para crear y distribuir encuestas de satisfacción. Incluye listado de encuestas y visualización de resultados con gráficas mock."
+    actors: ["admin", "manager"]
+
+  - id: "bi"
+    name: "Tableros BI"
+    description: "Módulo de extensión de Business Intelligence. Dashboard con gráficas avanzadas (barras, líneas, donut) usando datos mock. Soporta descarga y compartición de reportes."
+    actors: ["admin", "manager", "viewer"]
+
+  - id: "user_management"
+    name: "Gestión de Usuarios"
+    description: "Administración de usuarios de la organización. Listado con búsqueda, detalle de usuario, asignación de múltiples roles via chips, asignación a grupos. Solo accesible para administradores."
+    actors: ["admin"]
+
+  - id: "roles_permissions"
+    name: "Roles y Permisos"
+    description: "Gestión de roles con matriz de permisos granulares (view_kpi, edit_kpi, activate_extensions, manage_users). Interfaz enterprise con tabla de permisos por rol."
+    actors: ["admin"]
+
+  - id: "user_groups"
+    name: "Grupos de Usuarios"
+    description: "Gestión de grupos organizacionales. Crear grupos, asignar usuarios a grupos y asignar rol por grupo. Permite organizar usuarios por departamento o función."
+    actors: ["admin"]
+
+  - id: "dashboard"
+    name: "Dashboard Principal"
+    description: "Panel principal de la aplicación autenticada. Muestra resumen de KPIs activos (widgets), accesos rápidos a módulos habilitados, y estado general de la organización."
+    actors: ["admin", "manager", "viewer"]
+
+  - id: "global_state"
+    name: "Estado Global"
+    description: "Infraestructura de estado con Zustand. Maneja rol actual, extensiones activas, usuario actual y organización. Permite activar extensión, refrescar sidebar y cambiar rol en tiempo real."
+    actors: ["system"]
+
+entities:
+  - id: "user"
+    name: "Usuario"
+    states: ["active", "inactive", "suspended"]
+    transitions:
+      - from: "active"
+        to: "inactive"
+        action: "Desactivar usuario"
+      - from: "inactive"
+        to: "active"
+        action: "Reactivar usuario"
+      - from: "active"
+        to: "suspended"
+        action: "Suspender usuario"
+
+  - id: "role"
+    name: "Rol"
+    states: ["active", "disabled"]
+    transitions: []
+
+  - id: "permission"
+    name: "Permiso"
+    states: []
+    transitions: []
+
+  - id: "group"
+    name: "Grupo"
+    states: ["active", "archived"]
+    transitions: []
+
+  - id: "extension"
+    name: "Extensión"
+    states: ["available", "active"]
+    transitions:
+      - from: "available"
+        to: "active"
+        action: "Habilitar extensión"
+      - from: "active"
+        to: "available"
+        action: "Deshabilitar extensión"
+
+  - id: "kpi_indicator"
+    name: "Indicador KPI"
+    states: ["critical", "warning", "stable"]
+    transitions:
+      - from: "stable"
+        to: "warning"
+        action: "Valor se acerca al umbral"
+      - from: "warning"
+        to: "critical"
+        action: "Valor supera umbral crítico"
+
+  - id: "survey"
+    name: "Encuesta"
+    states: ["draft", "published", "closed"]
+    transitions:
+      - from: "draft"
+        to: "published"
+        action: "Publicar encuesta"
+      - from: "published"
+        to: "closed"
+        action: "Cerrar encuesta"
+
+  - id: "organization"
+    name: "Organización"
+    states: ["active"]
+    transitions: []
+
+  - id: "bi_report"
+    name: "Reporte BI"
+    states: ["generated", "shared"]
+    transitions:
+      - from: "generated"
+        to: "shared"
+        action: "Compartir reporte"
+
+stories:
+  # ═══════════════════════════════════════════
+  # US-001: Landing Page Enterprise
+  # ═══════════════════════════════════════════
+  - id: "US-001"
+    title: "Como visitante quiero ver una landing page enterprise para entender las capacidades de Orquestra y acceder al demo."
+    module: "landing"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-001", "FLOW-002", "FLOW-003"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La landing muestra un hero con título, subtítulo y CTA principal ('Comenzar ahora')."
+        validated: false
+        flow_ids: ["FLOW-001"]
+      - id: "AC-002"
+        description: "Al hacer clic en el CTA principal, el usuario navega a /marketplace."
+        validated: false
+        flow_ids: ["FLOW-001"]
+      - id: "AC-003"
+        description: "Existe una sección de beneficios con al menos 6 cards (icono, título, descripción)."
+        validated: false
+        flow_ids: ["FLOW-002"]
+      - id: "AC-004"
+        description: "Existe una sección de 'Cómo Funciona' con 3 pasos numerados."
+        validated: false
+        flow_ids: ["FLOW-002"]
+      - id: "AC-005"
+        description: "Existe una sección de extensiones destacadas con preview de KPI, Encuestas y BI."
+        validated: false
+        flow_ids: ["FLOW-002"]
+      - id: "AC-006"
+        description: "La navegación sticky contiene el logo de Orquestra y un enlace 'Ir al Demo'."
+        validated: false
+        flow_ids: ["FLOW-003"]
+      - id: "AC-007"
+        description: "La página es responsive y se adapta a móvil (>=320px) y desktop."
+        validated: false
+        flow_ids: ["FLOW-001"]
+      - id: "AC-008"
+        description: "El footer muestra copyright, links de términos/privacidad y año actual."
+        validated: false
+        flow_ids: ["FLOW-003"]
+
+  # ═══════════════════════════════════════════
+  # US-002: App Shell y Layout Autenticado
+  # ═══════════════════════════════════════════
+  - id: "US-002"
+    title: "Como usuario autenticado quiero una estructura de layout con sidebar y header para navegar entre los módulos de la plataforma."
+    module: "app_shell"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-004", "FLOW-005", "FLOW-006", "FLOW-007"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "El AppLayout renderiza un sidebar izquierdo, header superior y área de contenido."
+        validated: false
+        flow_ids: ["FLOW-004"]
+      - id: "AC-002"
+        description: "El sidebar muestra ítems de navegación fijos: Dashboard, Marketplace, Usuarios."
+        validated: false
+        flow_ids: ["FLOW-004"]
+      - id: "AC-003"
+        description: "El sidebar inyecta dinámicamente los módulos de extensiones activas (KPI, Encuestas, BI)."
+        validated: false
+        flow_ids: ["FLOW-005"]
+      - id: "AC-004"
+        description: "El ítem activo del sidebar se resalta visualmente con fondo y borde lateral."
+        validated: false
+        flow_ids: ["FLOW-004"]
+      - id: "AC-005"
+        description: "El sidebar puede colapsarse/expandirse a solo íconos."
+        validated: false
+        flow_ids: ["FLOW-006"]
+      - id: "AC-006"
+        description: "El header muestra el nombre de la organización actual."
+        validated: false
+        flow_ids: ["FLOW-007"]
+      - id: "AC-007"
+        description: "El header contiene un selector de rol (Admin/Gestor/Viewer) para cambiar permisos en tiempo real."
+        validated: false
+        flow_ids: ["FLOW-007"]
+      - id: "AC-008"
+        description: "El header muestra íconos de utilidad: búsqueda, notificaciones y ayuda."
+        validated: false
+        flow_ids: ["FLOW-007"]
+      - id: "AC-009"
+        description: "Cuando el rol cambia a Viewer, los ítems de admin (Usuarios, Roles) desaparecen del sidebar."
+        validated: false
+        flow_ids: ["FLOW-005"]
+
+  # ═══════════════════════════════════════════
+  # US-003: Marketplace de Extensiones
+  # ═══════════════════════════════════════════
+  - id: "US-003"
+    title: "Como administrador quiero un marketplace de extensiones para explorar, activar y desactivar módulos disponibles en la plataforma."
+    module: "marketplace"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-008", "FLOW-009", "FLOW-010", "FLOW-011"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "El marketplace muestra todas las extensiones disponibles en formato grid de cards."
+        validated: false
+        flow_ids: ["FLOW-008"]
+      - id: "AC-002"
+        description: "Cada card muestra: ícono, nombre, descripción, categoría y badge de estado (Activa/Disponible)."
+        validated: false
+        flow_ids: ["FLOW-008"]
+      - id: "AC-003"
+        description: "El botón 'Habilitar' cambia la extensión a estado 'active' y actualiza el store global."
+        validated: false
+        flow_ids: ["FLOW-009"]
+      - id: "AC-004"
+        description: "Al activar una extensión, su módulo aparece inmediatamente en el sidebar sin recargar."
+        validated: false
+        flow_ids: ["FLOW-009"]
+      - id: "AC-005"
+        description: "El botón 'Deshabilitar' revierte el estado y remueve el módulo del sidebar."
+        validated: false
+        flow_ids: ["FLOW-010"]
+      - id: "AC-006"
+        description: "Un usuario con rol Viewer NO puede ver el botón de activar/desactivar."
+        validated: false
+        flow_ids: ["FLOW-011"]
+      - id: "AC-007"
+        description: "El marketplace muestra un contador de extensiones activas vs. totales en el header."
+        validated: false
+        flow_ids: ["FLOW-008"]
+      - id: "AC-008"
+        description: "Las extensiones activas muestran un borde/indicador visual verde diferenciado."
+        validated: false
+        flow_ids: ["FLOW-008"]
+
+  # ═══════════════════════════════════════════
+  # US-004: Módulo de Indicadores KPI
+  # ═══════════════════════════════════════════
+  - id: "US-004"
+    title: "Como gestor quiero un módulo de indicadores KPI para monitorear métricas clave del negocio con semáforo visual y creación dinámica."
+    module: "kpi"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-012", "FLOW-013", "FLOW-014", "FLOW-015"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La página /modules/kpi lista todos los KPIs en formato card grid."
+        validated: false
+        flow_ids: ["FLOW-012"]
+      - id: "AC-002"
+        description: "Cada card KPI muestra: nombre, valor actual, meta, unidad y barra de progreso."
+        validated: false
+        flow_ids: ["FLOW-012"]
+      - id: "AC-003"
+        description: "El indicador semáforo muestra rojo (critical <70%), amarillo (warning 70-90%) y verde (stable >90%)."
+        validated: false
+        flow_ids: ["FLOW-012"]
+      - id: "AC-004"
+        description: "Existe un botón 'Crear KPI' que abre un modal con formulario (nombre, valor, meta, unidad)."
+        validated: false
+        flow_ids: ["FLOW-013"]
+      - id: "AC-005"
+        description: "Al crear un KPI, se agrega a la lista sin recargar la página."
+        validated: false
+        flow_ids: ["FLOW-013"]
+      - id: "AC-006"
+        description: "Si la extensión KPI no está activa, navegar a /modules/kpi redirige al marketplace."
+        validated: false
+        flow_ids: ["FLOW-014"]
+      - id: "AC-007"
+        description: "Un usuario Viewer puede ver los KPIs pero NO el botón de crear."
+        validated: false
+        flow_ids: ["FLOW-015"]
+      - id: "AC-008"
+        description: "Los KPIs mock incluyen al menos 4 indicadores variados (ingresos, satisfacción, ticket promedio, retención)."
+        validated: false
+        flow_ids: ["FLOW-012"]
+
+  # ═══════════════════════════════════════════
+  # US-005: Módulo de Encuestas
+  # ═══════════════════════════════════════════
+  - id: "US-005"
+    title: "Como gestor quiero un módulo de encuestas para crear, distribuir y ver resultados de encuestas de satisfacción."
+    module: "surveys"
+    priority: "medium"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-016", "FLOW-017", "FLOW-018"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La página /modules/surveys lista las encuestas existentes en cards."
+        validated: false
+        flow_ids: ["FLOW-016"]
+      - id: "AC-002"
+        description: "Cada card muestra: título, estado (borrador/publicada/cerrada), total de respuestas y fecha."
+        validated: false
+        flow_ids: ["FLOW-016"]
+      - id: "AC-003"
+        description: "Existe un botón 'Crear Encuesta' que abre un formulario/modal."
+        validated: false
+        flow_ids: ["FLOW-017"]
+      - id: "AC-004"
+        description: "Al clicar en una encuesta publicada se muestran resultados con gráfica de barras mock."
+        validated: false
+        flow_ids: ["FLOW-018"]
+      - id: "AC-005"
+        description: "Si la extensión Surveys no está activa, navegar a /modules/surveys redirige al marketplace."
+        validated: false
+        flow_ids: ["FLOW-016"]
+      - id: "AC-006"
+        description: "Los datos mock incluyen al menos 3 encuestas con diferentes estados."
+        validated: false
+        flow_ids: ["FLOW-016"]
+      - id: "AC-007"
+        description: "Las encuestas en estado 'borrador' muestran un badge gris, 'publicada' muestra verde, 'cerrada' muestra rojo."
+        validated: false
+        flow_ids: ["FLOW-016"]
+      - id: "AC-008"
+        description: "Solo admin y manager pueden crear encuestas; viewer solo puede ver resultados."
+        validated: false
+        flow_ids: ["FLOW-017"]
+
+  # ═══════════════════════════════════════════
+  # US-006: Módulo de Tableros BI
+  # ═══════════════════════════════════════════
+  - id: "US-006"
+    title: "Como gestor quiero tableros de BI con gráficas interactivas para analizar datos del negocio visualmente."
+    module: "bi"
+    priority: "medium"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-019", "FLOW-020", "FLOW-021"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La página /modules/bi muestra un dashboard con al menos 3 gráficas (barras, líneas, donut)."
+        validated: false
+        flow_ids: ["FLOW-019"]
+      - id: "AC-002"
+        description: "Las gráficas usan datos mock realistas (ventas mensuales, distribución por categoría, tendencia)."
+        validated: false
+        flow_ids: ["FLOW-019"]
+      - id: "AC-003"
+        description: "Existe un botón 'Descargar Reporte' (acción mock con feedback visual)."
+        validated: false
+        flow_ids: ["FLOW-020"]
+      - id: "AC-004"
+        description: "Existe un botón 'Compartir' reporte (acción mock con toast/notificación)."
+        validated: false
+        flow_ids: ["FLOW-020"]
+      - id: "AC-005"
+        description: "Si la extensión BI no está activa, navegar a /modules/bi redirige al marketplace."
+        validated: false
+        flow_ids: ["FLOW-021"]
+      - id: "AC-006"
+        description: "Las gráficas son interactivas (hover muestra tooltips con valores)."
+        validated: false
+        flow_ids: ["FLOW-019"]
+      - id: "AC-007"
+        description: "El layout del dashboard BI usa grid responsivo de 2 columnas en desktop."
+        validated: false
+        flow_ids: ["FLOW-019"]
+      - id: "AC-008"
+        description: "Cada card de gráfica tiene título descriptivo y período de datos ('Últimos 6 meses', etc.)."
+        validated: false
+        flow_ids: ["FLOW-019"]
+
+  # ═══════════════════════════════════════════
+  # US-007: Gestión de Usuarios
+  # ═══════════════════════════════════════════
+  - id: "US-007"
+    title: "Como administrador quiero gestionar los usuarios de la organización para controlar quién accede al sistema y con qué permisos."
+    module: "user_management"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-022", "FLOW-023", "FLOW-024", "FLOW-025"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La página /admin/users muestra una tabla con: nombre, email, rol(es), grupo(s) y estado."
+        validated: false
+        flow_ids: ["FLOW-022"]
+      - id: "AC-002"
+        description: "Existe un campo de búsqueda que filtra usuarios por nombre o email en tiempo real."
+        validated: false
+        flow_ids: ["FLOW-022"]
+      - id: "AC-003"
+        description: "La página muestra estadísticas resumen: total usuarios, activos, inactivos."
+        validated: false
+        flow_ids: ["FLOW-022"]
+      - id: "AC-004"
+        description: "Al hacer clic en un usuario se abre un panel de detalle o modal para edición."
+        validated: false
+        flow_ids: ["FLOW-023"]
+      - id: "AC-005"
+        description: "Desde el detalle se pueden asignar/remover roles al usuario mediante chips seleccionables."
+        validated: false
+        flow_ids: ["FLOW-023"]
+      - id: "AC-006"
+        description: "Existe un botón 'Crear Usuario' que abre formulario con campos: nombre, email, rol, grupo."
+        validated: false
+        flow_ids: ["FLOW-024"]
+      - id: "AC-007"
+        description: "Se puede cambiar el estado de un usuario entre activo/inactivo desde la lista."
+        validated: false
+        flow_ids: ["FLOW-025"]
+      - id: "AC-008"
+        description: "Solo usuarios con rol Admin ven la sección de administración de usuarios."
+        validated: false
+        flow_ids: ["FLOW-022"]
+      - id: "AC-009"
+        description: "Los datos mock incluyen al menos 5 usuarios con roles y grupos variados."
+        validated: false
+        flow_ids: ["FLOW-022"]
+
+  # ═══════════════════════════════════════════
+  # US-008: Roles y Permisos
+  # ═══════════════════════════════════════════
+  - id: "US-008"
+    title: "Como administrador quiero definir roles con permisos granulares para controlar el acceso a cada funcionalidad de la plataforma."
+    module: "roles_permissions"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-026", "FLOW-027", "FLOW-028"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La página /admin/roles muestra una tabla de roles existentes (Admin, Gestor, Viewer)."
+        validated: false
+        flow_ids: ["FLOW-026"]
+      - id: "AC-002"
+        description: "Cada rol muestra un badge con la cantidad de usuarios asignados."
+        validated: false
+        flow_ids: ["FLOW-026"]
+      - id: "AC-003"
+        description: "Al clicar un rol, se abre una vista de detalle con la matriz de permisos (checkboxes por permiso)."
+        validated: false
+        flow_ids: ["FLOW-027"]
+      - id: "AC-004"
+        description: "Los permisos incluyen al menos: view_kpi, edit_kpi, view_surveys, edit_surveys, view_bi, activate_extensions, manage_users, manage_roles."
+        validated: false
+        flow_ids: ["FLOW-027"]
+      - id: "AC-005"
+        description: "Existe un botón 'Crear Rol' que permite definir un nuevo rol con nombre y permisos seleccionados."
+        validated: false
+        flow_ids: ["FLOW-028"]
+      - id: "AC-006"
+        description: "La UI refleja los permisos del rol Admin marcando todos los checkboxes como activos."
+        validated: false
+        flow_ids: ["FLOW-027"]
+      - id: "AC-007"
+        description: "El rol Viewer tiene solo permisos de lectura (view_*) activos en la matriz."
+        validated: false
+        flow_ids: ["FLOW-027"]
+      - id: "AC-008"
+        description: "Un rol no puede eliminarse si tiene usuarios asignados (feedback visual de error)."
+        validated: false
+        flow_ids: ["FLOW-026"]
+
+  # ═══════════════════════════════════════════
+  # US-009: Grupos de Usuarios
+  # ═══════════════════════════════════════════
+  - id: "US-009"
+    title: "Como administrador quiero organizar usuarios en grupos para simplificar la asignación de permisos por departamento o función."
+    module: "user_groups"
+    priority: "medium"
+    status: "pending"
+    sprint: 2
+    flow_ids: ["FLOW-029", "FLOW-030", "FLOW-031"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La página /admin/groups muestra una lista de grupos con nombre, descripción y cantidad de miembros."
+        validated: false
+        flow_ids: ["FLOW-029"]
+      - id: "AC-002"
+        description: "Existe un botón 'Crear Grupo' que abre formulario con nombre, descripción y rol por defecto."
+        validated: false
+        flow_ids: ["FLOW-030"]
+      - id: "AC-003"
+        description: "Al clicar un grupo se ve la lista de miembros con opción de agregar/remover usuarios."
+        validated: false
+        flow_ids: ["FLOW-031"]
+      - id: "AC-004"
+        description: "Los datos mock incluyen al menos 3 grupos (Dirección, Operaciones, Marketing)."
+        validated: false
+        flow_ids: ["FLOW-029"]
+      - id: "AC-005"
+        description: "Al asignar un usuario a un grupo, hereda el rol por defecto del grupo."
+        validated: false
+        flow_ids: ["FLOW-031"]
+      - id: "AC-006"
+        description: "Un grupo puede archivarse (no eliminarse), con feedback visual correspondiente."
+        validated: false
+        flow_ids: ["FLOW-029"]
+      - id: "AC-007"
+        description: "Cada grupo muestra un avatar coloreado con la inicial del nombre."
+        validated: false
+        flow_ids: ["FLOW-029"]
+      - id: "AC-008"
+        description: "Solo usuarios con rol Admin pueden acceder a /admin/groups."
+        validated: false
+        flow_ids: ["FLOW-029"]
+
+  # ═══════════════════════════════════════════
+  # US-010: Dashboard Principal
+  # ═══════════════════════════════════════════
+  - id: "US-010"
+    title: "Como usuario autenticado quiero un dashboard principal con resumen de métricas y accesos rápidos para tener visibilidad instantánea del estado de la organización."
+    module: "dashboard"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-032", "FLOW-033", "FLOW-034"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "La página /dashboard muestra un saludo con el nombre del usuario actual y su rol."
+        validated: false
+        flow_ids: ["FLOW-032"]
+      - id: "AC-002"
+        description: "El dashboard muestra widgets de resumen (usuarios activos, extensiones habilitadas, KPIs críticos)."
+        validated: false
+        flow_ids: ["FLOW-032"]
+      - id: "AC-003"
+        description: "Si el módulo KPI está activo, se muestran los 3 principales KPIs como widgets-resumen."
+        validated: false
+        flow_ids: ["FLOW-033"]
+      - id: "AC-004"
+        description: "Existen accesos rápidos (quick links) a los módulos activos."
+        validated: false
+        flow_ids: ["FLOW-032"]
+      - id: "AC-005"
+        description: "El dashboard adapta su contenido según las extensiones activas (no muestra widgets de extensiones desactivadas)."
+        validated: false
+        flow_ids: ["FLOW-033"]
+      - id: "AC-006"
+        description: "Muestra una mini gráfica de actividad reciente (datos mock de últimos 7 días)."
+        validated: false
+        flow_ids: ["FLOW-034"]
+      - id: "AC-007"
+        description: "El layout usa grid responsivo con cards de ancho uniforme y spacing enterprise."
+        validated: false
+        flow_ids: ["FLOW-032"]
+      - id: "AC-008"
+        description: "Cada card resumen tiene ícono, label, valor numérico y % de cambio vs. periodo anterior."
+        validated: false
+        flow_ids: ["FLOW-032"]
+
+  # ═══════════════════════════════════════════
+  # US-011: Estado Global y Reactividad
+  # ═══════════════════════════════════════════
+  - id: "US-011"
+    title: "Como desarrollador quiero un estado global reactivo (Zustand) para que los cambios de rol, extensiones y usuario se reflejen inmediatamente en toda la aplicación."
+    module: "global_state"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-035", "FLOW-036", "FLOW-037", "FLOW-038"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "El store Zustand expone: currentUser, currentRole, activeExtensions, organization."
+        validated: false
+        flow_ids: ["FLOW-035"]
+      - id: "AC-002"
+        description: "El store provee acción setRole() que actualiza currentRole y refresca el sidebar."
+        validated: false
+        flow_ids: ["FLOW-036"]
+      - id: "AC-003"
+        description: "El store provee acción toggleExtension() que activa/desactiva una extensión y actualiza sidebar."
+        validated: false
+        flow_ids: ["FLOW-037"]
+      - id: "AC-004"
+        description: "Al cambiar rol en el header, las rutas de admin se ocultan si el rol no tiene permisos."
+        validated: false
+        flow_ids: ["FLOW-036"]
+      - id: "AC-005"
+        description: "Al desactivar una extensión desde el marketplace, si el usuario está en esa ruta, se redirige a /dashboard."
+        validated: false
+        flow_ids: ["FLOW-037"]
+      - id: "AC-006"
+        description: "Los datos iniciales del store se cargan desde los datos mock (no requiere API real)."
+        validated: false
+        flow_ids: ["FLOW-035"]
+      - id: "AC-007"
+        description: "El store es accesible desde cualquier componente client-side via hook useStore()."
+        validated: false
+        flow_ids: ["FLOW-035"]
+      - id: "AC-008"
+        description: "Al cambiar de organización (si se extendiera), el store resetea extensiones y usuarios."
+        validated: false
+        flow_ids: ["FLOW-038"]
+
+  # ═══════════════════════════════════════════
+  # US-012: Datos Mock Realistas
+  # ═══════════════════════════════════════════
+  - id: "US-012"
+    title: "Como демо-reviewer quiero datos mock realistas y coherentes para evaluar la plataforma como si estuviera en producción."
+    module: "global_state"
+    priority: "medium"
+    status: "pending"
+    sprint: 1
+    flow_ids: ["FLOW-039", "FLOW-040"]
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "Existen al menos 5 usuarios mock con nombres, emails y roles variados."
+        validated: false
+        flow_ids: ["FLOW-039"]
+      - id: "AC-002"
+        description: "Existen al menos 3 extensiones mock (KPI, Encuestas, BI) con metadatos completos."
+        validated: false
+        flow_ids: ["FLOW-039"]
+      - id: "AC-003"
+        description: "Existen al menos 4 KPIs mock con valores, metas y estados variados."
+        validated: false
+        flow_ids: ["FLOW-039"]
+      - id: "AC-004"
+        description: "Existen al menos 3 encuestas mock con estados diferentes (borrador, publicada, cerrada)."
+        validated: false
+        flow_ids: ["FLOW-039"]
+      - id: "AC-005"
+        description: "Los datos de gráficas BI son arrays numéricos con 6-12 puntos de datos realistas."
+        validated: false
+        flow_ids: ["FLOW-039"]
+      - id: "AC-006"
+        description: "Existen al menos 3 grupos mock (Dirección, Operaciones, Marketing) con miembros."
+        validated: false
+        flow_ids: ["FLOW-039"]
+      - id: "AC-007"
+        description: "Hay al menos 3 roles mock con permisos diferentes (Admin=todo, Gestor=parcial, Viewer=lectura)."
+        validated: false
+        flow_ids: ["FLOW-040"]
+      - id: "AC-008"
+        description: "Cada entidad mock tiene IDs únicos y relaciones coherentes entre sí."
+        validated: false
+        flow_ids: ["FLOW-039"]
+
+flows:
+  # ─── LANDING PAGE ────────────────────────────
+  - id: "FLOW-001"
+    name: "Visualizar Hero y CTA principal"
+    type: "user_flow"
+    module: "landing"
+    actor: "visitante"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-001"
+    story_points: 3
+    entities: []
+    trigger: "El visitante accede a la URL raíz (/)"
+    preconditions: ["Ninguna"]
+    steps:
+      - "El visitante accede a la URL raíz"
+      - "El sistema renderiza el hero section con título, subtítulo, badge 'Enterprise v2.0' y botón CTA"
+      - "El visitante hace clic en 'Comenzar ahora'"
+      - "El sistema navega a /marketplace"
+    alternatives:
+      - "Si el visitante hace clic en 'Hablar con Ventas', se muestra un modal de contacto (mock)"
+    errors: []
+
+  - id: "FLOW-002"
+    name: "Explorar secciones informativas"
+    type: "user_flow"
+    module: "landing"
+    actor: "visitante"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-001"
+    story_points: 3
+    entities: []
+    trigger: "El visitante hace scroll en la landing page"
+    preconditions: ["El visitante está en /"]
+    steps:
+      - "El visitante hace scroll hacia abajo"
+      - "Aparece la sección de beneficios con 6 cards (ícono, título, descripción)"
+      - "Aparece la sección 'Cómo Funciona' con 3 pasos numerados"
+      - "Aparece la sección de extensiones destacadas con preview de KPI, Encuestas y BI"
+      - "Aparece el CTA final con fondo oscuro y botón de acción"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-003"
+    name: "Navegar desde la barra sticky"
+    type: "user_flow"
+    module: "landing"
+    actor: "visitante"
+    priority: "low"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-001"
+    story_points: 1
+    entities: []
+    trigger: "El visitante interactúa con la navbar sticky"
+    preconditions: ["El visitante está en /"]
+    steps:
+      - "El visitante carga la página y ve la navbar fija con logo y links"
+      - "Al hacer clic en 'Características' se navega con scroll suave a la sección de features"
+      - "Al hacer clic en 'Ir al Demo' se navega a /marketplace"
+    alternatives: []
+    errors: []
+
+  # ─── APP SHELL ───────────────────────────────
+  - id: "FLOW-004"
+    name: "Renderizar layout con sidebar y header"
+    type: "user_flow"
+    module: "app_shell"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-002"
+    story_points: 5
+    entities: ["user", "role"]
+    trigger: "El usuario navega a cualquier página interna (ej. /dashboard)"
+    preconditions: ["El usuario tiene rol asignado en el store"]
+    steps:
+      - "El sistema renderiza AppLayout con sidebar izquierdo"
+      - "El sidebar muestra: Logo, Dashboard, Marketplace, y sección Admin (si aplica)"
+      - "El header superior muestra nombre de organización, selector de rol y utilidades"
+      - "El área de contenido principal renderiza la página hija correspondiente"
+      - "El ítem de navegación actual se resalta con borde izquierdo y fondo activo"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-005"
+    name: "Actualizar sidebar dinámicamente por extensiones y rol"
+    type: "system_flow"
+    module: "app_shell"
+    actor: "system"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-002"
+    story_points: 5
+    entities: ["extension", "role"]
+    trigger: "El store de extensiones activas o el rol actual cambia"
+    preconditions: ["El AppLayout está montado"]
+    steps:
+      - "El componente Sidebar se suscribe al store Zustand (activeExtensions, currentRole)"
+      - "El sidebar recalcula los ítems visibles: fijos + extensiones activas + admin (si rol es Admin/Manager)"
+      - "Los ítems de extensiones inactivas dejan de mostrarse instantáneamente"
+      - "Si el rol es Viewer, las secciones de admin (Usuarios, Roles, Grupos) se ocultan"
+    alternatives:
+      - "Si no hay extensiones activas, el sidebar solo muestra Dashboard y Marketplace"
+    errors: []
+
+  - id: "FLOW-006"
+    name: "Colapsar y expandir sidebar"
+    type: "user_flow"
+    module: "app_shell"
+    actor: "admin"
+    priority: "low"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-002"
+    story_points: 2
+    entities: []
+    trigger: "El usuario hace clic en el botón de colapsar del sidebar"
+    preconditions: ["El sidebar está visible"]
+    steps:
+      - "El usuario hace clic en el ícono de colapsar (chevron)"
+      - "El sidebar se reduce a un ancho mínimo mostrando solo íconos"
+      - "Los labels de navegación se ocultan con animación"
+      - "El usuario hace clic de nuevo para expandir"
+      - "El sidebar vuelve a su ancho completo con labels visibles"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-007"
+    name: "Interactuar con el header bar"
+    type: "user_flow"
+    module: "app_shell"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-002"
+    story_points: 3
+    entities: ["user", "role", "organization"]
+    trigger: "El usuario interactúa con el header bar"
+    preconditions: ["El AppLayout está montado"]
+    steps:
+      - "El header muestra el nombre de la organización actual"
+      - "El selector de rol muestra el rol actual seleccionado"
+      - "El usuario selecciona un rol diferente del dropdown"
+      - "El store se actualiza con setRole() y toda la UI reacciona"
+      - "Los íconos de búsqueda, notificaciones y ayuda muestran tooltips al hover"
+    alternatives: []
+    errors: []
+
+  # ─── MARKETPLACE ─────────────────────────────
+  - id: "FLOW-008"
+    name: "Ver catálogo de extensiones"
+    type: "user_flow"
+    module: "marketplace"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-003"
+    story_points: 3
+    entities: ["extension"]
+    trigger: "El usuario navega a /marketplace"
+    preconditions: ["El usuario tiene rol Admin"]
+    steps:
+      - "El sistema carga la lista de extensiones desde data mock"
+      - "Se renderizan cards en grid con ícono, nombre, descripción, categoría"
+      - "Cada card muestra un badge: 'Activa' (verde) o 'Disponible' (gris)"
+      - "El header del marketplace muestra contador: 'X de Y extensiones activas'"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-009"
+    name: "Activar una extensión"
+    type: "user_flow"
+    module: "marketplace"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-003"
+    story_points: 5
+    entities: ["extension"]
+    trigger: "El admin hace clic en 'Habilitar' en una extensión disponible"
+    preconditions: ["El usuario tiene rol Admin", "La extensión no está activa"]
+    steps:
+      - "El admin hace clic en el botón 'Habilitar' de la extensión"
+      - "El sistema llama a toggleExtension(extensionId) en el store"
+      - "El badge cambia de 'Disponible' a 'Activa' con animación"
+      - "El sidebar se actualiza añadiendo el nuevo módulo en la sección de extensiones"
+      - "El contador de extensiones activas en el header se incrementa"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-010"
+    name: "Desactivar una extensión"
+    type: "user_flow"
+    module: "marketplace"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-003"
+    story_points: 3
+    entities: ["extension"]
+    trigger: "El admin hace clic en 'Deshabilitar' en una extensión activa"
+    preconditions: ["La extensión está activa"]
+    steps:
+      - "El admin hace clic en el botón 'Deshabilitar'"
+      - "El sistema llama a toggleExtension(extensionId) para desactivar"
+      - "El badge cambia de 'Activa' a 'Disponible'"
+      - "El sidebar remueve el módulo correspondiente"
+      - "Si el usuario estaba en la ruta de esa extensión, se redirige a /dashboard"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-011"
+    name: "Restricción de marketplace por rol"
+    type: "business_flow"
+    module: "marketplace"
+    actor: "viewer"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-003"
+    story_points: 2
+    entities: ["role", "extension"]
+    trigger: "Un usuario con rol Viewer navega al marketplace"
+    preconditions: ["El rol actual es Viewer"]
+    steps:
+      - "El usuario Viewer accede a /marketplace"
+      - "El sistema renderiza las cards de extensiones en modo solo lectura"
+      - "Los botones 'Habilitar/Deshabilitar' no se muestran para rol Viewer"
+      - "El usuario puede ver el catálogo pero no modificar nada"
+    alternatives: []
+    errors: []
+
+  # ─── MÓDULO KPI ──────────────────────────────
+  - id: "FLOW-012"
+    name: "Listar KPIs con semáforo visual"
+    type: "user_flow"
+    module: "kpi"
+    actor: "manager"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-004"
+    story_points: 3
+    entities: ["kpi_indicator"]
+    trigger: "El usuario navega a /modules/kpi"
+    preconditions: ["Extensión KPI está activa"]
+    steps:
+      - "El sistema verifica que la extensión KPI está activa en el store"
+      - "Se cargan los KPIs desde mock data"
+      - "Se renderizan cards con: nombre, valor, meta, barra de progreso"
+      - "El indicador semáforo se calcula: rojo (<70%), amarillo (70-90%), verde (>90%)"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-013"
+    name: "Crear nuevo KPI via modal"
+    type: "user_flow"
+    module: "kpi"
+    actor: "manager"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-004"
+    story_points: 3
+    entities: ["kpi_indicator"]
+    trigger: "El gestor hace clic en 'Crear KPI'"
+    preconditions: ["Extensión KPI activa", "Rol es Admin o Manager"]
+    steps:
+      - "El usuario hace clic en 'Crear KPI'"
+      - "Se abre un modal con campos: nombre, valor actual, meta, unidad"
+      - "El usuario completa el formulario y hace clic en 'Guardar'"
+      - "El KPI se agrega a la lista local (sin backend, push al array)"
+      - "El modal se cierra y el nuevo KPI aparece con su semáforo calculado"
+    alternatives:
+      - "Si el usuario cancela el modal, no se crea nada"
+    errors:
+      - "Si nombre está vacío, se muestra error de validación"
+
+  - id: "FLOW-014"
+    name: "Proteger ruta KPI por extensión activa"
+    type: "system_flow"
+    module: "kpi"
+    actor: "system"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-004"
+    story_points: 2
+    entities: ["extension"]
+    trigger: "Un usuario intenta navegar a /modules/kpi"
+    preconditions: ["La extensión KPI NO está activa"]
+    steps:
+      - "El sistema verifica activeExtensions en el store"
+      - "La extensión 'kpi' no está en la lista de activas"
+      - "El sistema redirige al usuario a /marketplace con un mensaje indicativo"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-015"
+    name: "Restringir creación de KPI por rol"
+    type: "business_flow"
+    module: "kpi"
+    actor: "viewer"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-004"
+    story_points: 1
+    entities: ["role", "kpi_indicator"]
+    trigger: "Un Viewer accede a /modules/kpi"
+    preconditions: ["Rol actual es Viewer", "Extensión KPI activa"]
+    steps:
+      - "El Viewer accede a la página de KPIs"
+      - "Ve las cards de KPIs en modo solo lectura"
+      - "El botón 'Crear KPI' NO se renderiza"
+    alternatives: []
+    errors: []
+
+  # ─── MÓDULO ENCUESTAS ────────────────────────
+  - id: "FLOW-016"
+    name: "Listar encuestas con estados"
+    type: "user_flow"
+    module: "surveys"
+    actor: "manager"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-005"
+    story_points: 3
+    entities: ["survey"]
+    trigger: "El usuario navega a /modules/surveys"
+    preconditions: ["Extensión Surveys activa"]
+    steps:
+      - "El sistema verifica que Surveys está activa"
+      - "Se cargan las encuestas desde mock data"
+      - "Cards muestran: título, estado (badge color), respuestas, fecha"
+      - "Badge gris=borrador, verde=publicada, rojo=cerrada"
+    alternatives:
+      - "Si extensión Surveys no está activa, redirige a /marketplace"
+    errors: []
+
+  - id: "FLOW-017"
+    name: "Crear nueva encuesta"
+    type: "user_flow"
+    module: "surveys"
+    actor: "manager"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-005"
+    story_points: 3
+    entities: ["survey"]
+    trigger: "El gestor hace clic en 'Crear Encuesta'"
+    preconditions: ["Rol Admin o Manager", "Extensión Surveys activa"]
+    steps:
+      - "El usuario hace clic en 'Crear Encuesta'"
+      - "Se abre modal/formulario con campos: título, descripción"
+      - "El usuario completa y guarda"
+      - "La encuesta se crea en estado 'borrador' y aparece en la lista"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-018"
+    name: "Ver resultados de encuesta publicada"
+    type: "user_flow"
+    module: "surveys"
+    actor: "manager"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-005"
+    story_points: 3
+    entities: ["survey"]
+    trigger: "El usuario hace clic en una encuesta con estado 'publicada'"
+    preconditions: ["La encuesta está en estado publicada"]
+    steps:
+      - "El usuario hace clic en la card de encuesta"
+      - "Se abre una vista de detalle con gráfica de barras de resultados"
+      - "Los datos son mock pero representan distribución de respuestas"
+      - "Se muestra total de respuestas y % por opción"
+    alternatives: []
+    errors: []
+
+  # ─── MÓDULO BI ───────────────────────────────
+  - id: "FLOW-019"
+    name: "Visualizar dashboard BI con gráficas"
+    type: "user_flow"
+    module: "bi"
+    actor: "manager"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-006"
+    story_points: 5
+    entities: ["bi_report"]
+    trigger: "El usuario navega a /modules/bi"
+    preconditions: ["Extensión BI activa"]
+    steps:
+      - "El sistema verifica que BI está activa"
+      - "Se renderiza un grid 2 columnas con cards de gráficas"
+      - "Card 1: gráfica de barras (Ventas mensuales)"
+      - "Card 2: gráfica de líneas (Tendencia anual)"
+      - "Card 3: gráfica de donut (Distribución por categoría)"
+      - "Cada gráfica muestra tooltips al hover con valores exactos"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-020"
+    name: "Descargar y compartir reporte BI"
+    type: "user_flow"
+    module: "bi"
+    actor: "manager"
+    priority: "low"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-006"
+    story_points: 2
+    entities: ["bi_report"]
+    trigger: "El usuario hace clic en 'Descargar' o 'Compartir'"
+    preconditions: ["El dashboard BI está renderizado"]
+    steps:
+      - "El usuario hace clic en 'Descargar Reporte'"
+      - "Se muestra una notificación/toast: 'Reporte generado correctamente'"
+      - "Alternativa: El usuario hace clic en 'Compartir'"
+      - "Se muestra un toast: 'Enlace copiado al portapapeles'"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-021"
+    name: "Proteger ruta BI por extensión activa"
+    type: "system_flow"
+    module: "bi"
+    actor: "system"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-006"
+    story_points: 1
+    entities: ["extension"]
+    trigger: "Un usuario intenta navegar a /modules/bi"
+    preconditions: ["La extensión BI NO está activa"]
+    steps:
+      - "El sistema verifica activeExtensions en el store"
+      - "BI no está en la lista de activas"
+      - "Redirige a /marketplace"
+    alternatives: []
+    errors: []
+
+  # ─── GESTIÓN DE USUARIOS ─────────────────────
+  - id: "FLOW-022"
+    name: "Listar y buscar usuarios"
+    type: "user_flow"
+    module: "user_management"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-007"
+    story_points: 3
+    entities: ["user", "role", "group"]
+    trigger: "El admin navega a /admin/users"
+    preconditions: ["El usuario tiene rol Admin"]
+    steps:
+      - "El sistema verifica que el rol es Admin"
+      - "Se carga la tabla de usuarios con: avatar, nombre, email, roles (chips), grupos, estado"
+      - "Se muestran estadísticas: total, activos, inactivos"
+      - "El admin escribe en el campo de búsqueda"
+      - "La tabla se filtra en tiempo real por nombre o email"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-023"
+    name: "Editar usuario y asignar roles"
+    type: "user_flow"
+    module: "user_management"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-007"
+    story_points: 5
+    entities: ["user", "role"]
+    trigger: "El admin hace clic en un usuario de la lista"
+    preconditions: ["El admin está en /admin/users"]
+    steps:
+      - "El admin hace clic en una fila de usuario"
+      - "Se abre un panel lateral o modal con detalle del usuario"
+      - "Se muestran campos editables: nombre, email"
+      - "Los roles se muestran como chips seleccionables (multi-select)"
+      - "El admin añade/quita roles haciendo clic en los chips"
+      - "Al guardar, el store local se actualiza"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-024"
+    name: "Crear nuevo usuario"
+    type: "user_flow"
+    module: "user_management"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-007"
+    story_points: 3
+    entities: ["user"]
+    trigger: "El admin hace clic en 'Crear Usuario'"
+    preconditions: ["Rol es Admin"]
+    steps:
+      - "El admin hace clic en 'Crear Usuario'"
+      - "Se abre formulario con: nombre, email, rol, grupo"
+      - "El admin completa y guarda"
+      - "El usuario se agrega a la lista local y aparece en la tabla"
+    alternatives: []
+    errors:
+      - "Si email está vacío o duplicado, se muestra error"
+
+  - id: "FLOW-025"
+    name: "Cambiar estado de usuario"
+    type: "user_flow"
+    module: "user_management"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-007"
+    story_points: 2
+    entities: ["user"]
+    trigger: "El admin cambia el toggle de estado de un usuario"
+    preconditions: ["El admin está en la lista de usuarios"]
+    steps:
+      - "El admin localiza al usuario en la tabla"
+      - "Hace clic en el toggle/botón de estado"
+      - "El estado cambia de activo a inactivo (o viceversa)"
+      - "El badge de estado se actualiza visualmente"
+    alternatives: []
+    errors: []
+
+  # ─── ROLES Y PERMISOS ───────────────────────
+  - id: "FLOW-026"
+    name: "Listar roles existentes"
+    type: "user_flow"
+    module: "roles_permissions"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-008"
+    story_points: 3
+    entities: ["role", "permission"]
+    trigger: "El admin navega a /admin/roles"
+    preconditions: ["Rol es Admin"]
+    steps:
+      - "El sistema renderiza tabla de roles: Admin, Gestor, Viewer"
+      - "Cada fila muestra nombre del rol y badge con cantidad de usuarios asignados"
+      - "Los roles del sistema no pueden eliminarse (botón deshabilitado)"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-027"
+    name: "Ver y editar matriz de permisos de un rol"
+    type: "user_flow"
+    module: "roles_permissions"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-008"
+    story_points: 5
+    entities: ["role", "permission"]
+    trigger: "El admin hace clic en un rol de la lista"
+    preconditions: ["El admin está en /admin/roles"]
+    steps:
+      - "El admin hace clic en el nombre de un rol"
+      - "Se abre una vista con la matriz de permisos"
+      - "La matriz muestra filas de permisos (view_kpi, edit_kpi, etc.) con checkboxes"
+      - "Admin tiene todos marcados, Viewer solo los de lectura"
+      - "El admin puede activar/desactivar checkboxes"
+      - "Al guardar, los permisos se actualizan en el store local"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-028"
+    name: "Crear nuevo rol personalizado"
+    type: "user_flow"
+    module: "roles_permissions"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-008"
+    story_points: 3
+    entities: ["role", "permission"]
+    trigger: "El admin hace clic en 'Crear Rol'"
+    preconditions: ["Rol es Admin"]
+    steps:
+      - "El admin hace clic en 'Crear Rol'"
+      - "Se abre formulario con campo nombre y matriz de permisos vacía"
+      - "El admin ingresa nombre y selecciona permisos"
+      - "Al guardar, el rol se agrega a la lista local"
+    alternatives: []
+    errors:
+      - "Si el nombre está vacío o es duplicado, se muestra error"
+
+  # ─── GRUPOS DE USUARIOS ─────────────────────
+  - id: "FLOW-029"
+    name: "Listar grupos organizacionales"
+    type: "user_flow"
+    module: "user_groups"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-009"
+    story_points: 3
+    entities: ["group"]
+    trigger: "El admin navega a /admin/groups"
+    preconditions: ["Rol es Admin"]
+    steps:
+      - "El sistema renderiza lista de grupos mock"
+      - "Cada grupo muestra: avatar con inicial, nombre, descripción, cantidad de miembros"
+      - "Grupos archivados se muestran con opacidad reducida"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-030"
+    name: "Crear grupo nuevo"
+    type: "user_flow"
+    module: "user_groups"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-009"
+    story_points: 3
+    entities: ["group"]
+    trigger: "El admin hace clic en 'Crear Grupo'"
+    preconditions: ["Rol es Admin"]
+    steps:
+      - "El admin hace clic en 'Crear Grupo'"
+      - "Se abre formulario con: nombre, descripción, rol por defecto"
+      - "El admin completa y guarda"
+      - "El grupo aparece en la lista con 0 miembros"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-031"
+    name: "Gestionar miembros de un grupo"
+    type: "user_flow"
+    module: "user_groups"
+    actor: "admin"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-009"
+    story_points: 3
+    entities: ["group", "user"]
+    trigger: "El admin hace clic en un grupo"
+    preconditions: ["El admin está en /admin/groups"]
+    steps:
+      - "Se abre vista de detalle con lista de miembros actuales"
+      - "El admin puede agregar usuarios via autocompletar"
+      - "Al agregar un usuario al grupo, hereda el rol por defecto"
+      - "El admin puede remover usuarios del grupo"
+    alternatives: []
+    errors: []
+
+  # ─── DASHBOARD PRINCIPAL ─────────────────────
+  - id: "FLOW-032"
+    name: "Visualizar dashboard con métricas"
+    type: "user_flow"
+    module: "dashboard"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-010"
+    story_points: 5
+    entities: ["user", "extension", "kpi_indicator"]
+    trigger: "El usuario navega a /dashboard"
+    preconditions: ["El usuario está autenticado"]
+    steps:
+      - "El sistema renderiza saludo personalizado con nombre y rol"
+      - "Se muestran cards de resumen: usuarios activos, extensiones habilitadas"
+      - "Cada card tiene ícono, label, valor y % de cambio"
+      - "Existen accesos rápidos (quick links) a módulos activos"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-033"
+    name: "Mostrar widgets de extensiones activas en dashboard"
+    type: "system_flow"
+    module: "dashboard"
+    actor: "system"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-010"
+    story_points: 3
+    entities: ["extension", "kpi_indicator"]
+    trigger: "El dashboard detecta extensiones activas en el store"
+    preconditions: ["Al menos una extensión está activa"]
+    steps:
+      - "El dashboard consulta activeExtensions del store"
+      - "Si KPI está activa, muestra widgets con los 3 KPIs principales"
+      - "Si BI está activa, muestra una mini gráfica resumen"
+      - "Si Surveys está activa, muestra contador de encuestas pendientes"
+      - "Si ninguna extensión está activa, muestra solo cards base"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-034"
+    name: "Mostrar gráfica de actividad reciente"
+    type: "user_flow"
+    module: "dashboard"
+    actor: "admin"
+    priority: "low"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-010"
+    story_points: 2
+    entities: []
+    trigger: "El dashboard se renderiza"
+    preconditions: ["El usuario está en /dashboard"]
+    steps:
+      - "El dashboard renderiza una card con mini gráfica de línea"
+      - "La gráfica muestra actividad de los últimos 7 días (datos mock)"
+      - "El tooltip muestra el valor al hover"
+    alternatives: []
+    errors: []
+
+  # ─── ESTADO GLOBAL ──────────────────────────
+  - id: "FLOW-035"
+    name: "Inicializar store con datos mock"
+    type: "system_flow"
+    module: "global_state"
+    actor: "system"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-011"
+    story_points: 3
+    entities: ["user", "role", "extension", "organization"]
+    trigger: "La aplicación se monta por primera vez"
+    preconditions: ["Ninguna"]
+    steps:
+      - "Zustand crea el store con estado inicial"
+      - "currentUser se establece con el primer usuario mock"
+      - "currentRole se establece como 'admin'"
+      - "activeExtensions se inicializa vacío"
+      - "organization se carga desde datos mock"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-036"
+    name: "Cambiar rol en tiempo real"
+    type: "user_flow"
+    module: "global_state"
+    actor: "admin"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-011"
+    story_points: 3
+    entities: ["role"]
+    trigger: "El usuario selecciona un rol diferente en el header"
+    preconditions: ["El header está renderizado"]
+    steps:
+      - "El usuario abre el selector de rol en el header"
+      - "Selecciona un nuevo rol (ej. Viewer)"
+      - "El store ejecuta setRole('viewer')"
+      - "El sidebar se recalcula: ítems de admin desaparecen"
+      - "Si el usuario estaba en una ruta admin, se redirige a /dashboard"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-037"
+    name: "Toggle de extensión con efectos en cascada"
+    type: "system_flow"
+    module: "global_state"
+    actor: "system"
+    priority: "high"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-011"
+    story_points: 5
+    entities: ["extension"]
+    trigger: "Se llama a toggleExtension() desde el marketplace"
+    preconditions: ["El marketplace está abierto"]
+    steps:
+      - "toggleExtension recibe extensionId"
+      - "Si la extensión estaba inactiva, se agrega a activeExtensions"
+      - "Si estaba activa, se remueve de activeExtensions"
+      - "El sidebar se re-renderiza con los nuevos ítems"
+      - "Si se desactivó y el usuario estaba en esa ruta, redirige a /dashboard"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-038"
+    name: "Reset de estado al cambiar organización"
+    type: "system_flow"
+    module: "global_state"
+    actor: "system"
+    priority: "low"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-011"
+    story_points: 2
+    entities: ["organization", "extension"]
+    trigger: "Se cambia de organización (extensión futura)"
+    preconditions: ["Múltiples organizaciones disponibles"]
+    steps:
+      - "El store recibe setOrganization(newOrg)"
+      - "Se resetean activeExtensions a vacío"
+      - "Se recarga la lista de usuarios de la nueva organización"
+      - "Se redirige a /dashboard"
+    alternatives: []
+    errors: []
+
+  # ─── DATOS MOCK ─────────────────────────────
+  - id: "FLOW-039"
+    name: "Proveer datos mock realistas"
+    type: "data_flow"
+    module: "global_state"
+    actor: "system"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-012"
+    story_points: 3
+    entities: ["user", "extension", "kpi_indicator", "survey", "group"]
+    trigger: "El sistema necesita datos para cualquier módulo"
+    preconditions: ["Ninguna"]
+    steps:
+      - "El archivo mock/data.ts exporta arrays tipados de todas las entidades"
+      - "Usuarios: 5+ con nombres, emails, roles y grupos variados"
+      - "Extensiones: KPI, Encuestas, BI con metadatos completos"
+      - "KPIs: 4+ con valores y metas realistas para semáforo"
+      - "Encuestas: 3+ con estados diferentes"
+      - "Grupos: 3+ con miembros asignados"
+    alternatives: []
+    errors: []
+
+  - id: "FLOW-040"
+    name: "Proveer roles y permisos mock"
+    type: "data_flow"
+    module: "global_state"
+    actor: "system"
+    priority: "medium"
+    status: "pending"
+    test_status: "none"
+    sprint_status: "todo"
+    story: "US-012"
+    story_points: 2
+    entities: ["role", "permission"]
+    trigger: "El sistema necesita datos de roles y permisos"
+    preconditions: ["Ninguna"]
+    steps:
+      - "El archivo mock exporta 3 roles: Admin (todos los permisos), Gestor (parcial), Viewer (solo lectura)"
+      - "Cada rol tiene un array de permission strings"
+      - "Los permisos incluyen: view_kpi, edit_kpi, view_surveys, edit_surveys, view_bi, activate_extensions, manage_users, manage_roles"
+      - "Relaciones entre usuarios y roles son coherentes"
+    alternatives: []
+    errors: []
