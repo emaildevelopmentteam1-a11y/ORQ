@@ -11,9 +11,9 @@ meta:
     days_left: 13
   stats:
     total: 54
-    implemented: 0
+    implemented: 3
     partial: 0
-    pending: 54
+    pending: 51
     with_tests: 0
     coverage_pct: 0
 
@@ -354,41 +354,41 @@ stories:
     title: "Como visitante quiero ver una landing page enterprise para entender las capacidades de Orquestra y acceder al demo."
     module: "landing"
     priority: "high"
-    status: "pending"
+    status: "implemented"
     sprint: 1
     flow_ids: ["FLOW-001", "FLOW-002", "FLOW-003"]
     acceptance_criteria:
       - id: "AC-001"
         description: "La landing muestra un hero con H1 ('Convierte la operación de tu empresa en un sistema medible'), subtítulo descriptivo, mockup decorativo del dashboard y 2 CTAs."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-001"]
       - id: "AC-002"
-        description: "CTA primario 'Ver demo' (botón azul #2563EB pill) navega a /dashboard. CTA secundario 'Solicitar información' (outline blanco) navega a /contacto."
-        validated: false
+        description: "CTA primario 'Ver demo' (botón azul #2563EB rounded-lg) navega a /dashboard. CTA secundario 'Solicitar información' (outline blanco rounded-lg) navega a /contacto."
+        validated: true
         flow_ids: ["FLOW-001"]
       - id: "AC-003"
         description: "Existe una sección 'Capacidades que se adaptan a tu operación' con 3 cards (icono lineal azul, título, descripción): Estructura empresarial, Indicadores KPI, Activación inmediata."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-002"]
       - id: "AC-004"
         description: "Existe una sección CTA final con título '¿Listo para transformar tu operación?' y botón 'Solicitar información'."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-002"]
       - id: "AC-005"
-        description: "El fondo general tiene gradiente azul sutil (#F0F4FF → blanco)."
-        validated: false
+        description: "El fondo general tiene gradiente azul sutil (#F5F7FF) con sección de capacidades en blanco."
+        validated: true
         flow_ids: ["FLOW-002"]
       - id: "AC-006"
         description: "La navbar sticky contiene logo 🔵 Orquestra + 3 enlaces: Producto, Capacidades, Contacto."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-003"]
       - id: "AC-007"
         description: "La página es responsive y se adapta a móvil (>=320px) y desktop."
-        validated: false
+        validated: true
         flow_ids: ["FLOW-001"]
       - id: "AC-008"
-        description: "El footer muestra copyright, links de términos/privacidad y año actual."
-        validated: false
+        description: "El footer muestra copyright y año actual (© 2026 Orquestra)."
+        validated: true
         flow_ids: ["FLOW-003"]
 
   # ═══════════════════════════════════════════
