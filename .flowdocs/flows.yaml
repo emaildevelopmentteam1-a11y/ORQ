@@ -251,7 +251,7 @@ stories:
     title: "Página de contacto corporativa con confirmación de envío"
     module: "landing"
     priority: "high"
-    status: "pending"
+    status: "implemented"
     sprint: 1
     story_points: 8
     actors: ["visitante", "cto", "director", "tomador_decision"]
@@ -311,7 +311,7 @@ stories:
           - "Espaciado consistente"
           - "Tipografía enterprise"
           - "Responsive completo"
-        validated: false
+        validated: true
 
       - id: "AC-002"
         name: "Formulario intuitivo"
@@ -323,7 +323,7 @@ stories:
           - "Campos obligatorios marcados"
           - "Errores visibles inline"
           - "Navegación por teclado funcional"
-        validated: false
+        validated: true
 
       - id: "AC-003"
         name: "Sugerencias inteligentes de mensaje"
@@ -334,7 +334,7 @@ stories:
           - "Existen al menos 4 sugerencias visibles"
           - "Al hacer click se insertan en el textarea"
           - "No interfieren con escritura manual"
-        validated: false
+        validated: true
 
       - id: "AC-004"
         name: "Envío funcional del formulario"
@@ -346,7 +346,7 @@ stories:
           - "Se evita doble envío"
           - "Timeout manejado correctamente"
           - "Errores de red manejados"
-        validated: false
+        validated: true
 
       - id: "AC-005"
         name: "Confirmación visual inmediata"
@@ -358,7 +358,7 @@ stories:
           - "Tono corporativo y tranquilizador"
           - "Incluye expectativa de tiempo de respuesta"
           - "Accesible por lectores de pantalla"
-        validated: false
+        validated: true
 
       - id: "AC-006"
         name: "Correo recibido por el equipo"
@@ -370,7 +370,7 @@ stories:
           - "Formato legible"
           - "Timestamp incluido"
           - "Ambiente configurable (dev/prod)"
-        validated: false
+        validated: true
 
       - id: "AC-007"
         name: "Correo de confirmación al usuario"
@@ -382,7 +382,7 @@ stories:
           - "Incluye resumen del mensaje"
           - "Branding de Orquestra"
           - "Tiempo estimado de respuesta"
-        validated: false
+        validated: true
 
       - id: "AC-008"
         name: "Experiencia responsive premium"
@@ -393,7 +393,7 @@ stories:
           - "Sin scroll horizontal en 320px"
           - "Campos táctiles ≥44px"
           - "CTA visible en viewport móvil"
-        validated: false
+        validated: true
 
       - id: "AC-009"
         name: "Protección básica anti-spam"
@@ -403,7 +403,7 @@ stories:
           - "Honeypot o equivalente"
           - "Rate limiting básico"
           - "Validación de dominio de correo"
-        validated: false
+        validated: true
 
     non_functional_requirements:
       performance:
@@ -439,7 +439,7 @@ stories:
     title: "Solicitud de demo guiada con captura de lead calificado"
     module: "landing"
     priority: "high"
-    status: "pending"
+    status: "implemented"
     sprint: 1
     story_points: 8
     actors: ["visitante", "cto", "director", "tomador_decision"]
@@ -512,7 +512,7 @@ stories:
           - "Navegación client-side"
           - "Tiempo de transición < 300ms"
           - "Evento analytics disparado"
-        validated: false
+        validated: true
 
       - id: "AC-002"
         name: "Experiencia diferenciada de demo"
@@ -523,7 +523,7 @@ stories:
           - "Headline orientado a demo"
           - "Microcopy de expectativa de contacto"
           - "Diseño consistente con branding"
-        validated: false
+        validated: true
 
       - id: "AC-003"
         name: "Formulario optimizado para lead calificado"
@@ -535,7 +535,7 @@ stories:
           - "Campos obligatorios mínimos"
           - "Validación inline"
           - "Accesible por teclado"
-        validated: false
+        validated: true
 
       - id: "AC-004"
         name: "Envío y estado de carga"
@@ -546,7 +546,7 @@ stories:
           - "Botón muestra loading"
           - "Prevención de doble submit"
           - "Errores manejados"
-        validated: false
+        validated: true
 
       - id: "AC-005"
         name: "Confirmación post-solicitud"
@@ -558,7 +558,7 @@ stories:
           - "Tono corporativo"
           - "Incluye tiempo estimado de respuesta"
           - "ARIA live presente"
-        validated: false
+        validated: true
 
       - id: "AC-006"
         name: "Notificación al equipo comercial"
@@ -569,7 +569,7 @@ stories:
           - "Incluye metadata de origen"
           - "Timestamp"
           - "Campos completos"
-        validated: false
+        validated: true
 
       - id: "AC-007"
         name: "Correo de confirmación al solicitante"
@@ -580,7 +580,7 @@ stories:
           - "Branding Orquestra"
           - "Resumen de solicitud"
           - "Próximos pasos claros"
-        validated: false
+        validated: true
 
       - id: "AC-008"
         name: "Experiencia responsive premium"
@@ -591,7 +591,7 @@ stories:
           - "Sin overflow en 320px"
           - "Inputs táctiles ≥44px"
           - "CTA visible"
-        validated: false
+        validated: true
 
     analytics_events:
       - "demo_cta_click"
@@ -625,7 +625,7 @@ stories:
     title: "Diferenciación clara entre Contacto y Solicitar demo"
     module: "landing"
     priority: "high"
-    status: "pending"
+    status: "implemented"
     sprint: 1
     story_points: 5
     actors: ["visitante", "cto", "director", "tomador_decision"]
@@ -696,7 +696,7 @@ stories:
           - "Demo orientado a ver el producto"
           - "Headline distinto en cada página"
           - "Subtítulo contextual"
-        validated: false
+        validated: true
 
       - id: "AC-002"
         name: "Sugerencias inteligentes diferenciadas"
@@ -707,7 +707,7 @@ stories:
           - "Contacto muestra preguntas informativas"
           - "Demo muestra intereses de demo"
           - "No comparten exactamente los mismos textos"
-        validated: false
+        validated: true
 
       - id: "AC-003"
         name: "Campo adicional en solicitud de demo"
@@ -718,7 +718,7 @@ stories:
           - "Existe campo '¿Qué deseas ver en la demo?'"
           - "No aparece en contacto"
           - "Es opcional pero visible"
-        validated: false
+        validated: true
 
       - id: "AC-004"
         name: "Microcopy de expectativa diferenciada"
@@ -729,7 +729,7 @@ stories:
           - "Contacto promete respuesta informativa"
           - "Demo promete agendamiento o contacto comercial"
           - "Lenguaje corporativo"
-        validated: false
+        validated: true
 
       - id: "AC-005"
         name: "Confirmaciones post-envío distintas"
@@ -739,7 +739,7 @@ stories:
           - "Contacto: confirmación de recepción"
           - "Demo: próximos pasos de demo"
           - "Incluyen tiempos estimados"
-        validated: false
+        validated: true
 
       - id: "AC-006"
         name: "Tracking diferenciado"
@@ -749,7 +749,7 @@ stories:
           - "contact_form_submit"
           - "demo_form_submit"
           - "No se mezclan eventos"
-        validated: false
+        validated: true
 
       - id: "AC-007"
         name: "Reutilización técnica sin duplicación"
@@ -760,7 +760,7 @@ stories:
           - "Existe LeadForm reutilizable"
           - "Uso de prop variant"
           - "Sin lógica duplicada"
-        validated: false
+        validated: true
 
     non_functional_requirements:
       ux_quality:
@@ -785,7 +785,7 @@ stories:
     title: "Como usuario corporativo quiero que la navegación funcione correctamente desde /contacto y /demo para acceder al contenido sin errores."
     module: "navigation"
     priority: "high"
-    status: "reported"
+    status: "implemented"
     sprint: 2
     related_to: ["US-001", "US-002", "US-003", "US-004"]
     persona: "Director de Tecnología / Evaluador de plataforma"
@@ -813,45 +813,45 @@ stories:
         description: >
           Desde /contacto y /demo, al hacer clic en "Producto",
           el usuario es redirigido a la landing (/) con scroll automático a la sección #producto.
-        validated: false
+        validated: true
 
       - id: "AC-002"
         description: >
           Desde /contacto y /demo, al hacer clic en "Plataforma",
           el usuario es redirigido a /#plataforma con desplazamiento suave.
-        validated: false
+        validated: true
 
       - id: "AC-003"
         description: >
           Desde /contacto y /demo, al hacer clic en "Capacidades",
           el usuario es redirigido a /#capacidades mostrando el contenido correctamente.
-        validated: false
+        validated: true
 
       - id: "AC-004"
         description: >
           La navegación detecta automáticamente si el usuario está fuera de la landing
           y ajusta el href para incluir la ruta base (/).
-        validated: false
+        validated: true
 
       - id: "AC-005"
         description: >
           El comportamiento es consistente en navegación desktop y móvil.
-        validated: false
+        validated: true
 
       - id: "AC-006"
         description: >
           Se implementa scroll suave (smooth scroll) al llegar a la sección destino.
-        validated: false
+        validated: true
 
       - id: "AC-007"
         description: >
           No se generan rutas inválidas como /contacto#producto o /demo#capacidades.
-        validated: false
+        validated: true
 
       - id: "AC-008"
         description: >
           La experiencia de navegación transmite calidad enterprise y continuidad de producto.
-        validated: false
+        validated: true
 
     technical_notes: |
       Posibles soluciones técnicas:

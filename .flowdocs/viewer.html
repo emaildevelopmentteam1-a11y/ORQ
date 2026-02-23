@@ -477,235 +477,978 @@ tr:hover td { background: #ffffff04; }
 // DATOS MOCK (simula el flows.yaml parseado)
 // ============================================================
 const MOCK_DATA = {
-  meta: {
-    app: "Sarchi POS",
-    version: "2.1.0",
-    description: "Sistema POS para pizzería con sync en la nube",
-    updated_at: "2026-02-19",
-    sprint: {
-      number: 3,
-      goal: "Completar checkout real y cubrir flujos críticos con tests",
-      start: "2026-02-17",
-      end: "2026-02-28",
-      days_left: 9
+  "meta": {
+    "app": "Orquestra",
+    "version": "1.0.0",
+    "description": "Plataforma web enfocada exclusivamente en la Landing Page corporativa, flujos de captación de leads (Contacto/Demo) y navegación enterprise.",
+    "updated_at": "2026-02-22",
+    "sprint": {
+      "number": 1,
+      "goal": "Lanzamiento de Landing Page y Funnels de Conversión",
+      "start": "2026-02-22",
+      "end": "2026-03-07",
+      "days_left": 13
     },
-    sprints: [
-      { number: 1, goal: "MVP inicial", start: "2026-01-01", end: "2026-01-14", days_left: 0 },
-      { number: 2, goal: "Estabilización", start: "2026-02-01", end: "2026-02-14", days_left: 0 },
-      { number: 3, goal: "Completar checkout real y cubrir flujos críticos con tests", start: "2026-02-17", end: "2026-02-28", days_left: 9 }
-    ],
-    active_sprint: 3,
-    stats: { total: 15, implemented: 7, partial: 5, pending: 3, with_tests: 4, coverage_pct: 27 }
+    "stats": {
+      "total": 5,
+      "implemented": 5,
+      "partial": 0,
+      "pending": 0,
+      "with_tests": 0,
+      "coverage_pct": 0
+    }
   },
-  modules: [
-    { id: "pos",       name: "Punto de Venta",   actors: ["cajero"] },
-    { id: "inventory", name: "Inventario",        actors: ["admin"] },
-    { id: "orders",    name: "Pedidos",           actors: ["cajero","admin"] },
-    { id: "cash",      name: "Caja",              actors: ["cajero","admin"] },
-    { id: "customers", name: "Clientes",          actors: ["admin"] },
-  ],
-  stories: [
-    { id: "US-001", title: "Cobrar una venta al cliente", module: "pos", priority: "critical", status: "partial", sprint: 3, flow_ids: ["FLOW-001","FLOW-002","FLOW-003"] },
-    { id: "US-002", title: "Gestionar el catálogo de productos", module: "inventory", priority: "high", status: "implemented", sprint: 2, flow_ids: ["FLOW-005","FLOW-006"] },
-    { id: "US-003", title: "Controlar el inventario físico", module: "inventory", priority: "high", status: "partial", sprint: 2, flow_ids: ["FLOW-007","FLOW-008"] },
-    { id: "US-004", title: "Abrir y cerrar el turno de caja", module: "cash", priority: "critical", status: "partial", sprint: 3, flow_ids: ["FLOW-011"] },
-    { id: "US-005", title: "Seguir el estado de los pedidos", module: "orders", priority: "high", status: "partial", flow_ids: ["FLOW-012"] },
-    { id: "US-006", title: "Gestionar clientes y su historial", module: "customers", priority: "medium", status: "implemented", sprint: 1, flow_ids: ["FLOW-010"] },
-    { id: "US-007", title: "Acceder al sistema de forma segura", module: "pos", priority: "critical", status: "implemented", sprint: 1, flow_ids: ["FLOW-013"] },
-    { id: "US-008", title: "Anular una venta y revertir stock", module: "pos", priority: "high", status: "implemented", sprint: 3, flow_ids: ["FLOW-014"] },
-    { id: "US-009", title: "Operar sin conexión a internet", module: "pos", priority: "high", status: "partial", sprint: 3, flow_ids: ["FLOW-015"] },
-  ],
-  entities: [
+  "modules": [
     {
-      id: "sale", name: "Venta",
-      states: ["draft","completed","cancelled"],
-      state_colors: { draft:"#6366f1", completed:"#22c55e", cancelled:"#ef4444" },
-      transitions: [
-        { from:"draft", to:"completed",  trigger:"FLOW-003", label:"Cobrar" },
-        { from:"draft", to:"cancelled",  trigger:"FLOW-014", label:"Cancelar" },
+      "id": "landing",
+      "name": "Landing Page",
+      "description": "Página de aterrizaje pública y escaparate del producto. Incluye hero, beneficios, capacidades clave, y modelo de arquitectura modular para transmitir madurez enterprise.",
+      "actors": [
+        "visitante",
+        "evaluador_tecnico",
+        "director"
       ]
     },
     {
-      id: "order", name: "Pedido",
-      states: ["pending","confirmed","in_progress","ready","delivered","completed","cancelled"],
-      state_colors: { pending:"#6366f1", confirmed:"#8b5cf6", in_progress:"#f59e0b", ready:"#22c55e", delivered:"#06b6d4", completed:"#4ade80", cancelled:"#ef4444" },
-      transitions: [
-        { from:"pending",     to:"confirmed",   trigger:"FLOW-021", label:"Confirmar" },
-        { from:"confirmed",   to:"in_progress", trigger:"FLOW-022", label:"Iniciar" },
-        { from:"in_progress", to:"ready",        trigger:"FLOW-023", label:"Listo" },
-        { from:"ready",       to:"delivered",    trigger:"FLOW-024", label:"Entregar" },
-        { from:"delivered",   to:"completed",    trigger:"FLOW-025", label:"Completar" },
-        { from:"pending",     to:"cancelled",    trigger:"FLOW-026", label:"Cancelar" },
+      "id": "contact_flow",
+      "name": "Flujo de Contacto",
+      "description": "Módulo de captación de leads generales y consultas corporativas. Emplea un formulario validado con envío de notificaciones y experiencia de éxito.",
+      "actors": [
+        "visitante"
       ]
     },
     {
-      id: "product", name: "Producto",
-      states: ["active","inactive"],
-      state_colors: { active:"#22c55e", inactive:"#475569" },
-      transitions: [
-        { from:"active",   to:"inactive", trigger:"FLOW-009", label:"Desactivar" },
-        { from:"inactive", to:"active",   trigger:"FLOW-009", label:"Activar" },
+      "id": "demo_flow",
+      "name": "Flujo de Demo Guiada",
+      "description": "Módulo especializado en captación de leads de alta intención (Decision Makers). Exige campos de calificación y promete agendamiento de sesión técnica.",
+      "actors": [
+        "tomador_decision",
+        "cto"
       ]
     },
     {
-      id: "cash_session", name: "Sesión de Caja",
-      states: ["open","closed"],
-      state_colors: { open:"#22c55e", closed:"#475569" },
-      transitions: [
-        { from:"open", to:"closed", trigger:"FLOW-011", label:"Cerrar caja" },
+      "id": "navigation",
+      "name": "Navegación Global",
+      "description": "Sistema de enrutamiento y anclaje (Navbar, Footer, enlaces cruzados) que garantiza la cohesión entre la landing, rutas dinámicas y secciones de contenido.",
+      "actors": [
+        "visitante",
+        "todos"
       ]
     }
   ],
-  flows: [
-    { id:"FLOW-001", name:"Venta de producto simple",      type:"user_flow",     module:"pos",       actor:"cajero", priority:"critical", status:"implemented", test_status:"covered", sprint_status:"done", story:"US-001", story_points:2, test_files:["src/tests/e2e/pos.spec.ts"], entities:["sale","product"], tasks:[{id:"TASK-001",name:"Grid de productos clickeable",status:"done"},{id:"TASK-002",name:"Lógica agregar al carrito",status:"done"},{id:"TASK-003",name:"Test E2E venta simple",status:"done"}],
-      trigger:"Cajero selecciona producto simple en grid",
-      preconditions:["Producto activo en catálogo","Stock disponible si trackStock=true"],
-      steps:["Cajero busca o selecciona producto","Sistema valida tipo simple","Agrega al carrito con cantidad 1","Recalcula subtotal, IVA y total"],
-      alternatives:[{condition:"Producto sin stock",steps:["Sistema deshabilita el producto","Muestra indicador visual rojo"]}],
-      errors:[{condition:"Producto no encontrado",steps:["Muestra estado vacío en la búsqueda"]}],
-      postconditions:["Producto en carrito","Totales actualizados"],
-      diagram:`flowchart TD\n    A([Cajero selecciona producto]) --> B{¿Es variable?}\n    B -->|No| C[Agregar al carrito]\n    B -->|Sí| D[→ FLOW-002]\n    C --> E[Recalcular totales]\n    E --> F([Fin])`,
-      notes:"Flujo más frecuente. Crítico para operación diaria." },
-
-    { id:"FLOW-002", name:"Venta de producto variable",    type:"user_flow",     module:"pos",       actor:"cajero", priority:"critical", status:"implemented", test_status:"none", sprint_status:"review", story:"US-001", story_points:3, test_files:[], entities:["sale","product","variant"], tasks:[{id:"TASK-004",name:"ProductConfigModal UI",status:"done"},{id:"TASK-005",name:"Selección de variantes y precios",status:"done"},{id:"TASK-006",name:"Test E2E modal variable",status:"todo"}],
-      trigger:"Cajero selecciona producto marcado como variable",
-      preconditions:["Producto con variants configurados en DB"],
-      steps:["Selecciona producto variable","Sistema abre ProductConfigModal","Selecciona variante/tamaño","Selecciona modificadores opcionales","Sistema calcula precio dinámico","Cajero confirma","Item configurado se agrega al carrito"],
-      alternatives:[{condition:"Cajero cancela",steps:["Modal se cierra","Carrito sin cambios"]}],
-      errors:[{condition:"Producto sin variantes configuradas",steps:["Sistema muestra error de configuración"]}],
-      postconditions:["Item con variante en carrito","Precio calculado correctamente"],
-      diagram:`flowchart TD\n    A([Producto variable seleccionado]) --> B[Abrir Modal Config]\n    B --> C[Seleccionar variante]\n    C --> D[Agregar modificadores]\n    D --> E[Calcular precio]\n    E --> F{¿Confirma?}\n    F -->|Sí| G[Agregar al carrito]\n    F -->|No| H[Cerrar modal]\n    G --> I([Fin])`,
-      notes:"Sin tests E2E. Prioridad alta para siguiente sprint." },
-
-    { id:"FLOW-003", name:"Proceso de pago (Checkout)",    type:"business_flow", module:"pos",       actor:"cajero", priority:"critical", status:"partial", test_status:"partial", sprint_status:"doing", story:"US-001", story_points:5, test_files:["src/tests/e2e/pos.spec.ts"], entities:["sale","cash_session"], tasks:[{id:"TASK-007",name:"UI Modal cobrar",status:"done"},{id:"TASK-008",name:"Conectar SaleService con Supabase",status:"doing"},{id:"TASK-009",name:"Cálculo de cambio efectivo",status:"done"},{id:"TASK-010",name:"Test E2E checkout completo",status:"todo"}],
-      trigger:"Clic en botón Cobrar con carrito no vacío",
-      preconditions:["Carrito con al menos un item","Caja abierta"],
-      steps:["Clic en Cobrar","Seleccionar método de pago","Ingresar monto recibido (efectivo)","Sistema calcula cambio","Finalizar transacción","Registrar venta en DB","Emitir ticket"],
-      alternatives:[{condition:"Descuento global",steps:["Aplicar descuento antes de calcular total"]},{condition:"Propina",steps:["Agregar propina al total"]}],
-      errors:[{condition:"DB no disponible",steps:["Guardar en cola offline","Notificar al cajero"]}],
-      postconditions:["Venta registrada","Stock descontado","Ticket generado","Carrito limpio"],
-      diagram:`flowchart TD\n    A([Clic Cobrar]) --> B[Seleccionar método pago]\n    B --> C{Efectivo?}\n    C -->|Sí| D[Ingresar monto]\n    D --> E[Calcular cambio]\n    C -->|No| F[Confirmar]\n    E --> F\n    F --> G[Registrar en DB]\n    G --> H[Imprimir ticket]\n    H --> I([Fin])`,
-      notes:"SaleService mockeado en Fase 1. Migrar a Supabase en Fase 2." },
-
-    { id:"FLOW-004", name:"Reimpresión de ticket",         type:"task_flow",     module:"pos",       actor:"cajero", priority:"medium",   status:"implemented", test_status:"none",   sprint_status:"todo", story:"US-001", story_points:1, test_files:[], entities:["sale"], tasks:[{id:"TASK-011",name:"Botón reimprimir en historial",status:"done"},{id:"TASK-012",name:"Test unitario reimpresión",status:"todo"}],
-      trigger:"Clic en reimprimir desde historial de ventas",
-      preconditions:["Impresora Bluetooth conectada","Venta existente en historial"],
-      steps:["Localizar venta en historial","Clic en reimprimir","Sistema regenera formato ESC/POS","Envía a impresora Bluetooth"],
-      alternatives:[],
-      errors:[{condition:"Impresora desconectada",steps:["Muestra toast de error","No bloquea la UI"]}],
-      postconditions:["Ticket reimpreso"],
-      diagram:`flowchart TD\n    A([Clic reimprimir]) --> B{¿Impresora conectada?}\n    B -->|Sí| C[Generar ESC/POS]\n    B -->|No| D[Toast error]\n    C --> E[Enviar a impresora]\n    E --> F([Fin])`,
-      notes:"" },
-
-    { id:"FLOW-005", name:"CRUD de productos",             type:"task_flow",     module:"inventory", actor:"admin",  priority:"high",     status:"implemented", test_status:"none",   sprint_status:"todo", story:"US-002", story_points:3, test_files:[], entities:["product"], tasks:[{id:"TASK-013",name:"Formulario crear/editar producto",status:"done"},{id:"TASK-014",name:"Soft delete productos",status:"done"},{id:"TASK-015",name:"Tests CRUD productos",status:"todo"}],
-      trigger:"Navegación a /products",
-      preconditions:["Usuario con rol admin autenticado"],
-      steps:["Listar productos","Crear / Editar / Desactivar producto","Configurar stock y alertas","Guardar en Supabase"],
-      alternatives:[],
-      errors:[{condition:"Nombre duplicado",steps:["Sistema muestra validación inline"]}],
-      postconditions:["Producto actualizado en DB y visible en POS"],
-      diagram:`flowchart TD\n    A([Admin abre /products]) --> B[Listar productos]\n    B --> C{Acción}\n    C -->|Crear| D[Formulario nuevo]\n    C -->|Editar| E[Formulario existente]\n    C -->|Desactivar| F[Soft delete]\n    D --> G[Guardar en DB]\n    E --> G\n    F --> G\n    G --> H([Fin])`,
-      notes:"" },
-
-    { id:"FLOW-006", name:"Importación masiva CSV",        type:"task_flow",     module:"inventory", actor:"admin",  priority:"medium",   status:"implemented", test_status:"covered", sprint_status:"done", story:"US-002", story_points:2, test_files:["src/tests/unit/csv.test.ts"], entities:["product"], tasks:[{id:"TASK-016",name:"Parser CSV con PapaParse",status:"done"},{id:"TASK-017",name:"Validación cabeceras y filas",status:"done"},{id:"TASK-018",name:"Test unitario importación",status:"done"}],
-      trigger:"Clic en botón Importar CSV",
-      preconditions:["Archivo CSV con formato válido"],
-      steps:["Seleccionar archivo .csv","Parser valida cabeceras","Creación masiva de productos","Feedback de cantidad importada"],
-      alternatives:[],
-      errors:[{condition:"CSV malformado",steps:["Filas inválidas ignoradas","Muestra resumen de errores"]}],
-      postconditions:["Productos importados en DB"],
-      diagram:`flowchart TD\n    A([Seleccionar CSV]) --> B[Validar cabeceras]\n    B --> C{¿Válido?}\n    C -->|No| D[Mostrar error]\n    C -->|Sí| E[Crear productos]\n    E --> F[Feedback cantidad]\n    F --> G([Fin])`,
-      notes:"" },
-
-    { id:"FLOW-007", name:"Ajuste manual de inventario",   type:"data_flow",     module:"inventory", actor:"admin",  priority:"high",     status:"implemented", test_status:"none",   sprint_status:"todo", story:"US-003", story_points:2, test_files:[], entities:["product"], tasks:[{id:"TASK-019",name:"Dialog ajuste stock",status:"done"},{id:"TASK-020",name:"Registro en inventory_movements",status:"done"},{id:"TASK-021",name:"Test ajuste stock",status:"todo"}],
-      trigger:"Botón Ajustar Stock en ficha de producto",
-      preconditions:["Producto existente con trackStock=true"],
-      steps:["Seleccionar producto","Ingresar cantidad (+/-)","Seleccionar motivo","Sistema actualiza stock","Crea entrada en inventory_movements"],
-      alternatives:[],
-      errors:[],
-      postconditions:["Stock actualizado","Movimiento registrado en historial"],
-      diagram:`flowchart TD\n    A([Abrir ajuste]) --> B[Ingresar cantidad]\n    B --> C[Seleccionar motivo]\n    C --> D[Actualizar stock en DB]\n    D --> E[Crear movimiento]\n    E --> F([Fin])`,
-      notes:"" },
-
-    { id:"FLOW-008", name:"Historial de movimientos",      type:"task_flow",     module:"inventory", actor:"admin",  priority:"low",      status:"implemented", test_status:"covered", sprint_status:"done", story:"US-003", story_points:1, test_files:["src/tests/unit/inventory.test.ts"], entities:["product"], tasks:[{id:"TASK-022",name:"InventoryHistoryDialog UI",status:"done"},{id:"TASK-023",name:"Test historial movimientos",status:"done"}],
-      trigger:"Click en Ver Historial en ficha de producto",
-      preconditions:["Producto con movimientos registrados"],
-      steps:["Sistema carga inventory_movements del producto","Muestra lista cronológica","Cada entrada con tipo, cantidad, motivo y fecha"],
-      alternatives:[],
-      errors:[],
-      postconditions:["Historial visible"],
-      diagram:`flowchart TD\n    A([Ver historial]) --> B[Cargar movimientos DB]\n    B --> C[Renderizar lista]\n    C --> D([Fin])`,
-      notes:"" },
-
-    { id:"FLOW-009", name:"Gestión de categorías",         type:"task_flow",     module:"inventory", actor:"admin",  priority:"medium",   status:"partial",     test_status:"none",   sprint_status:"todo", story:"US-002", story_points:2, test_files:[], entities:["product"], tasks:[{id:"TASK-024",name:"CRUD básico categorías",status:"done"},{id:"TASK-025",name:"Colores e iconos por categoría",status:"todo"},{id:"TASK-026",name:"Ordenar drag & drop",status:"todo"}],
-      trigger:"Navegación a /categories",
-      preconditions:["Rol admin"],
-      steps:["Listar categorías","Crear nueva categoría","Asignar productos","Ordenar categorías"],
-      alternatives:[],
-      errors:[{condition:"Eliminar categoría con productos",steps:["Sistema bloquea la acción"]}],
-      postconditions:["Categoría actualizada"],
-      diagram:`flowchart TD\n    A([Admin abre categorías]) --> B[Listar]\n    B --> C{Acción}\n    C -->|Crear| D[Nueva categoría]\n    C -->|Editar| E[Editar]\n    C -->|Eliminar| F{¿Tiene productos?}\n    F -->|Sí| G[Bloquear]\n    F -->|No| H[Eliminar]\n    D --> I([Fin])\n    E --> I`,
-      notes:"CRUD básico implementado. Colores e iconos pendientes." },
-
-    { id:"FLOW-010", name:"Gestión de clientes (CRM)",     type:"task_flow",     module:"customers", actor:"admin",  priority:"medium",   status:"implemented", test_status:"covered", sprint_status:"done", story:"US-006", story_points:3, test_files:["src/tests/e2e/customers.spec.ts"], entities:["sale"], tasks:[{id:"TASK-027",name:"CRUD clientes",status:"done"},{id:"TASK-028",name:"Historial compras por cliente",status:"done"},{id:"TASK-029",name:"Test E2E clientes",status:"done"}],
-      trigger:"Navegación a /customers",
-      preconditions:["Rol admin"],
-      steps:["Listar clientes","Crear / Editar cliente","Ver historial de compras por cliente","Asociar venta a cliente"],
-      alternatives:[],
-      errors:[],
-      postconditions:["Cliente actualizado"],
-      diagram:`flowchart TD\n    A([Admin abre clientes]) --> B[Listar clientes]\n    B --> C{Acción}\n    C -->|Crear| D[Formulario]\n    C -->|Ver historial| E[Ventas del cliente]\n    D --> F([Fin])\n    E --> F`,
-      notes:"" },
-
-    { id:"FLOW-011", name:"Apertura y cierre de caja",     type:"business_flow", module:"cash",      actor:"cajero", priority:"critical", status:"partial",     test_status:"none",   sprint_status:"doing", story:"US-004", story_points:5, test_files:[], entities:["cash_session","sale"], tasks:[{id:"TASK-030",name:"UI apertura de caja con fondo inicial",status:"done"},{id:"TASK-031",name:"Migrar CashRegisterService a Supabase",status:"doing"},{id:"TASK-032",name:"Reporte X/Z de cierre",status:"todo"},{id:"TASK-033",name:"Tests cierre de caja",status:"todo"}],
-      trigger:"Inicio o fin de jornada del cajero",
-      preconditions:["Usuario autenticado con rol cajero o admin"],
-      steps:["Ingresar fondo inicial","Marcar caja como abierta","(Fin) Contar efectivo físico","Generar reporte X/Z","Cerrar sesión de caja"],
-      alternatives:[],
-      errors:[{condition:"Cierre sin cuadre",steps:["Registra diferencia (sobrante/faltante)","No bloquea el cierre"]}],
-      postconditions:["Sesión de caja cerrada","Reporte generado"],
-      diagram:`flowchart TD\n    A([Inicio jornada]) --> B[Ingresar fondo]\n    B --> C[Abrir caja]\n    C --> D[Operar ventas...]\n    D --> E[Fin jornada]\n    E --> F[Contar efectivo]\n    F --> G[Generar reporte]\n    G --> H[Cerrar sesión]\n    H --> I([Fin])`,
-      notes:"CashRegisterService mockeado. Migrar a Supabase pendiente." },
-
-    { id:"FLOW-012", name:"Seguimiento de pedidos",        type:"business_flow", module:"orders",    actor:"cajero", priority:"high",     status:"partial",     test_status:"none",   sprint_status:"todo", story:"US-005", story_points:8, test_files:[], entities:["order"], tasks:[{id:"TASK-034",name:"Vista Kanban de pedidos",status:"done"},{id:"TASK-035",name:"Drag & drop entre columnas",status:"doing"},{id:"TASK-036",name:"Persistencia estados en Supabase",status:"todo"},{id:"TASK-037",name:"Timeline de eventos por pedido",status:"todo"}],
-      trigger:"Navegación a /orders o creación de pedido",
-      preconditions:["Al menos un pedido activo"],
-      steps:["Ver tablero Kanban de pedidos","Arrastrar tarjeta para cambiar estado","Sistema registra transición y timestamp","Notificación de pedido listo"],
-      alternatives:[],
-      errors:[{condition:"Transición inválida de estado",steps:["Sistema bloquea el movimiento"]}],
-      postconditions:["Estado del pedido actualizado","Timeline registrado"],
-      diagram:`flowchart TD\n    A([Ver tablero]) --> B[Pedido en columna]\n    B --> C{Cambiar estado}\n    C --> D[Validar transición]\n    D -->|Válida| E[Actualizar DB]\n    D -->|Inválida| F[Bloquear]\n    E --> G[Registrar en timeline]\n    G --> H([Fin])`,
-      notes:"Vista Kanban implementada parcialmente. Persistencia de estados pendiente." },
-
-    { id:"FLOW-013", name:"Autenticación de usuario",      type:"user_flow",     module:"pos",       actor:"cajero", priority:"critical", status:"implemented", test_status:"none",   sprint_status:"review", story:"US-007", story_points:3, test_files:[], entities:["sale"], tasks:[{id:"TASK-038",name:"Pantalla login Supabase Auth",status:"done"},{id:"TASK-039",name:"Permisos por rol (RLS)",status:"done"},{id:"TASK-040",name:"Test E2E login y permisos",status:"todo"}],
-      trigger:"Apertura de la app sin sesión activa",
-      preconditions:["Usuario registrado en Supabase Auth"],
-      steps:["Mostrar pantalla de login","Usuario ingresa email y contraseña","Supabase valida credenciales","Sistema carga perfil y permisos por rol","Redirige a vista según rol"],
-      alternatives:[{condition:"Cajero intenta acceder a /admin",steps:["Sistema redirige a /pos"]}],
-      errors:[{condition:"Credenciales incorrectas",steps:["Muestra mensaje de error","No expone detalles técnicos"]}],
-      postconditions:["Sesión JWT activa","UI adaptada al rol del usuario"],
-      diagram:`flowchart TD\n    A([Abrir app]) --> B{¿Sesión activa?}\n    B -->|Sí| C[Cargar dashboard]\n    B -->|No| D[Pantalla login]\n    D --> E[Validar credenciales]\n    E -->|OK| F[Cargar perfil]\n    E -->|Error| G[Mostrar error]\n    F --> C`,
-      notes:"RLS configurado en Supabase. Falta test E2E de login." },
-
-    { id:"FLOW-014", name:"Cancelación de venta",          type:"task_flow",     module:"pos",       actor:"admin",  priority:"high",     status:"implemented", test_status:"none",   sprint_status:"todo", story:"US-008", story_points:2, test_files:[], entities:["sale","product"], tasks:[{id:"TASK-041",name:"Botón anular en historial",status:"done"},{id:"TASK-042",name:"Reversión automática de stock",status:"done"},{id:"TASK-043",name:"Test cancelación con reversión",status:"todo"}],
-      trigger:"Clic en Cancelar en el historial de ventas",
-      preconditions:["Venta con status=completed","Rol admin"],
-      steps:["Localizar venta en historial","Clic en anular","Confirmación modal","Sistema marca venta como cancelled","Reversión de stock de cada item"],
-      alternatives:[],
-      errors:[{condition:"Venta ya cancelada",steps:["Sistema no permite doble cancelación"]}],
-      postconditions:["Venta=cancelled","Stock revertido","Historial actualizado"],
-      diagram:`flowchart TD\n    A([Clic cancelar]) --> B[Modal confirmación]\n    B -->|Confirma| C[Marcar cancelled]\n    B -->|Cancela| D[Cerrar modal]\n    C --> E[Revertir stock]\n    E --> F([Fin])`,
-      notes:"" },
-
-    { id:"FLOW-015", name:"Sincronización offline",        type:"system_flow",   module:"pos",       actor:"system", priority:"high",     status:"partial",     test_status:"none",   sprint_status:"doing", story:"US-009", story_points:5, test_files:[], entities:["sale","product"], tasks:[{id:"TASK-044",name:"Service Worker y cola offline",status:"done"},{id:"TASK-045",name:"Auto-sync al reconectar",status:"doing"},{id:"TASK-046",name:"Resolución de conflictos LWW",status:"todo"},{id:"TASK-047",name:"Tests modo offline",status:"todo"}],
-      trigger:"App detecta pérdida de conexión a internet",
-      preconditions:["Service Worker registrado","Cola offline activa"],
-      steps:["App detecta offline","Operaciones se guardan en cola local","Al reconectar, cola se procesa en orden","Conflicts resueltos con Last Write Wins","UI muestra indicador de sync"],
-      alternatives:[],
-      errors:[{condition:"Conflicto de datos",steps:["Last Write Wins","Log del conflicto en consola"]}],
-      postconditions:["Datos sincronizados con Supabase","Cola vaciada"],
-      diagram:`flowchart TD\n    A([Detectar offline]) --> B[Modo offline]\n    B --> C[Guardar en cola local]\n    C --> D{¿Reconectó?}\n    D -->|No| C\n    D -->|Sí| E[Procesar cola]\n    E --> F[Resolver conflicts]\n    F --> G[Sync completo]\n    G --> H([Fin])`,
-      notes:"Background Sync via Service Worker implementado." },
+  "entities": [
+    {
+      "id": "visitor",
+      "name": "Visitante Público",
+      "states": [
+        "exploring",
+        "bounced"
+      ],
+      "transitions": []
+    },
+    {
+      "id": "lead",
+      "name": "Lead Corporativo",
+      "states": [
+        "captured",
+        "contacted",
+        "qualified"
+      ],
+      "transitions": [
+        {
+          "from": "captured",
+          "to": "contacted",
+          "action": "Asesor contacta al lead vía email/teléfono"
+        }
+      ]
+    }
+  ],
+  "stories": [
+    {
+      "id": "US-001",
+      "title": "Landing enterprise orientada a decisión ejecutiva",
+      "module": "landing",
+      "priority": "high",
+      "status": "implemented",
+      "sprint": 1,
+      "story_points": 8,
+      "actors": [
+        "visitante",
+        "director",
+        "tomador_decision"
+      ],
+      "narrative": "Como director o responsable de transformación digital, quiero ingresar a la landing de Orquestra y comprender en segundos que se trata de una plataforma empresarial modular, confiable y escalable, para evaluar rápidamente su adopción y acceder a una demostración.\n",
+      "business_context": {
+        "product_positioning": "Plataforma enterprise modular tipo ecosystem-driven (similar a Salesforce AppExchange mindset)",
+        "key_message": "Activa solo las capacidades que tu organización necesita",
+        "differentiation": [
+          "Arquitectura por extensiones activables",
+          "Marketplace integrado",
+          "Enfoque enterprise-first",
+          "Time-to-value acelerado"
+        ]
+      },
+      "ux_intent": {
+        "primary_goal": "Conversión a demo",
+        "secondary_goal": "Confianza ejecutiva",
+        "tertiary_goal": "Comprensión del modelo modular",
+        "emotional_tone": [
+          "corporativo",
+          "confiable",
+          "moderno",
+          "tecnológicamente sólido"
+        ]
+      },
+      "information_architecture": {
+        "required_sections": [
+          "Hero estratégico",
+          "Propuesta de valor empresarial",
+          "Modelo de plataforma modular",
+          "Capacidades clave",
+          "Extensiones destacadas",
+          "Beneficios enterprise/cloud",
+          "CTA de conversión",
+          "Footer institucional"
+        ]
+      },
+      "acceptance_criteria": [
+        {
+          "id": "AC-001",
+          "name": "Hero con posicionamiento ejecutivo",
+          "description": "La sección hero comunica inmediatamente que Orquestra es una plataforma empresarial modular. Debe incluir: - H1 orientado a transformación operativa medible - Subtítulo que mencione explícitamente el modelo por extensiones - Mockup limpio tipo dashboard enterprise - CTA primario hacia demo - CTA secundario informativo\n",
+          "validations": [
+            "El valor modular se entiende en ≤5 segundos",
+            "Existe exactamente un H1",
+            "El hero es above-the-fold en desktop",
+            "El diseño transmite estética enterprise (no startup genérica)"
+          ],
+          "validated": true,
+          "flow_ids": [
+            "FLOW-001"
+          ]
+        },
+        {
+          "id": "AC-002",
+          "name": "Sección de propuesta de valor",
+          "description": "Existe una sección que explica claramente que Orquestra permite construir soluciones empresariales mediante la activación de extensiones bajo demanda.\n",
+          "validations": [
+            "Se menciona explícitamente el concepto de extensiones",
+            "Se comunica el beneficio de usar solo lo necesario",
+            "El lenguaje es corporativo, no técnico excesivo",
+            "La jerarquía visual guía la lectura ejecutiva"
+          ],
+          "validated": true,
+          "flow_ids": [
+            "FLOW-002"
+          ]
+        },
+        {
+          "id": "AC-003",
+          "name": "Modelo de plataforma modular",
+          "description": "Existe una sección visual que explique el flujo: Organización → Activación de extensiones → Solución operativa.\n",
+          "validations": [
+            "El flujo se entiende sin leer texto largo",
+            "Existe apoyo visual (diagrama, steps o visual flow)",
+            "Refuerza el concepto de escalabilidad"
+          ],
+          "validated": true,
+          "flow_ids": [
+            "FLOW-002"
+          ]
+        },
+        {
+          "id": "AC-004",
+          "name": "Capacidades empresariales",
+          "description": "Existe una sección de capacidades clave con cards (ej. multi-organización, KPI, automatización, gobierno de datos).\n",
+          "validations": [
+            "Las capacidades están orientadas a empresa, no a usuario individual",
+            "Iconografía consistente",
+            "Grid responsive",
+            "Hover states en desktop"
+          ],
+          "validated": true,
+          "flow_ids": [
+            "FLOW-002"
+          ]
+        },
+        {
+          "id": "AC-005",
+          "name": "Extensiones destacadas como marketplace",
+          "description": "La landing muestra extensiones (KPI, Encuestas, BI) claramente etiquetadas como 'Extensión' o 'Módulo activable', reforzando el modelo tipo marketplace.\n",
+          "validations": [
+            "Cada item tiene badge de extensión",
+            "Se entiende que pueden activarse bajo demanda",
+            "La sección transmite mentalidad de ecosystem"
+          ],
+          "validated": true,
+          "flow_ids": [
+            "FLOW-002"
+          ]
+        },
+        {
+          "id": "AC-006",
+          "name": "Beneficios enterprise y cloud",
+          "description": "Existe una sección que comunique atributos enterprise: seguridad, escalabilidad, multi-tenant, alta disponibilidad.\n",
+          "validations": [
+            "Lenguaje orientado a TI/directores",
+            "Diseño visual diferenciado (sección premium)",
+            "No usa claims vacíos sin contexto"
+          ],
+          "validated": true,
+          "flow_ids": [
+            "FLOW-002"
+          ]
+        },
+        {
+          "id": "AC-007",
+          "name": "Navegación corporativa",
+          "description": "La navbar sticky muestra logo Orquestra y navegación clara orientada a exploración ejecutiva.\n",
+          "validations": [
+            "Sticky funcional",
+            "Responsive con menú móvil",
+            "Estados hover y focus",
+            "Accesible por teclado"
+          ],
+          "validated": true,
+          "flow_ids": [
+            "FLOW-003"
+          ]
+        },
+        {
+          "id": "AC-008",
+          "name": "Experiencia responsive premium",
+          "description": "La landing mantiene calidad visual y legibilidad en móvil, tablet y desktop.\n",
+          "validations": [
+            "Sin scroll horizontal en 320px",
+            "CTAs táctiles ≥44px",
+            "Tipografía escala correctamente",
+            "Las secciones mantienen jerarquía visual"
+          ],
+          "validated": true,
+          "flow_ids": [
+            "FLOW-001"
+          ]
+        },
+        {
+          "id": "AC-009",
+          "name": "CTA final orientado a decisión",
+          "description": "La página cierra con un bloque de conversión que invite a solicitar demo o información, reforzando confianza enterprise.\n",
+          "validations": [
+            "Ubicado antes del footer",
+            "Mensaje orientado a valor de negocio",
+            "Botón primario consistente con design system"
+          ],
+          "validated": true,
+          "flow_ids": [
+            "FLOW-002"
+          ]
+        }
+      ],
+      "non_functional_requirements": {
+        "performance": [
+          "Lighthouse ≥ 90",
+          "LCP < 2.5s",
+          "CLS < 0.1"
+        ],
+        "accessibility": [
+          "WCAG 2.1 AA básico",
+          "Navegación por teclado"
+        ],
+        "seo": [
+          "Metadata completa",
+          "OpenGraph",
+          "Estructura semántica correcta"
+        ]
+      },
+      "definition_of_done": [
+        "La propuesta modular se entiende claramente",
+        "La página transmite confianza enterprise",
+        "Todos los AC validados",
+        "Build de producción exitoso",
+        "Revisión UX aprobada"
+      ]
+    },
+    {
+      "id": "US-002",
+      "title": "Página de contacto corporativa con confirmación de envío",
+      "module": "landing",
+      "priority": "high",
+      "status": "implemented",
+      "sprint": 1,
+      "story_points": 8,
+      "actors": [
+        "visitante",
+        "cto",
+        "director",
+        "tomador_decision"
+      ],
+      "narrative": "Como Director de Tecnología o responsable de evaluar plataformas, quiero acceder a una página de contacto clara, moderna y confiable para solicitar información sobre precios, planes y capacidades de Orquestra, y recibir confirmación inmediata de que mi mensaje fue enviado correctamente.\n",
+      "business_goal": [
+        "Capturar leads calificados enterprise",
+        "Reducir fricción en el primer contacto",
+        "Transmitir confianza corporativa",
+        "Preparar pipeline comercial"
+      ],
+      "ux_intent": {
+        "primary_goal": "Envío exitoso del formulario",
+        "secondary_goal": "Generar confianza post-envío",
+        "emotional_tone": [
+          "profesional",
+          "moderno",
+          "enterprise",
+          "confiable",
+          "sin fricción"
+        ]
+      },
+      "functional_scope": {
+        "form_fields_required": [
+          "Nombre completo",
+          "Correo corporativo",
+          "Organización",
+          "Rol",
+          "Mensaje"
+        ],
+        "optional_fields": [
+          "Teléfono",
+          "Tamaño de la organización",
+          "Interés principal (planes, demo, partnership, etc.)"
+        ],
+        "system_behaviors": [
+          "Validación en tiempo real",
+          "Estado de carga al enviar",
+          "Mensaje de éxito visible",
+          "Envío de correo al equipo comercial",
+          "Correo de confirmación al usuario",
+          "Prevención de spam básica"
+        ]
+      },
+      "acceptance_criteria": [
+        {
+          "id": "AC-001",
+          "name": "Diseño corporativo de la página",
+          "description": "La página de contacto presenta un layout moderno, limpio y alineado al design system enterprise de Orquestra.\n",
+          "validations": [
+            "Jerarquía visual clara",
+            "Espaciado consistente",
+            "Tipografía enterprise",
+            "Responsive completo"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-002",
+          "name": "Formulario intuitivo",
+          "description": "El formulario es fácil de completar para un ejecutivo, con labels claros, placeholders útiles y agrupación lógica.\n",
+          "validations": [
+            "Tiempo estimado de llenado ≤ 60 segundos",
+            "Campos obligatorios marcados",
+            "Errores visibles inline",
+            "Navegación por teclado funcional"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-003",
+          "name": "Sugerencias inteligentes de mensaje",
+          "description": "La UI muestra ejemplos o chips de ayuda sobre qué puede solicitar el usuario (ej. precios, demo, arquitectura).\n",
+          "validations": [
+            "Existen al menos 4 sugerencias visibles",
+            "Al hacer click se insertan en el textarea",
+            "No interfieren con escritura manual"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-004",
+          "name": "Envío funcional del formulario",
+          "description": "Al enviar, el sistema procesa la solicitud de forma asíncrona y muestra estado de carga.\n",
+          "validations": [
+            "Botón muestra loading state",
+            "Se evita doble envío",
+            "Timeout manejado correctamente",
+            "Errores de red manejados"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-005",
+          "name": "Confirmación visual inmediata",
+          "description": "Tras envío exitoso, el usuario ve un mensaje claro de confirmación sin abandonar la página.\n",
+          "validations": [
+            "Mensaje de éxito visible",
+            "Tono corporativo y tranquilizador",
+            "Incluye expectativa de tiempo de respuesta",
+            "Accesible por lectores de pantalla"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-006",
+          "name": "Correo recibido por el equipo",
+          "description": "El sistema envía un email estructurado al equipo comercial con la información del lead.\n",
+          "validations": [
+            "Incluye todos los campos",
+            "Formato legible",
+            "Timestamp incluido",
+            "Ambiente configurable (dev/prod)"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-007",
+          "name": "Correo de confirmación al usuario",
+          "description": "El usuario recibe un correo automático confirmando la recepción de su solicitud.\n",
+          "validations": [
+            "Enviado al correo capturado",
+            "Incluye resumen del mensaje",
+            "Branding de Orquestra",
+            "Tiempo estimado de respuesta"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-008",
+          "name": "Experiencia responsive premium",
+          "description": "La página mantiene usabilidad y estética en móvil, tablet y desktop.\n",
+          "validations": [
+            "Sin scroll horizontal en 320px",
+            "Campos táctiles ≥44px",
+            "CTA visible en viewport móvil"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-009",
+          "name": "Protección básica anti-spam",
+          "description": "El formulario implementa al menos una medida anti-spam.\n",
+          "validations": [
+            "Honeypot o equivalente",
+            "Rate limiting básico",
+            "Validación de dominio de correo"
+          ],
+          "validated": true
+        }
+      ],
+      "non_functional_requirements": {
+        "performance": [
+          "Tiempo de envío percibido < 2s",
+          "Sin bloqueo del main thread"
+        ],
+        "accessibility": [
+          "WCAG 2.1 AA",
+          "ARIA live en mensaje de éxito"
+        ],
+        "security": [
+          "Sanitización de inputs",
+          "Protección contra XSS",
+          "Validación server-side obligatoria"
+        ]
+      },
+      "analytics_events": [
+        "contact_form_view",
+        "contact_form_submit",
+        "contact_form_success",
+        "contact_form_error"
+      ],
+      "definition_of_done": [
+        "Formulario envía correctamente",
+        "Usuario recibe correo de confirmación",
+        "Equipo recibe lead",
+        "UX aprobada por diseño",
+        "Tests básicos pasando",
+        "Sin errores en consola"
+      ]
+    },
+    {
+      "id": "US-003",
+      "title": "Solicitud de demo guiada con captura de lead calificado",
+      "module": "landing",
+      "priority": "high",
+      "status": "implemented",
+      "sprint": 1,
+      "story_points": 8,
+      "actors": [
+        "visitante",
+        "cto",
+        "director",
+        "tomador_decision"
+      ],
+      "narrative": "Como Director de Tecnología o responsable de evaluar plataformas, quiero solicitar una demo de Orquestra desde la landing, proporcionando mis datos de forma rápida y profesional, para que el equipo comercial me contacte y me muestre el producto.\n",
+      "strategic_note": "Esta funcionalidad reutiliza la infraestructura del formulario de contacto, pero optimizada para intención de compra (high-intent lead).\n",
+      "business_goal": [
+        "Capturar leads de alta intención",
+        "Acelerar pipeline comercial",
+        "Reducir fricción para solicitud de demo",
+        "Segmentar prospectos enterprise"
+      ],
+      "ux_intent": {
+        "primary_goal": "Solicitud de demo completada",
+        "secondary_goal": "Percepción de proceso enterprise",
+        "emotional_tone": [
+          "premium",
+          "ágil",
+          "confiable",
+          "orientado a negocio"
+        ]
+      },
+      "reuse_strategy": {
+        "base_component": "ContactForm",
+        "reuse_level": "alto",
+        "differences": [
+          "copy orientado a demo",
+          "tracking específico",
+          "campos de calificación opcionales",
+          "ruta dedicada /demo"
+        ]
+      },
+      "functional_scope": {
+        "entry_points": [
+          "Hero CTA 'Solicitar demo'",
+          "CTA final de la landing",
+          "Navbar (opcional futuro)"
+        ],
+        "form_fields_required": [
+          "Nombre completo",
+          "Correo corporativo",
+          "Organización",
+          "Rol"
+        ],
+        "recommended_fields": [
+          "Tamaño de la organización",
+          "Interés principal",
+          "¿Qué deseas ver en la demo?"
+        ],
+        "system_behaviors": [
+          "Apertura en página dedicada o modal",
+          "Validación en tiempo real",
+          "Loading state",
+          "Confirmación visual",
+          "Email al equipo comercial",
+          "Email de confirmación al solicitante"
+        ]
+      },
+      "acceptance_criteria": [
+        {
+          "id": "AC-001",
+          "name": "Navegación desde CTA",
+          "description": "Al hacer click en 'Solicitar demo', el usuario es dirigido a la experiencia de solicitud de demo sin fricción.\n",
+          "validations": [
+            "Navegación client-side",
+            "Tiempo de transición < 300ms",
+            "Evento analytics disparado"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-002",
+          "name": "Experiencia diferenciada de demo",
+          "description": "La página o modal comunica claramente que se trata de una solicitud de demo guiada.\n",
+          "validations": [
+            "Headline orientado a demo",
+            "Microcopy de expectativa de contacto",
+            "Diseño consistente con branding"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-003",
+          "name": "Formulario optimizado para lead calificado",
+          "description": "El formulario reutiliza el componente base pero prioriza rapidez y calidad del lead.\n",
+          "validations": [
+            "Tiempo de llenado ≤ 60s",
+            "Campos obligatorios mínimos",
+            "Validación inline",
+            "Accesible por teclado"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-004",
+          "name": "Envío y estado de carga",
+          "description": "Al enviar la solicitud, el sistema procesa de forma asíncrona mostrando feedback visual.\n",
+          "validations": [
+            "Botón muestra loading",
+            "Prevención de doble submit",
+            "Errores manejados"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-005",
+          "name": "Confirmación post-solicitud",
+          "description": "Tras envío exitoso, el usuario ve confirmación clara con expectativa de contacto.\n",
+          "validations": [
+            "Mensaje visible",
+            "Tono corporativo",
+            "Incluye tiempo estimado de respuesta",
+            "ARIA live presente"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-006",
+          "name": "Notificación al equipo comercial",
+          "description": "El sistema envía email estructurado marcando el lead como 'Demo Request'.\n",
+          "validations": [
+            "Incluye metadata de origen",
+            "Timestamp",
+            "Campos completos"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-007",
+          "name": "Correo de confirmación al solicitante",
+          "description": "El usuario recibe confirmación automática de que su demo fue solicitada.\n",
+          "validations": [
+            "Branding Orquestra",
+            "Resumen de solicitud",
+            "Próximos pasos claros"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-008",
+          "name": "Experiencia responsive premium",
+          "description": "La solicitud de demo funciona correctamente en móvil, tablet y desktop.\n",
+          "validations": [
+            "Sin overflow en 320px",
+            "Inputs táctiles ≥44px",
+            "CTA visible"
+          ],
+          "validated": true
+        }
+      ],
+      "analytics_events": [
+        "demo_cta_click",
+        "demo_form_view",
+        "demo_form_submit",
+        "demo_form_success",
+        "demo_form_error"
+      ],
+      "non_functional_requirements": {
+        "performance": [
+          "Tiempo de envío percibido < 2s"
+        ],
+        "accessibility": [
+          "WCAG 2.1 AA"
+        ],
+        "security": [
+          "Validación server-side",
+          "Sanitización inputs",
+          "Protección anti-spam"
+        ]
+      },
+      "definition_of_done": [
+        "Solicitud de demo funcional",
+        "Correos enviados correctamente",
+        "Tracking activo",
+        "UX aprobada",
+        "Sin errores en consola"
+      ]
+    },
+    {
+      "id": "US-004",
+      "title": "Diferenciación clara entre Contacto y Solicitar demo",
+      "module": "landing",
+      "priority": "high",
+      "status": "implemented",
+      "sprint": 1,
+      "story_points": 5,
+      "actors": [
+        "visitante",
+        "cto",
+        "director",
+        "tomador_decision"
+      ],
+      "narrative": "Como Director de Tecnología evaluando Orquestra, experimenté confusión entre el formulario de Contacto y el de Solicitar demo porque ambos se ven y funcionan igual. Quiero que cada experiencia esté claramente diferenciada en propósito, mensaje y ayudas visuales, para saber cuál utilizar según mi necesidad.\n",
+      "problem_statement": {
+        "current_issue": "Los formularios de Contacto y Solicitar demo comparten estructura, ayudas y apariencia casi idéntica, lo que genera ambigüedad en la intención del usuario.\n",
+        "business_risk": [
+          "Fricción en conversión",
+          "Leads mal calificados",
+          "Experiencia poco enterprise",
+          "Duda en el decision maker"
+        ],
+        "user_impact": [
+          "No sé cuál elegir",
+          "No entiendo la diferencia",
+          "Percibo falta de madurez del producto"
+        ]
+      },
+      "business_goal": [
+        "Eliminar ambigüedad entre flujos",
+        "Mejorar calidad de leads",
+        "Aumentar conversión a demo",
+        "Transmitir madurez enterprise"
+      ],
+      "ux_intent": {
+        "primary_goal": "Claridad de propósito por flujo",
+        "secondary_goal": "Reducir fricción cognitiva",
+        "emotional_tone": [
+          "claro",
+          "guiado",
+          "enterprise",
+          "intencional"
+        ]
+      },
+      "differentiation_strategy": {
+        "required_differences": [
+          "headline específico por flujo",
+          "subcopy contextual",
+          "sugerencias inteligentes distintas",
+          "campo adicional en demo",
+          "microcopy de expectativa diferente",
+          "tracking diferenciado"
+        ],
+        "visual_differences": [
+          "iconografía contextual",
+          "badge o label del flujo",
+          "hero/header distinto",
+          "orden de campos optimizado por intención"
+        ]
+      },
+      "acceptance_criteria": [
+        {
+          "id": "AC-001",
+          "name": "Propósito explícito por página",
+          "description": "Cada página comunica claramente su objetivo antes de mostrar el formulario.\n",
+          "validations": [
+            "Contacto orientado a preguntas generales",
+            "Demo orientado a ver el producto",
+            "Headline distinto en cada página",
+            "Subtítulo contextual"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-002",
+          "name": "Sugerencias inteligentes diferenciadas",
+          "description": "Los chips de ayuda del formulario son distintos entre Contacto y Demo.\n",
+          "validations": [
+            "Contacto muestra preguntas informativas",
+            "Demo muestra intereses de demo",
+            "No comparten exactamente los mismos textos"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-003",
+          "name": "Campo adicional en solicitud de demo",
+          "description": "El formulario de demo incluye al menos un campo específico de calificación de demo.\n",
+          "validations": [
+            "Existe campo '¿Qué deseas ver en la demo?'",
+            "No aparece en contacto",
+            "Es opcional pero visible"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-004",
+          "name": "Microcopy de expectativa diferenciada",
+          "description": "El mensaje previo al envío explica claramente qué ocurrirá después en cada flujo.\n",
+          "validations": [
+            "Contacto promete respuesta informativa",
+            "Demo promete agendamiento o contacto comercial",
+            "Lenguaje corporativo"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-005",
+          "name": "Confirmaciones post-envío distintas",
+          "description": "El mensaje de éxito refleja el tipo de solicitud.\n",
+          "validations": [
+            "Contacto: confirmación de recepción",
+            "Demo: próximos pasos de demo",
+            "Incluyen tiempos estimados"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-006",
+          "name": "Tracking diferenciado",
+          "description": "Analytics distingue claramente ambos flujos.\n",
+          "validations": [
+            "contact_form_submit",
+            "demo_form_submit",
+            "No se mezclan eventos"
+          ],
+          "validated": true
+        },
+        {
+          "id": "AC-007",
+          "name": "Reutilización técnica sin duplicación",
+          "description": "El sistema reutiliza el componente base manteniendo diferenciación por variante.\n",
+          "validations": [
+            "Existe LeadForm reutilizable",
+            "Uso de prop variant",
+            "Sin lógica duplicada"
+          ],
+          "validated": true
+        }
+      ],
+      "non_functional_requirements": {
+        "ux_quality": [
+          "La diferencia se entiende en <5 segundos",
+          "No aumenta el tiempo de llenado"
+        ],
+        "accessibility": [
+          "WCAG 2.1 AA"
+        ],
+        "performance": [
+          "Sin impacto perceptible en carga"
+        ]
+      },
+      "definition_of_done": [
+        "Usuarios distinguen claramente ambos flujos",
+        "Sin duplicación de lógica",
+        "UX validada",
+        "Eventos analytics correctos",
+        "Copy aprobado por negocio"
+      ]
+    },
+    {
+      "id": "US-005",
+      "title": "Como usuario corporativo quiero que la navegación funcione correctamente desde /contacto y /demo para acceder al contenido sin errores.",
+      "module": "navigation",
+      "priority": "high",
+      "status": "implemented",
+      "sprint": 2,
+      "related_to": [
+        "US-001",
+        "US-002",
+        "US-003",
+        "US-004"
+      ],
+      "persona": "Director de Tecnología / Evaluador de plataforma",
+      "user_story": "Como evaluador de la plataforma Orquestra, cuando navego desde las páginas /contacto o /demo, quiero que los enlaces del menú (Producto, Plataforma, Capacidades) me lleven correctamente al contenido correspondiente, para no perder contexto ni experimentar confusión durante la evaluación del producto.\n",
+      "problem_statement": "Actualmente, al hacer clic en los enlaces de navegación desde /contacto o /demo, la aplicación solo concatena anclas (por ejemplo: /contacto#producto), lo que no muestra el contenido esperado porque dichas secciones existen únicamente en la landing (/). Esto genera fricción, sensación de producto inmaduro y rompe el flujo de exploración.\n",
+      "expected_experience": "La navegación debe sentirse consistente, corporativa y confiable. Desde cualquier página, el usuario debe poder llegar a las secciones clave de la plataforma sin importar en qué ruta se encuentre.\n",
+      "acceptance_criteria": [
+        {
+          "id": "AC-001",
+          "description": "Desde /contacto y /demo, al hacer clic en \"Producto\", el usuario es redirigido a la landing (/) con scroll automático a la sección #producto.\n",
+          "validated": true
+        },
+        {
+          "id": "AC-002",
+          "description": "Desde /contacto y /demo, al hacer clic en \"Plataforma\", el usuario es redirigido a /#plataforma con desplazamiento suave.\n",
+          "validated": true
+        },
+        {
+          "id": "AC-003",
+          "description": "Desde /contacto y /demo, al hacer clic en \"Capacidades\", el usuario es redirigido a /#capacidades mostrando el contenido correctamente.\n",
+          "validated": true
+        },
+        {
+          "id": "AC-004",
+          "description": "La navegación detecta automáticamente si el usuario está fuera de la landing y ajusta el href para incluir la ruta base (/).\n",
+          "validated": true
+        },
+        {
+          "id": "AC-005",
+          "description": "El comportamiento es consistente en navegación desktop y móvil.\n",
+          "validated": true
+        },
+        {
+          "id": "AC-006",
+          "description": "Se implementa scroll suave (smooth scroll) al llegar a la sección destino.\n",
+          "validated": true
+        },
+        {
+          "id": "AC-007",
+          "description": "No se generan rutas inválidas como /contacto#producto o /demo#capacidades.\n",
+          "validated": true
+        },
+        {
+          "id": "AC-008",
+          "description": "La experiencia de navegación transmite calidad enterprise y continuidad de producto.\n",
+          "validated": true
+        }
+      ],
+      "technical_notes": "Posibles soluciones técnicas:\n\nOpción A (recomendada):\n  - Normalizar links del navbar:\n    /#producto\n    /#plataforma\n    /#capacidades\n\nOpción B:\n  - Detectar pathname actual con usePathname()\n  - Si !== '/', hacer router.push('/#seccion')\n\nOpción C (más robusta enterprise):\n  - Centralizar configuración de navegación\n  - NavigationMap.ts\n  - Scroll manager global\n\nConsiderar:\n  - next/link con scroll={false}\n  - manejo de hash después de navegación\n  - compatibilidad con App Router\n",
+      "business_value": "Corrige un bug visible en la experiencia de navegación que afecta la percepción de madurez del producto. Mejora la confianza del evaluador corporativo y mantiene la continuidad del journey comercial.\n",
+      "definition_of_done": [
+        "Navegación funcional desde cualquier ruta",
+        "Scroll correcto a secciones de la landing",
+        "Sin rutas con hash incorrectas",
+        "Validado en móvil y desktop",
+        "Revisado por QA"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "id": "FLOW-001",
+      "name": "Exploración de la Landing Page",
+      "type": "user_flow",
+      "module": "landing",
+      "actor": "visitante",
+      "priority": "high",
+      "status": "implemented",
+      "story": "US-001",
+      "trigger": "El usuario accede a la raíz (/)",
+      "steps": [
+        "El sistema renderiza el Hero Section con posicionamiento enterprise.",
+        "El usuario hace scroll visualizando secciones de beneficios, arquitectura modular y capacidades.",
+        "El usuario interactúa con los CTAs (ej. 'Ver demo')."
+      ]
+    },
+    {
+      "id": "FLOW-002",
+      "name": "Navegación Cruzada y Scroll Suave",
+      "type": "user_flow",
+      "module": "navigation",
+      "actor": "visitante",
+      "priority": "high",
+      "status": "implemented",
+      "story": "US-005",
+      "trigger": "El usuario hace clic en el Navbar desde una ruta interna (ej. /contacto)",
+      "steps": [
+        "El usuario hace clic en 'Plataforma' en el menú principal.",
+        "El sistema enruta a la landing (/) usando Next Link.",
+        "El navegador realiza un scroll suave hacia la sección '/#plataforma'.",
+        "El usuario no pierde contexto ni encuentra enlaces rotos."
+      ]
+    },
+    {
+      "id": "FLOW-003",
+      "name": "Envío de Consulta de Contacto",
+      "type": "user_flow",
+      "module": "contact_flow",
+      "actor": "visitante",
+      "priority": "high",
+      "status": "implemented",
+      "story": "US-002",
+      "trigger": "El usuario navega a /contacto y llena el formulario",
+      "steps": [
+        "El usuario ve un formulario orientado a dudas generales con chips informativos.",
+        "El usuario completa el mensaje y hace clic en Enviar.",
+        "El sistema valida los datos con Zod y muestra estado de carga.",
+        "El sistema redirige a una pantalla de éxito confirmando la recepción.",
+        "Se registra el evento 'contact_request' originando un nuevo Lead en la plataforma."
+      ]
+    },
+    {
+      "id": "FLOW-004",
+      "name": "Solicitud de Demo Calificada",
+      "type": "user_flow",
+      "module": "demo_flow",
+      "actor": "tomador_decision",
+      "priority": "high",
+      "status": "implemented",
+      "story": "US-003, US-004",
+      "trigger": "El usuario hace clic en 'Solicitar Demo' desde el Hero o Navbar",
+      "steps": [
+        "El sistema navega a la ruta optimizada /demo sin footer para evitar distracciones.",
+        "El usuario ve propuesta de valor lateral y un formulario con un badge 'Sesión técnica'.",
+        "El usuario completa los campos, incluyendo 'Detalles de la demo' (específico para calificar ventas).",
+        "El sistema valida e higieniza los datos mediante Zod.",
+        "El sistema muestra pantalla de éxito orientada a agendamiento en < 24h.",
+        "Se envía la metadata y se asigna el estado 'demo_request' al Lead."
+      ]
+    }
   ]
 };
 
