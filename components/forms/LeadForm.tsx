@@ -25,8 +25,9 @@ const leadSchema = z.object({
     email: z.string().min(1, "El correo es requerido").email("Ingresa un correo válido"),
     organizacion: z.string().min(2, "La organización es requerida"),
     rol: z.string().min(1, "Selecciona tu rol"),
-    mensaje: z.string().min(10, "El mensaje debe tener al menos 10 caracteres"),
     // Opcionales
+    mensaje: z.string().optional(),
+    detalles_demo: z.string().optional(),
     telefono: z.string().optional(),
     tamano: z.string().optional(),
     interes: z.string().optional(),
@@ -39,9 +40,7 @@ const leadSchema = z.object({
 export type LeadFormData = z.infer<typeof leadSchema>;
 
 const CONTACT_CHIPS = [
-    "Quisiera una demostración personalizada",
     "Necesito información sobre planes y precios",
-    "Estoy interesado en la arquitectura técnica",
     "Quiero evaluar la plataforma para mi equipo",
 ];
 
@@ -102,6 +101,7 @@ export function LeadForm({ variant, onSuccess }: LeadFormProps) {
             organizacion: "",
             rol: "",
             mensaje: "",
+            detalles_demo: "",
             telefono: "",
             tamano: "",
             interes: "",
@@ -110,12 +110,13 @@ export function LeadForm({ variant, onSuccess }: LeadFormProps) {
         },
     });
 
-    const mensajeValue = watch("mensaje");
+    const targetField = isDemo ? "detalles_demo" : "mensaje";
+    const currentValue = watch(targetField);
 
     const insertSuggestion = (text: string) => {
-        const current = mensajeValue || "";
+        const current = currentValue || "";
         const separator = current.length > 0 ? "\n" : "";
-        setValue("mensaje", current + separator + text, { shouldValidate: true });
+        setValue(targetField, current + separator + text, { shouldValidate: true });
         setTimeout(() => textareaRef.current?.focus(), 50);
     };
 
@@ -161,6 +162,16 @@ export function LeadForm({ variant, onSuccess }: LeadFormProps) {
                 <label htmlFor="website">Website</label>
                 <input type="text" id="website" tabIndex={-1} autoComplete="off" {...register("website")} />
             </div>
+
+            {/* Badge visual para reforzar contexto dentro del formulario */}
+            {isDemo && (
+                <div className="flex items-center gap-2 mb-2 p-3 bg-accent-amber/10 border border-accent-amber/20 rounded-lg">
+                    <CalendarCheck className="size-4 text-accent-amber shrink-0" />
+                    <span className="text-xs font-medium text-amber-800">
+                        Sesión técnica guiada con un especialista
+                    </span>
+                </div>
+            )}
 
             {/* Nombre */}
             <div>
@@ -287,25 +298,48 @@ export function LeadForm({ variant, onSuccess }: LeadFormProps) {
                 </div>
             </div>
 
-            {/* Mensaje */}
-            <div>
-                <label htmlFor="mensaje" className={labelBase}>
-                    {isDemo ? "¿Qué te gustaría ver en la demo?" : "Mensaje"} <span className="text-accent-red">*</span>
-                </label>
-                <textarea
-                    id="mensaje"
-                    rows={4}
-                    placeholder={isDemo ? "Cuéntanos tus retos principales para enfocar la sesión..." : "Cuéntanos cómo podemos ayudarte..."}
-                    className={`${inputBase} resize-none`}
-                    disabled={isSubmitting}
-                    {...register("mensaje", { required: "El mensaje es requerido", minLength: { value: 10, message: "Al menos 10 caracteres" } })}
-                    ref={(e) => {
-                        register("mensaje").ref(e);
-                        textareaRef.current = e;
-                    }}
-                />
-                {errors.mensaje && <p className={errorText}>{errors.mensaje.message}</p>}
-            </div>
+            {/* Mensaje (Solo Contacto) */}
+            {!isDemo && (
+                <div>
+                    <label htmlFor="mensaje" className={labelBase}>
+                        Mensaje <span className="text-accent-red">*</span>
+                    </label>
+                    <textarea
+                        id="mensaje"
+                        rows={4}
+                        placeholder="Cuéntanos cómo podemos ayudarte..."
+                        className={`${inputBase} resize-none`}
+                        disabled={isSubmitting}
+                        {...register("mensaje", { required: "El mensaje es requerido", minLength: { value: 10, message: "Al menos 10 caracteres" } })}
+                        ref={(e) => {
+                            register("mensaje").ref(e);
+                            textareaRef.current = e;
+                        }}
+                    />
+                    {errors.mensaje && <p className={errorText}>{errors.mensaje.message}</p>}
+                </div>
+            )}
+
+            {/* Detalles Demo (Solo Demo) - Campo opcional adicional */}
+            {isDemo && (
+                <div>
+                    <label htmlFor="detalles_demo" className={labelBase}>
+                        ¿Qué te gustaría ver en la demo? {optionalTag}
+                    </label>
+                    <textarea
+                        id="detalles_demo"
+                        rows={4}
+                        placeholder="Cuéntanos tus retos principales para enfocar la sesión..."
+                        className={`${inputBase} resize-none`}
+                        disabled={isSubmitting}
+                        {...register("detalles_demo")}
+                        ref={(e) => {
+                            register("detalles_demo").ref(e);
+                            textareaRef.current = e;
+                        }}
+                    />
+                </div>
+            )}
 
             {/* Submit */}
             <button
@@ -326,9 +360,22 @@ export function LeadForm({ variant, onSuccess }: LeadFormProps) {
                 )}
             </button>
 
-            <p className="text-xs text-muted-foreground text-center">
-                Los campos marcados con <span className="text-accent-red">*</span> son obligatorios.
-            </p>
+            <div className="text-center space-y-2">
+                <p className="text-xs text-muted-foreground">
+                    Los campos marcados con <span className="text-accent-red">*</span> son obligatorios.
+                </p>
+                <div className="text-xs text-text-secondary bg-muted/50 p-3 rounded-lg border border-border/50">
+                    {isDemo ? (
+                        <span>
+                            <strong className="text-foreground">Expectativa:</strong> Un ejecutivo de cuentas estudiará tu caso y te contactará en menos de 24 horas laborables para <strong>agendar el horario</strong> de la demo.
+                        </span>
+                    ) : (
+                        <span>
+                            <strong className="text-foreground">Siguientes pasos:</strong> Nuestro equipo de soporte e información revisará tus inquietudes y te enviará una <strong>respuesta informativa</strong> estructurada a la brevedad.
+                        </span>
+                    )}
+                </div>
+            </div>
         </form>
     );
 }

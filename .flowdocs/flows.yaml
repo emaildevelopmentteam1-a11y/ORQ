@@ -912,90 +912,166 @@ stories:
       - "UX aprobada"
       - "Sin errores en consola"
 
-# ═══════════════════════════════════════════
-# US-004: App Shell y Layout Autenticado
-# ═══════════════════════════════════════════
+# ========================================= 
+# US-004  Diferenciación clara entre Contacto y Solicitar demo
+# ========================================= 
+
   - id: "US-004"
-    title: "Como usuario autenticado quiero una estructura de layout con sidebar y header para navegar entre los módulos de la plataforma."
-    module: "app_shell"
+    title: "Diferenciación clara entre Contacto y Solicitar demo"
+    module: "landing"
     priority: "high"
     status: "pending"
     sprint: 1
-    flow_ids: ["FLOW-004", "FLOW-005", "FLOW-006", "FLOW-007"]
-    acceptance_criteria:
-      - id: "AC-001"
-        description: "El AppLayout renderiza un sidebar izquierdo, header superior y área de contenido."
-        validated: false
-        flow_ids: ["FLOW-004"]
-      - id: "AC-002"
-        description: "El sidebar muestra 5 ítems fijos de navegación: Inicio, Organización, Usuarios, Contenidos, Extensiones."
-        validated: false
-        flow_ids: ["FLOW-004"]
-      - id: "AC-003"
-        description: "El sidebar inyecta dinámicamente los módulos de extensiones activas (KPI, Encuestas, BI)."
-        validated: false
-        flow_ids: ["FLOW-005"]
-      - id: "AC-004"
-        description: "El ítem activo del sidebar se resalta con fondo azul claro #EEF2FF, texto e icono #2563EB."
-        validated: false
-        flow_ids: ["FLOW-004"]
-      - id: "AC-005"
-        description: "El sidebar ocupa ~240px con fondo blanco y borde derecho sutil."
-        validated: false
-        flow_ids: ["FLOW-006"]
-      - id: "AC-006"
-        description: "El logo 🔵 Orquestra aparece en la esquina superior izquierda del sidebar y es clickeable."
-        validated: false
-        flow_ids: ["FLOW-007"]
-      - id: "AC-007"
-        description: "El header contiene un selector de rol/perfil 'Directivo ▼' (dropdown) + icono ayuda (?) + icono mensajes (✉️)."
-        validated: false
-        flow_ids: ["FLOW-007"]
-      - id: "AC-008"
-        description: "El header muestra íconos de utilidad: búsqueda, notificaciones y ayuda."
-        validated: false
-        flow_ids: ["FLOW-007"]
-      - id: "AC-009"
-        description: "Cuando el rol cambia a Viewer, los ítems de admin (Usuarios, Roles) desaparecen del sidebar."
-        validated: false
-        flow_ids: ["FLOW-005"]
+    story_points: 5
+    actors: ["visitante", "cto", "director", "tomador_decision"]
 
-  # ═══════════════════════════════════════════
-  # US-005: Dashboard (Inicio) y Empty States
-  # ═══════════════════════════════════════════
-  - id: "US-005"
-    title: "Dashboard de Inicio con KPI Cards y guiado a Extensiones"
-    module: "dashboard"
-    priority: "high"
-    status: "pending"
-    sprint: 1
-    flow_ids: ["FLOW-008", "FLOW-009"]
-    actors: ["admin", "manager"]
-    
     narrative: >
-      Como usuario evaluando el demo, quiero aterrizar en un Dashboard
-      con KPIs pre-calculados (Áreas, Actividad, Estado del sistema)
-      y un área central vacía que me guíe hacia el Marketplace
-      para entender que la plataforma usa un modelo modular que debo activar.
+      Como Director de Tecnología evaluando Orquestra,
+      experimenté confusión entre el formulario de Contacto
+      y el de Solicitar demo porque ambos se ven y funcionan igual.
+      Quiero que cada experiencia esté claramente diferenciada
+      en propósito, mensaje y ayudas visuales,
+      para saber cuál utilizar según mi necesidad.
+
+    problem_statement:
+      current_issue: >
+        Los formularios de Contacto y Solicitar demo comparten
+        estructura, ayudas y apariencia casi idéntica,
+        lo que genera ambigüedad en la intención del usuario.
+      business_risk:
+        - "Fricción en conversión"
+        - "Leads mal calificados"
+        - "Experiencia poco enterprise"
+        - "Duda en el decision maker"
+      user_impact:
+        - "No sé cuál elegir"
+        - "No entiendo la diferencia"
+        - "Percibo falta de madurez del producto"
+
+    business_goal:
+      - "Eliminar ambigüedad entre flujos"
+      - "Mejorar calidad de leads"
+      - "Aumentar conversión a demo"
+      - "Transmitir madurez enterprise"
+
+    ux_intent:
+      primary_goal: "Claridad de propósito por flujo"
+      secondary_goal: "Reducir fricción cognitiva"
+      emotional_tone:
+        - "claro"
+        - "guiado"
+        - "enterprise"
+        - "intencional"
+
+    differentiation_strategy:
+
+      required_differences:
+        - "headline específico por flujo"
+        - "subcopy contextual"
+        - "sugerencias inteligentes distintas"
+        - "campo adicional en demo"
+        - "microcopy de expectativa diferente"
+        - "tracking diferenciado"
+
+      visual_differences:
+        - "iconografía contextual"
+        - "badge o label del flujo"
+        - "hero/header distinto"
+        - "orden de campos optimizado por intención"
 
     acceptance_criteria:
+
       - id: "AC-001"
-        name: "KPI Cards ejecutivas"
-        description: "El dashboard muestra 3 tarjetas KPI: Resumen org (12 áreas, 148 cols), Actividad reciente (24 hoy, +18%), Estado (100% operativo)."
+        name: "Propósito explícito por página"
+        description: >
+          Cada página comunica claramente su objetivo
+          antes de mostrar el formulario.
+        validations:
+          - "Contacto orientado a preguntas generales"
+          - "Demo orientado a ver el producto"
+          - "Headline distinto en cada página"
+          - "Subtítulo contextual"
         validated: false
-        flow_ids: ["FLOW-008"]
 
       - id: "AC-002"
-        name: "Empty State de Indicadores"
-        description: "Debajo de las tarjetas, se muestra un área de 'Indicadores' vacía, con un mensaje 'No hay indicadores configurados' y un enlace claro 'Ve a Extensiones para activar KPI'."
+        name: "Sugerencias inteligentes diferenciadas"
+        description: >
+          Los chips de ayuda del formulario son distintos
+          entre Contacto y Demo.
+        validations:
+          - "Contacto muestra preguntas informativas"
+          - "Demo muestra intereses de demo"
+          - "No comparten exactamente los mismos textos"
         validated: false
-        flow_ids: ["FLOW-008"]
 
       - id: "AC-003"
-        name: "Navegación guiada al Marketplace"
-        description: "Al hacer click en el enlace del empty state, el usuario navega a /extensiones para conocer el modelo modular."
+        name: "Campo adicional en solicitud de demo"
+        description: >
+          El formulario de demo incluye al menos un campo
+          específico de calificación de demo.
+        validations:
+          - "Existe campo '¿Qué deseas ver en la demo?'"
+          - "No aparece en contacto"
+          - "Es opcional pero visible"
         validated: false
-        flow_ids: ["FLOW-009"]
+
+      - id: "AC-004"
+        name: "Microcopy de expectativa diferenciada"
+        description: >
+          El mensaje previo al envío explica claramente
+          qué ocurrirá después en cada flujo.
+        validations:
+          - "Contacto promete respuesta informativa"
+          - "Demo promete agendamiento o contacto comercial"
+          - "Lenguaje corporativo"
+        validated: false
+
+      - id: "AC-005"
+        name: "Confirmaciones post-envío distintas"
+        description: >
+          El mensaje de éxito refleja el tipo de solicitud.
+        validations:
+          - "Contacto: confirmación de recepción"
+          - "Demo: próximos pasos de demo"
+          - "Incluyen tiempos estimados"
+        validated: false
+
+      - id: "AC-006"
+        name: "Tracking diferenciado"
+        description: >
+          Analytics distingue claramente ambos flujos.
+        validations:
+          - "contact_form_submit"
+          - "demo_form_submit"
+          - "No se mezclan eventos"
+        validated: false
+
+      - id: "AC-007"
+        name: "Reutilización técnica sin duplicación"
+        description: >
+          El sistema reutiliza el componente base
+          manteniendo diferenciación por variante.
+        validations:
+          - "Existe LeadForm reutilizable"
+          - "Uso de prop variant"
+          - "Sin lógica duplicada"
+        validated: false
+
+    non_functional_requirements:
+      ux_quality:
+        - "La diferencia se entiende en <5 segundos"
+        - "No aumenta el tiempo de llenado"
+      accessibility:
+        - "WCAG 2.1 AA"
+      performance:
+        - "Sin impacto perceptible en carga"
+
+    definition_of_done:
+      - "Usuarios distinguen claramente ambos flujos"
+      - "Sin duplicación de lógica"
+      - "UX validada"
+      - "Eventos analytics correctos"
+      - "Copy aprobado por negocio"
 
 flows:
   # ─── LANDING PAGE ────────────────────────────
