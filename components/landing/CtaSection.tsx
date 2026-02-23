@@ -24,7 +24,7 @@ export function CtaSection() {
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                     <Link
-                        href="/dashboard"
+                        href="/demo"
                         className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary-hover transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 min-h-[44px]"
                     >
                         Ver demo ahora

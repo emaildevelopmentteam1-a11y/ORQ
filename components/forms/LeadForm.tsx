@@ -3,33 +3,26 @@
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Send, CalendarCheck } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════════
-   ContactForm — Formulario corporativo de contacto
+   LeadForm — Formulario corporativo reutilizable (Contact / Demo)
    
-   US-002 ACs cubiertos:
-   - AC-002: Formulario intuitivo con validación inline
-   - AC-003: Sugerencias inteligentes de mensaje (chips)
-   - AC-004: Envío funcional con loading state
-   - AC-009: Honeypot anti-spam
+   US-003 ACs cubiertos:
+   - AC-003: Formulario optimizado para lead calificado
+   - AC-004: Envío y estado de carga
+   - AC-008: Experiencia responsive premium
 
    Arquitectura:
-   - Validación con Zod (esquema inline, sin dependencia de resolver
-     para mantener el bundle ligero)
-   - Chips de sugerencia se inyectan en el textarea al hacer click
-   - Honeypot: campo oculto "website" que bots rellenan — si tiene
-     valor, el submit es silenciosamente ignorado
-   - onSuccess callback notifica al padre para mostrar confirmación
+   - Validación inline con Zod
+   - Dos variantes ("contact" y "demo") que ajustan los campos
+     y las sugerencias dinámicamente.
+   - Honeypot anti-spam.
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Esquema de validación ── */
-const contactSchema = z.object({
+const leadSchema = z.object({
     nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-    email: z
-        .string()
-        .min(1, "El correo es requerido")
-        .email("Ingresa un correo válido"),
+    email: z.string().min(1, "El correo es requerido").email("Ingresa un correo válido"),
     organizacion: z.string().min(2, "La organización es requerida"),
     rol: z.string().min(1, "Selecciona tu rol"),
     mensaje: z.string().min(10, "El mensaje debe tener al menos 10 caracteres"),
@@ -37,23 +30,28 @@ const contactSchema = z.object({
     telefono: z.string().optional(),
     tamano: z.string().optional(),
     interes: z.string().optional(),
+    // Metadata interna
+    type: z.enum(["contact_request", "demo_request"]).optional(),
     // Honeypot (AC-009)
     website: z.string().optional(),
 });
 
-type ContactFormData = z.infer<typeof contactSchema>;
+export type LeadFormData = z.infer<typeof leadSchema>;
 
-/* ── Chips de sugerencia (AC-003) ── */
-const SUGGESTION_CHIPS = [
+const CONTACT_CHIPS = [
     "Quisiera una demostración personalizada",
     "Necesito información sobre planes y precios",
     "Estoy interesado en la arquitectura técnica",
     "Quiero evaluar la plataforma para mi equipo",
-    "Me gustaría saber sobre integraciones disponibles",
-    "Busco una solución enterprise para mi organización",
 ];
 
-/* ── Opciones de select ── */
+const DEMO_CHIPS = [
+    "Quiero conocer los precios de los planes",
+    "Necesito una demo técnica",
+    "Evaluando para mi organización",
+    "Información sobre configuración de módulos",
+];
+
 const ROLES = [
     { value: "", label: "Selecciona tu rol" },
     { value: "cto", label: "CTO / Director de Tecnología" },
@@ -81,14 +79,15 @@ const INTERESTS = [
     { value: "general", label: "Información general" },
 ];
 
-/* ── Props ── */
-interface ContactFormProps {
-    onSuccess: (data: ContactFormData) => void;
+interface LeadFormProps {
+    variant: "contact" | "demo";
+    onSuccess: (data: LeadFormData) => void;
 }
 
-export function ContactForm({ onSuccess }: ContactFormProps) {
+export function LeadForm({ variant, onSuccess }: LeadFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+    const isDemo = variant === "demo";
 
     const {
         register,
@@ -96,7 +95,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
         setValue,
         watch,
         formState: { errors },
-    } = useForm<ContactFormData>({
+    } = useForm<LeadFormData>({
         defaultValues: {
             nombre: "",
             email: "",
@@ -106,92 +105,64 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
             telefono: "",
             tamano: "",
             interes: "",
-            website: "", // honeypot
+            type: isDemo ? "demo_request" : "contact_request",
+            website: "",
         },
     });
 
     const mensajeValue = watch("mensaje");
 
-    /* ── Insertar chip de sugerencia en textarea (AC-003) ── */
     const insertSuggestion = (text: string) => {
         const current = mensajeValue || "";
         const separator = current.length > 0 ? "\n" : "";
         setValue("mensaje", current + separator + text, { shouldValidate: true });
-        // Focus en el textarea después de insertar
         setTimeout(() => textareaRef.current?.focus(), 50);
     };
 
-    /* ── Submit handler (AC-004) ── */
-    const onSubmit = async (data: ContactFormData) => {
-        // AC-009: Si el honeypot tiene valor, un bot lo llenó → ignorar silenciosamente
+    const onSubmit = async (data: LeadFormData) => {
+        // Honeypot check
         if (data.website && data.website.length > 0) {
-            // Simular éxito para no revelar al bot que fue detectado
             await new Promise((r) => setTimeout(r, 1500));
             onSuccess(data);
             return;
         }
 
         setIsSubmitting(true);
-
         try {
-            // Simular envío a servidor (demo mock)
             await new Promise((resolve) => setTimeout(resolve, 2000));
-
-            // En producción aquí iría:
-            // await fetch("/api/contact", { method: "POST", body: JSON.stringify(data) })
-            console.log("[ContactForm] Datos enviados:", data);
-
+            console.log(`[LeadForm - ${data.type}] Datos enviados:`, data);
             onSuccess(data);
         } catch (error) {
-            console.error("[ContactForm] Error al enviar:", error);
-            // En producción: mostrar toast de error
+            console.error("[LeadForm] Error al enviar:", error);
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    /* ── Estilos reutilizables ── */
     const inputBase =
         "w-full px-4 py-3 bg-white border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed";
     const labelBase = "block text-sm font-medium text-foreground mb-1.5";
     const errorText = "text-xs text-accent-red mt-1";
-    const optionalTag = (
-        <span className="text-muted-foreground font-normal ml-1">(opcional)</span>
-    );
+    const optionalTag = <span className="text-muted-foreground font-normal ml-1">(opcional)</span>;
 
-    /* ── Validación manual con Zod ── */
-    const validate = (field: keyof ContactFormData) => ({
-        ...register(field),
-        onChange: async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-            register(field).onChange(e);
-        },
-    });
+    const currentChips = isDemo ? DEMO_CHIPS : CONTACT_CHIPS;
 
     return (
         <form
             onSubmit={handleSubmit(async (data) => {
-                // Validar con Zod antes de enviar
-                const result = contactSchema.safeParse(data);
-                if (result.success) {
-                    await onSubmit(result.data);
-                }
+                const result = leadSchema.safeParse(data);
+                if (result.success) await onSubmit(result.data);
             })}
             className="space-y-5"
             noValidate
         >
-            {/* ── Honeypot (AC-009): campo invisible para bots ── */}
+            {/* Honeypot invisible */}
             <div className="absolute opacity-0 top-0 left-0 h-0 w-0 -z-10 overflow-hidden" aria-hidden="true">
                 <label htmlFor="website">Website</label>
-                <input
-                    type="text"
-                    id="website"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    {...register("website")}
-                />
+                <input type="text" id="website" tabIndex={-1} autoComplete="off" {...register("website")} />
             </div>
 
-            {/* ── Nombre (requerido) ── */}
+            {/* Nombre */}
             <div>
                 <label htmlFor="nombre" className={labelBase}>
                     Nombre completo <span className="text-accent-red">*</span>
@@ -202,12 +173,12 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
                     placeholder="Ej. Carlos Mendoza"
                     className={inputBase}
                     disabled={isSubmitting}
-                    {...register("nombre", { required: "El nombre es requerido", minLength: { value: 2, message: "Al menos 2 caracteres" } })}
+                    {...register("nombre", { required: "El nombre es requerido", minLength: 2 })}
                 />
                 {errors.nombre && <p className={errorText}>{errors.nombre.message}</p>}
             </div>
 
-            {/* ── Email (requerido) ── */}
+            {/* Email */}
             <div>
                 <label htmlFor="email" className={labelBase}>
                     Correo corporativo <span className="text-accent-red">*</span>
@@ -220,13 +191,13 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
                     disabled={isSubmitting}
                     {...register("email", {
                         required: "El correo es requerido",
-                        pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Ingresa un correo válido" },
+                        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                     })}
                 />
                 {errors.email && <p className={errorText}>{errors.email.message}</p>}
             </div>
 
-            {/* ── Organización + Rol (2 cols) ── */}
+            {/* Organización + Rol */}
             <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                     <label htmlFor="organizacion" className={labelBase}>
@@ -238,7 +209,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
                         placeholder="Nombre de tu empresa"
                         className={inputBase}
                         disabled={isSubmitting}
-                        {...register("organizacion", { required: "La organización es requerida", minLength: { value: 2, message: "Al menos 2 caracteres" } })}
+                        {...register("organizacion", { required: "La organización es requerida", minLength: 2 })}
                     />
                     {errors.organizacion && <p className={errorText}>{errors.organizacion.message}</p>}
                 </div>
@@ -246,12 +217,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
                     <label htmlFor="rol" className={labelBase}>
                         Tu rol <span className="text-accent-red">*</span>
                     </label>
-                    <select
-                        id="rol"
-                        className={inputBase}
-                        disabled={isSubmitting}
-                        {...register("rol", { required: "Selecciona tu rol" })}
-                    >
+                    <select id="rol" className={inputBase} disabled={isSubmitting} {...register("rol", { required: "Selecciona tu rol" })}>
                         {ROLES.map((r) => (
                             <option key={r.value} value={r.value}>
                                 {r.label}
@@ -262,9 +228,9 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
                 </div>
             </div>
 
-            {/* ── Teléfono + Tamaño org (opcionales, 2 cols) ── */}
-            <div className="grid sm:grid-cols-2 gap-4">
-                <div>
+            {/* Teléfono + Tamaño org */}
+            <div className={`grid ${!isDemo ? "sm:grid-cols-2" : "grid-cols-1 md:grid-cols-2"} gap-4`}>
+                <div className={isDemo ? "hidden md:block" : ""}>
                     <label htmlFor="telefono" className={labelBase}>
                         Teléfono {optionalTag}
                     </label>
@@ -279,47 +245,35 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
                 </div>
                 <div>
                     <label htmlFor="tamano" className={labelBase}>
-                        Tamaño de la organización {optionalTag}
+                        Tamaño de organización {optionalTag}
                     </label>
-                    <select
-                        id="tamano"
-                        className={inputBase}
-                        disabled={isSubmitting}
-                        {...register("tamano")}
-                    >
+                    <select id="tamano" className={inputBase} disabled={isSubmitting} {...register("tamano")}>
                         {ORG_SIZES.map((s) => (
-                            <option key={s.value} value={s.value}>
-                                {s.label}
-                            </option>
+                            <option key={s.value} value={s.value}>{s.label}</option>
                         ))}
                     </select>
                 </div>
             </div>
 
-            {/* ── Interés principal (opcional) ── */}
-            <div>
-                <label htmlFor="interes" className={labelBase}>
-                    Interés principal {optionalTag}
-                </label>
-                <select
-                    id="interes"
-                    className={inputBase}
-                    disabled={isSubmitting}
-                    {...register("interes")}
-                >
-                    {INTERESTS.map((i) => (
-                        <option key={i.value} value={i.value}>
-                            {i.label}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            {/* Interés principal (Solo en Contacto) */}
+            {!isDemo && (
+                <div>
+                    <label htmlFor="interes" className={labelBase}>
+                        Interés principal {optionalTag}
+                    </label>
+                    <select id="interes" className={inputBase} disabled={isSubmitting} {...register("interes")}>
+                        {INTERESTS.map((i) => (
+                            <option key={i.value} value={i.value}>{i.label}</option>
+                        ))}
+                    </select>
+                </div>
+            )}
 
-            {/* ── Sugerencias de mensaje (AC-003) ── */}
+            {/* Sugerencias */}
             <div>
                 <label className={labelBase}>Sugerencias rápidas</label>
                 <div className="flex flex-wrap gap-2">
-                    {SUGGESTION_CHIPS.map((chip) => (
+                    {currentChips.map((chip) => (
                         <button
                             key={chip}
                             type="button"
@@ -333,15 +287,15 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
                 </div>
             </div>
 
-            {/* ── Mensaje (requerido) ── */}
+            {/* Mensaje */}
             <div>
                 <label htmlFor="mensaje" className={labelBase}>
-                    Mensaje <span className="text-accent-red">*</span>
+                    {isDemo ? "¿Qué te gustaría ver en la demo?" : "Mensaje"} <span className="text-accent-red">*</span>
                 </label>
                 <textarea
                     id="mensaje"
-                    rows={5}
-                    placeholder="Cuéntanos cómo podemos ayudarte..."
+                    rows={4}
+                    placeholder={isDemo ? "Cuéntanos tus retos principales para enfocar la sesión..." : "Cuéntanos cómo podemos ayudarte..."}
                     className={`${inputBase} resize-none`}
                     disabled={isSubmitting}
                     {...register("mensaje", { required: "El mensaje es requerido", minLength: { value: 10, message: "Al menos 10 caracteres" } })}
@@ -353,7 +307,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
                 {errors.mensaje && <p className={errorText}>{errors.mensaje.message}</p>}
             </div>
 
-            {/* ── Botón de envío (AC-004) ── */}
+            {/* Submit */}
             <button
                 type="submit"
                 disabled={isSubmitting}
@@ -362,17 +316,16 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
                 {isSubmitting ? (
                     <>
                         <Loader2 className="size-4 animate-spin" />
-                        Enviando...
+                        {isDemo ? "Procesando solicitud..." : "Enviando..."}
                     </>
                 ) : (
                     <>
-                        <Send className="size-4" />
-                        Enviar solicitud
+                        {isDemo ? <CalendarCheck className="size-4" /> : <Send className="size-4" />}
+                        {isDemo ? "Solicitar demo personalizada" : "Enviar información"}
                     </>
                 )}
             </button>
 
-            {/* Nota de campos requeridos */}
             <p className="text-xs text-muted-foreground text-center">
                 Los campos marcados con <span className="text-accent-red">*</span> son obligatorios.
             </p>

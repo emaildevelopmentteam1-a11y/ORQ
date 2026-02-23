@@ -727,11 +727,195 @@ stories:
       - "Sin errores en consola"
 
 
-
 # ═══════════════════════════════════════════
-# US-003: App Shell y Layout Autenticado
+# US-003: Solicitud de demo guiada con captura de lead calificado
 # ═══════════════════════════════════════════
   - id: "US-003"
+    title: "Solicitud de demo guiada con captura de lead calificado"
+    module: "landing"
+    priority: "high"
+    status: "pending"
+    sprint: 1
+    story_points: 8
+    actors: ["visitante", "cto", "director", "tomador_decision"]
+
+    narrative: >
+      Como Director de Tecnología o responsable de evaluar plataformas,
+      quiero solicitar una demo de Orquestra desde la landing,
+      proporcionando mis datos de forma rápida y profesional,
+      para que el equipo comercial me contacte y me muestre el producto.
+
+    strategic_note: >
+      Esta funcionalidad reutiliza la infraestructura del formulario de contacto,
+      pero optimizada para intención de compra (high-intent lead).
+
+    business_goal:
+      - "Capturar leads de alta intención"
+      - "Acelerar pipeline comercial"
+      - "Reducir fricción para solicitud de demo"
+      - "Segmentar prospectos enterprise"
+
+    ux_intent:
+      primary_goal: "Solicitud de demo completada"
+      secondary_goal: "Percepción de proceso enterprise"
+      emotional_tone:
+        - "premium"
+        - "ágil"
+        - "confiable"
+        - "orientado a negocio"
+
+    reuse_strategy:
+      base_component: "ContactForm"
+      reuse_level: "alto"
+      differences:
+        - "copy orientado a demo"
+        - "tracking específico"
+        - "campos de calificación opcionales"
+        - "ruta dedicada /demo"
+
+    functional_scope:
+      entry_points:
+        - "Hero CTA 'Solicitar demo'"
+        - "CTA final de la landing"
+        - "Navbar (opcional futuro)"
+
+      form_fields_required:
+        - "Nombre completo"
+        - "Correo corporativo"
+        - "Organización"
+        - "Rol"
+      recommended_fields:
+        - "Tamaño de la organización"
+        - "Interés principal"
+        - "¿Qué deseas ver en la demo?"
+
+      system_behaviors:
+        - "Apertura en página dedicada o modal"
+        - "Validación en tiempo real"
+        - "Loading state"
+        - "Confirmación visual"
+        - "Email al equipo comercial"
+        - "Email de confirmación al solicitante"
+
+    acceptance_criteria:
+      - id: "AC-001"
+        name: "Navegación desde CTA"
+        description: >
+          Al hacer click en 'Solicitar demo', el usuario es dirigido
+          a la experiencia de solicitud de demo sin fricción.
+        validations:
+          - "Navegación client-side"
+          - "Tiempo de transición < 300ms"
+          - "Evento analytics disparado"
+        validated: false
+
+      - id: "AC-002"
+        name: "Experiencia diferenciada de demo"
+        description: >
+          La página o modal comunica claramente que se trata
+          de una solicitud de demo guiada.
+        validations:
+          - "Headline orientado a demo"
+          - "Microcopy de expectativa de contacto"
+          - "Diseño consistente con branding"
+        validated: false
+
+      - id: "AC-003"
+        name: "Formulario optimizado para lead calificado"
+        description: >
+          El formulario reutiliza el componente base pero
+          prioriza rapidez y calidad del lead.
+        validations:
+          - "Tiempo de llenado ≤ 60s"
+          - "Campos obligatorios mínimos"
+          - "Validación inline"
+          - "Accesible por teclado"
+        validated: false
+
+      - id: "AC-004"
+        name: "Envío y estado de carga"
+        description: >
+          Al enviar la solicitud, el sistema procesa
+          de forma asíncrona mostrando feedback visual.
+        validations:
+          - "Botón muestra loading"
+          - "Prevención de doble submit"
+          - "Errores manejados"
+        validated: false
+
+      - id: "AC-005"
+        name: "Confirmación post-solicitud"
+        description: >
+          Tras envío exitoso, el usuario ve confirmación clara
+          con expectativa de contacto.
+        validations:
+          - "Mensaje visible"
+          - "Tono corporativo"
+          - "Incluye tiempo estimado de respuesta"
+          - "ARIA live presente"
+        validated: false
+
+      - id: "AC-006"
+        name: "Notificación al equipo comercial"
+        description: >
+          El sistema envía email estructurado marcando
+          el lead como 'Demo Request'.
+        validations:
+          - "Incluye metadata de origen"
+          - "Timestamp"
+          - "Campos completos"
+        validated: false
+
+      - id: "AC-007"
+        name: "Correo de confirmación al solicitante"
+        description: >
+          El usuario recibe confirmación automática
+          de que su demo fue solicitada.
+        validations:
+          - "Branding Orquestra"
+          - "Resumen de solicitud"
+          - "Próximos pasos claros"
+        validated: false
+
+      - id: "AC-008"
+        name: "Experiencia responsive premium"
+        description: >
+          La solicitud de demo funciona correctamente
+          en móvil, tablet y desktop.
+        validations:
+          - "Sin overflow en 320px"
+          - "Inputs táctiles ≥44px"
+          - "CTA visible"
+        validated: false
+
+    analytics_events:
+      - "demo_cta_click"
+      - "demo_form_view"
+      - "demo_form_submit"
+      - "demo_form_success"
+      - "demo_form_error"
+
+    non_functional_requirements:
+      performance:
+        - "Tiempo de envío percibido < 2s"
+      accessibility:
+        - "WCAG 2.1 AA"
+      security:
+        - "Validación server-side"
+        - "Sanitización inputs"
+        - "Protección anti-spam"
+
+    definition_of_done:
+      - "Solicitud de demo funcional"
+      - "Correos enviados correctamente"
+      - "Tracking activo"
+      - "UX aprobada"
+      - "Sin errores en consola"
+
+# ═══════════════════════════════════════════
+# US-004: App Shell y Layout Autenticado
+# ═══════════════════════════════════════════
+  - id: "US-004"
     title: "Como usuario autenticado quiero una estructura de layout con sidebar y header para navegar entre los módulos de la plataforma."
     module: "app_shell"
     priority: "high"
@@ -777,9 +961,9 @@ stories:
         flow_ids: ["FLOW-005"]
 
   # ═══════════════════════════════════════════
-  # US-004: Dashboard (Inicio) y Empty States
+  # US-005: Dashboard (Inicio) y Empty States
   # ═══════════════════════════════════════════
-  - id: "US-004"
+  - id: "US-005"
     title: "Dashboard de Inicio con KPI Cards y guiado a Extensiones"
     module: "dashboard"
     priority: "high"
@@ -833,7 +1017,7 @@ flows:
       - "El visitante accede a la URL raíz"
       - "El sistema renderiza el hero section y botón CTA 'Ver demo'"
       - "El visitante hace clic en 'Ver demo'"
-      - "El sistema navega directamente a /dashboard"
+      - "El sistema navega a /demo"
     alternatives:
       - "Si el visitante hace clic en 'Hablar con Ventas', se muestra un modal de contacto (mock)"
     errors: []

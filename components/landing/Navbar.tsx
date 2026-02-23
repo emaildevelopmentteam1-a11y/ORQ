@@ -59,10 +59,10 @@ export function Navbar() {
                         )
                     )}
                     <Link
-                        href="/dashboard"
+                        href="/demo"
                         className="inline-flex items-center justify-center px-4 py-2 text-sm bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary-hover transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
                     >
-                        Acceder al demo
+                        Solicitar demo
                     </Link>
                 </div>
 
@@ -101,11 +101,11 @@ export function Navbar() {
                         )
                     )}
                     <Link
-                        href="/dashboard"
+                        href="/demo"
                         onClick={() => setMobileOpen(false)}
                         className="block mt-3 text-center px-4 py-2.5 text-sm bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary-hover transition-colors shadow-sm"
                     >
-                        Acceder al demo
+                        Solicitar demo
                     </Link>
                 </div>
             )}

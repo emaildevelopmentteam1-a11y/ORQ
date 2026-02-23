@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Building2, Mail, Phone, Globe } from "lucide-react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
-import { ContactForm } from "@/components/contact/ContactForm";
+import { LeadForm } from "@/components/forms/LeadForm";
 import { ContactSuccess } from "@/components/contact/ContactSuccess";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -157,7 +157,8 @@ export default function ContactoPage() {
                                         <p className="text-sm text-text-secondary mb-6">
                                             Completa los campos y te responderemos en menos de 24 horas.
                                         </p>
-                                        <ContactForm
+                                        <LeadForm
+                                            variant="contact"
                                             onSuccess={(data) =>
                                                 setSubmitted({
                                                     nombre: data.nombre,

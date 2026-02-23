@@ -1,60 +1,62 @@
-Perfecto. A continuación tienes un **prompt maestro listo para pegar en una IA generadora de código** (tipo Copilot, Cursor, Claude Code, etc.).
-
-Está diseñado para que te genere un **demo enterprise funcional de Orquestra**, con arquitectura clara, componentes bien definidos y comentarios.
-
-Puedes copiarlo tal cual 👇
-
----
-
-# 🧠 PROMPT MAESTRO — Generación de demo Orquestra
+# 🧠 PROMPT MAESTRO — Landing Enterprise Orquestra
 
 Actúa como un **arquitecto de software senior especializado en aplicaciones SaaS empresariales modernas**.
 
-Tu objetivo es generar un **demo funcional de la plataforma Orquestra**, con enfoque enterprise, modular y escalable.
+Tu objetivo es generar una **landing page enterprise de alta calidad para Orquestra**, enfocada exclusivamente en:
+
+* presentación del producto
+* captura de leads
+* solicitud de demo
 
 ⚠️ IMPORTANTE:
 
-* El código debe ser limpio y bien organizado.
-* Debes incluir **comentarios explicativos en los archivos clave**.
+* El código debe ser limpio, tipado y bien organizado.
+* Debes incluir **comentarios explicativos en archivos clave**.
 * Debes proponer una **estructura de directorios profesional**.
-* El demo debe ser funcional pero con datos mock donde sea necesario.
-* Prioriza claridad visual y arquitectura sobre complejidad.
+* Debe verse como producto enterprise (no startup genérica).
+* Prioriza claridad visual, conversión y calidad UX.
 
 ---
 
 # 🎯 Objetivo del sistema
 
-Construir un demo web donde el usuario pueda:
+Construir una landing donde un director o CTO pueda:
 
-1. Entrar a una landing page.
-2. Acceder a un dashboard empresarial.
-3. Ver un marketplace de extensiones.
-4. Activar extensiones (KPI, Encuestas, BI).
-5. Ver cómo el menú se actualiza dinámicamente.
-6. Gestionar usuarios, roles granulares y grupos.
-7. Crear un KPI de ejemplo.
-8. Navegar entre módulos.
+1. Entender rápidamente qué es Orquestra.
+2. Comprender el modelo de plataforma modular por extensiones.
+3. Confiar en el producto (look enterprise).
+4. Solicitar información de contacto.
+5. Solicitar una demo.
+6. Recibir confirmación visual y por correo.
+
+⚠️ NO construir dashboard ni app interna.
 
 ---
 
-# 🧱 Stack tecnológico sugerido
+# 🧱 Stack obligatorio
 
-Usa este stack salvo que propongas uno mejor y lo justifiques:
+Usar:
 
-**Frontend**
+**Framework**
 
-* React + TypeScript
-* Vite o Next.js
+* Next.js (App Router)
+* TypeScript
+
+**UI**
+
 * Tailwind CSS
-* Componentes modulares
-* Estado simple (Zustand o Context)
+* Componentes reutilizables
+* Diseño enterprise moderno
 
-**Backend (ligero para demo)**
+**Backend / BaaS**
 
-* Node.js + Express o NestJS
-* API REST
-* Datos mock en memoria o JSON
-* Arquitectura preparada para escalar
+* Supabase (para envío y persistencia de leads)
+* API routes de Next.js si es necesario
+
+**Estado**
+
+* React Hook Form (formularios)
+* Zod (validación)
 
 ---
 
@@ -63,309 +65,287 @@ Usa este stack salvo que propongas uno mejor y lo justifiques:
 Debes generar algo similar a:
 
 ```
-orquestra-demo/
-  apps/
-    web/
-      src/
-        components/
-        layouts/
-        pages/
-        modules/
-        store/
-        services/
-        types/
-        mock/
-  server/
-    src/
-      modules/
-      routes/
-      services/
-      data/
+orquestra-landing/
+  app/
+    (marketing)/
+      page.tsx
+      contacto/
+      demo/
+  components/
+    layout/
+    marketing/
+    forms/
+    ui/
+  lib/
+    supabase/
+    validations/
+  services/
+    leads/
+  types/
   docs/
 ```
 
-⚠️ Debes explicar brevemente el propósito de cada carpeta.
+⚠️ Explica brevemente el propósito de cada carpeta.
 
 ---
 
-# 🧩 Componentes obligatorios a generar
+# 🧩 Componentes obligatorios
 
-## 🔷 Layouts
+## 🔷 Layout público
 
-### 1. AppLayout
+### MarketingLayout
 
 Debe incluir:
 
-* Sidebar dinámica
-* Header superior
-* Área de contenido
-* Soporte para menú por roles
-* Soporte para módulos activados
+* Navbar sticky
+* Contenedor centrado
+* Footer corporativo
+* Soporte responsive
 
-Agregar comentarios explicando:
-
-* Cómo se construye el menú
-* Cómo se inyectan módulos
+Agregar comentarios explicando decisiones.
 
 ---
 
-## 🔷 Navegación
+## 🔷 Navbar
 
-### 2. Sidebar
+Debe contener:
 
-Debe soportar:
+* Logo Orquestra
+* Links:
 
-* Items base
-* Items por rol
-* Items por extensión activada
-* Estado colapsado
-* Highlight activo
+  * Producto
+  * Capacidades
+  * Contacto
+* CTA “Solicitar demo”
 
-⚠️ Muy comentado.
+Requisitos:
+
+* Sticky
+* Responsive con menú móvil
+* Estados hover y focus
 
 ---
 
-### 3. HeaderBar
+## 🔷 LandingPage (HOME)
+
+Debe ser **claramente enterprise**.
+
+### Secciones obligatorias
+
+#### 1. Hero estratégico
 
 Debe incluir:
 
-* Selector de rol (demo)
-* Nombre de organización
-* Botón de contacto
-* Avatar de usuario
+* H1 fuerte orientado a transformación empresarial
+* Subtítulo mencionando plataforma modular por extensiones
+* Mockup/dashboard decorativo
+* CTA primario: Solicitar demo
+* CTA secundario: Contacto
 
 ---
 
-## 🔷 Landing
+#### 2. Propuesta de valor
 
-### 4. LandingPage
+Explicar:
 
-Secciones:
-
-* Hero con CTA
-* Beneficios
-* Cómo funciona (3 pasos)
-* Extensiones destacadas
-* Beneficios cloud
-* CTA final
-
-Debe verse enterprise.
+* Plataforma modular
+* Activación por extensiones
+* Time-to-value
+* Enfoque enterprise
 
 ---
 
-## 🔷 Marketplace de extensiones
+#### 3. Cómo funciona (3 pasos)
 
-### 5. ExtensionsMarketplace
+Visual flow:
 
-Debe mostrar:
+1. Configura tu organización
+2. Activa extensiones
+3. Opera con visibilidad total
 
-Extensiones mock:
+Debe ser visual y claro.
 
-* Indicadores KPI
+---
+
+#### 4. Extensiones destacadas
+
+Mostrar cards mock:
+
+* KPI
 * Encuestas
-* Tableros BI
+* BI
 
-Cada tarjeta debe tener:
+Cada card con badge:
 
-* Badge 🧩 EXTENSIÓN
-* Estado (Disponible / Activo)
-* Botón Habilitar
+🧩 EXTENSIÓN
 
 ---
 
-### 6. ExtensionCard
+#### 5. Beneficios cloud / enterprise
 
-Reusable.
+Ejemplos:
 
-Props:
-
-* name
-* description
-* status
-* onActivate
+* Seguridad
+* Escalabilidad
+* Multi-organización
+* Alta disponibilidad
 
 ---
 
-# 📊 Módulos funcionales
+#### 6. CTA final de conversión
 
-## 7. KPI Module
+Bloque premium con:
 
-Pantallas:
-
-* KPIListPage
-* CreateKPIModal
-* KPIWidget (dashboard)
-
-Funcionalidad mock:
-
-* Crear KPI
-* Listar KPI
-* Mostrar semáforo
+* Headline de cierre
+* Botón Solicitar demo
+* Botón Contacto
 
 ---
 
-## 8. Surveys Module (extensión)
+# 📨 Página de Contacto
 
-Pantallas:
+Ruta:
 
-* SurveyListPage
-* SurveyResults (mock chart)
+```
+/contacto
+```
 
----
+## Requisitos del formulario
 
-## 9. BI Module (extensión)
+Campos:
 
-Pantalla:
-
-* BIDashboard
-
-Con gráficas mock (puede usar chart library simple).
-
----
-
-# 🔐 Sistema de usuarios y seguridad (CLAVE)
-
-## 10. User Management
-
-Pantallas:
-
-* UserListPage
-* UserDetail
-
-Debe permitir:
-
-* Usuario con múltiples roles
-* Chips de roles
-* Asignación de grupos
-
----
-
-## 11. Roles & Permissions
-
-Pantalla crítica.
-
-Debe incluir:
-
-* Roles list
-* PermissionMatrix
-
-Permisos ejemplo:
-
-* view_kpi
-* edit_kpi
-* activate_extensions
-* manage_users
-
-⚠️ Debe verse enterprise.
-
----
-
-## 12. User Groups
-
-Pantalla:
-
-* GroupList
-* GroupDetail
-
-Funcionalidad mock:
-
-* Crear grupo
-* Asignar usuarios
-* Asignar rol por grupo
-
----
-
-# 🧠 Estado global requerido
-
-Debes implementar store para:
-
-* Rol actual
-* Extensiones activas
-* Usuario actual
-* Organización actual
-
-Debe permitir:
-
-✅ Activar extensión
-✅ Refrescar sidebar
-✅ Cambiar rol
-
----
-
-# ✨ Comportamientos críticos
-
-Debes implementar:
-
-### Activar extensión
-
-Al hacer clic en Habilitar:
-
-* Cambia estado a Activo
-* Muestra toast
-* Actualiza sidebar
-
----
-
-### Sidebar dinámica
-
-Debe recalcularse según:
-
+* Nombre completo
+* Correo corporativo
+* Organización
 * Rol
-* Extensiones activas
+* Mensaje
+
+Opcionales:
+
+* Teléfono
+* Tamaño de empresa
+* Interés principal
 
 ---
 
-### Datos mock
+## Comportamientos obligatorios
 
-Crear carpeta:
-
-```
-mock/
-```
-
-Con:
-
-* users.mock.ts
-* roles.mock.ts
-* extensions.mock.ts
-* kpis.mock.ts
+* Validación con Zod
+* React Hook Form
+* Loading state
+* Prevención doble submit
+* Mensaje de éxito inline
+* Accesibilidad básica
 
 ---
 
-# 🎨 Estilo visual
+## ✨ Sugerencias inteligentes
 
-Usar Tailwind.
+Mostrar chips clicables como:
 
-Look:
+* "Quiero conocer precios"
+* "Necesito una demo técnica"
+* "Evaluando para mi organización"
+* "Información de arquitectura"
+
+Al hacer clic → se insertan en el textarea.
+
+---
+
+## 📩 Integración Supabase
+
+Al enviar:
+
+1. Guardar lead en tabla `leads`
+2. Enviar email al equipo
+3. Enviar email de confirmación al usuario
+
+⚠️ Usa variables de entorno.
+
+---
+
+# 🎬 Página Solicitar Demo
+
+Ruta:
+
+```
+/demo
+```
+
+⚠️ IMPORTANTE: reutilizar el mismo componente base de formulario.
+
+Patrón esperado:
+
+```
+<LeadForm variant="contact" />
+<LeadForm variant="demo" />
+```
+
+---
+
+## Diferencias demo vs contacto
+
+Demo debe:
+
+* copy orientado a demo
+* campo opcional:
+
+  * "¿Qué te gustaría ver en la demo?"
+* marcar lead como `type: demo_request`
+
+---
+
+## Confirmación post-envío
+
+El usuario debe ver:
+
+* mensaje claro
+* tono corporativo
+* tiempo estimado de respuesta
+* estado accesible (aria-live)
+
+---
+
+# 🧠 Estilo visual obligatorio
+
+Look & feel:
 
 * Enterprise moderno
 * Mucho espacio en blanco
 * Cards suaves
 * Bordes redondeados
-* Sombras ligeras
+* Sombras sutiles
+* Tipografía profesional
+
+Inspiración implícita:
+
+* plataformas tipo Salesforce
+* SaaS B2B moderno
+* GovTech limpio
 
 ---
 
 # 🧪 Nivel de fidelidad
 
-Esto es un **demo de alto impacto**, no un MVP feo.
+Esto es un **demo comercial de alto impacto**.
 
 Debe:
 
-* Verse profesional
-* Ser navegable
-* Tener estados realistas
-* Tener loading y empty states básicos
+* Verse vendible
+* Ser completamente navegable
+* Tener empty states
+* Tener loading states
+* Tener validaciones reales
 
 ---
 
 # 📚 Documentación requerida
 
-Debes generar en `/docs`:
+Generar en `/docs`:
 
-* README.md con instrucciones
+* README.md (cómo correr)
 * Arquitectura.md
-* Cómo agregar nuevas extensiones.md
+* Flujo de leads.md
 
 ---
 
@@ -373,9 +353,10 @@ Debes generar en `/docs`:
 
 NO:
 
-* No código desordenado
+* No dashboard
+* No marketplace funcional
+* No lógica innecesaria
 * No componentes gigantes
-* No lógica duplicada
 * No estilos inline caóticos
 
 SÍ:
@@ -383,19 +364,23 @@ SÍ:
 * Componentes pequeños
 * Tipado fuerte
 * Comentarios útiles
-* Estructura enterprise
+* Arquitectura limpia
+* Reutilización del formulario
 
 ---
 
 # ✅ Entregable esperado de la IA
 
-La IA debe entregar:
+Debe generar:
 
 1. Estructura de carpetas
-2. Código base funcional
-3. Componentes principales
-4. Datos mock
-5. Documentación mínima
-6. Instrucciones para correr el proyecto
+2. Landing funcional
+3. Página contacto
+4. Página demo
+5. Formulario reutilizable
+6. Integración Supabase
+7. Datos mock si aplica
+8. Documentación mínima
+9. Instrucciones para correr
 
-STACK NEXTJS, TAILWIND, SUPABASE
+---
