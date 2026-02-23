@@ -1,355 +1,60 @@
 meta:
   app: "Orquestra"
-  version: "0.2.0"
-  description: "Plataforma enterprise modular con marketplace de extensiones, gestión organizacional, usuarios/roles y módulos dinámicos (KPI, Encuestas, Formularios, BI)."
+  version: "1.0.0"
+  description: "Plataforma web enfocada exclusivamente en la Landing Page corporativa, flujos de captación de leads (Contacto/Demo) y navegación enterprise."
   updated_at: "2026-02-22"
   sprint:
     number: 1
-    goal: "Fundamentos: stack, design system y layout base"
+    goal: "Lanzamiento de Landing Page y Funnels de Conversión"
     start: "2026-02-22"
     end: "2026-03-07"
     days_left: 13
   stats:
-    total: 54
-    implemented: 3
+    total: 5
+    implemented: 5
     partial: 0
-    pending: 51
+    pending: 0
     with_tests: 0
     coverage_pct: 0
 
 modules:
   - id: "landing"
     name: "Landing Page"
-    description: "Página de aterrizaje pública del producto. Incluye hero con CTA, sección de beneficios, pasos de funcionamiento, extensiones destacadas, beneficios cloud y CTA final. Debe verse enterprise y profesional."
+    description: "Página de aterrizaje pública y escaparate del producto. Incluye hero, beneficios, capacidades clave, y modelo de arquitectura modular para transmitir madurez enterprise."
+    actors: ["visitante", "evaluador_tecnico", "director"]
+
+  - id: "contact_flow"
+    name: "Flujo de Contacto"
+    description: "Módulo de captación de leads generales y consultas corporativas. Emplea un formulario validado con envío de notificaciones y experiencia de éxito."
     actors: ["visitante"]
 
-  - id: "app_shell"
-    name: "App Shell (Layout)"
-    description: "Estructura general de la aplicación autenticada: AppLayout con sidebar dinámica, header superior con selector de rol, área de contenido principal. Controla la inyección de módulos y menú por roles/extensiones."
-    actors: ["admin", "manager", "viewer"]
+  - id: "demo_flow"
+    name: "Flujo de Demo Guiada"
+    description: "Módulo especializado en captación de leads de alta intención (Decision Makers). Exige campos de calificación y promete agendamiento de sesión técnica."
+    actors: ["tomador_decision", "cto"]
 
-  - id: "marketplace"
-    name: "Marketplace de Extensiones"
-    description: "Catálogo de extensiones disponibles y activas. Permite habilitar/deshabilitar módulos (KPI, Encuestas, BI). Cada extensión muestra badge de estado, descripción y botón de activación. Al activar, el sidebar se actualiza dinámicamente."
-    actors: ["admin"]
-
-  - id: "kpi"
-    name: "Indicadores KPI"
-    description: "Módulo de extensión para gestión y monitoreo de indicadores clave de rendimiento. Incluye listado de KPIs, creación via modal, widget para dashboard y lógica de semáforo (critical/warning/stable)."
-    actors: ["admin", "manager", "viewer"]
-
-  - id: "surveys"
-    name: "Encuestas"
-    description: "Módulo de extensión para crear y distribuir encuestas de satisfacción. Incluye listado de encuestas y visualización de resultados con gráficas mock."
-    actors: ["admin", "manager"]
-
-  - id: "bi"
-    name: "Tableros BI"
-    description: "Módulo de extensión de Business Intelligence. Dashboard con gráficas avanzadas (barras, líneas, donut) usando datos mock. Soporta descarga y compartición de reportes."
-    actors: ["admin", "manager", "viewer"]
-
-  - id: "user_management"
-    name: "Gestión de Usuarios"
-    description: "Administración de usuarios de la organización. Listado con búsqueda, detalle de usuario, asignación de múltiples roles via chips, asignación a grupos. Solo accesible para administradores."
-    actors: ["admin"]
-
-  - id: "roles_permissions"
-    name: "Roles y Permisos"
-    description: "Gestión de roles con matriz de permisos granulares (view_kpi, edit_kpi, activate_extensions, manage_users). Interfaz enterprise con tabla de permisos por rol."
-    actors: ["admin"]
-
-  - id: "user_groups"
-    name: "Grupos de Usuarios"
-    description: "Gestión de grupos organizacionales. Crear grupos, asignar usuarios a grupos y asignar rol por grupo. Permite organizar usuarios por departamento o función."
-    actors: ["admin"]
-
-  - id: "dashboard"
-    name: "Dashboard Principal"
-    description: "Panel principal de la aplicación autenticada. Muestra resumen de KPIs activos (widgets), accesos rápidos a módulos habilitados, y estado general de la organización."
-    actors: ["admin", "manager", "viewer"]
-
-  - id: "global_state"
-    name: "Estado Global"
-    description: "Infraestructura de estado con Zustand. Maneja rol actual, extensiones activas, usuario actual y organización. Permite activar extensión, refrescar sidebar y cambiar rol en tiempo real."
-    actors: ["system"]
-
-  - id: "organization_mgmt"
-    name: "Gestión de Organización"
-    description: "Módulo para gestionar la estructura jerárquica de la empresa: áreas, departamentos, responsables y empleados. Vista de árbol expandible con CRUD de áreas."
-    actors: ["admin", "manager"]
-
-  - id: "contact"
-    name: "Página de Contacto"
-    description: "Formulario público de captación de leads y solicitud de demo. Layout a 2 columnas con formulario + info de contacto, horarios y CTA de demo personalizada."
-    actors: ["visitante"]
-
-  - id: "forms"
-    name: "Formularios"
-    description: "Módulo de extensión para crear formularios personalizados y recopilar información del equipo. Incluye constructor de formularios y visualización de respuestas."
-    actors: ["admin", "manager"]
+  - id: "navigation"
+    name: "Navegación Global"
+    description: "Sistema de enrutamiento y anclaje (Navbar, Footer, enlaces cruzados) que garantiza la cohesión entre la landing, rutas dinámicas y secciones de contenido."
+    actors: ["visitante", "todos"]
 
 entities:
-  - id: "user"
-    name: "Usuario"
-    states: ["active", "inactive", "suspended"]
-    transitions:
-      - from: "active"
-        to: "inactive"
-        action: "Desactivar usuario"
-      - from: "inactive"
-        to: "active"
-        action: "Reactivar usuario"
-      - from: "active"
-        to: "suspended"
-        action: "Suspender usuario"
-
-  - id: "role"
-    name: "Rol"
-    states: ["active", "disabled"]
+  - id: "visitor"
+    name: "Visitante Público"
+    states: ["exploring", "bounced"]
     transitions: []
 
-  - id: "permission"
-    name: "Permiso"
-    states: []
-    transitions: []
-
-  - id: "group"
-    name: "Grupo"
-    states: ["active", "archived"]
-    transitions: []
-
-  - id: "extension"
-    name: "Extensión"
-    states: ["available", "active"]
+  - id: "lead"
+    name: "Lead Corporativo"
+    states: ["captured", "contacted", "qualified"]
     transitions:
-      - from: "available"
-        to: "active"
-        action: "Habilitar extensión"
-      - from: "active"
-        to: "available"
-        action: "Deshabilitar extensión"
-
-  - id: "kpi_indicator"
-    name: "Indicador KPI"
-    states: ["critical", "warning", "stable"]
-    transitions:
-      - from: "stable"
-        to: "warning"
-        action: "Valor se acerca al umbral"
-      - from: "warning"
-        to: "critical"
-        action: "Valor supera umbral crítico"
-
-  - id: "survey"
-    name: "Encuesta"
-    states: ["draft", "published", "closed"]
-    transitions:
-      - from: "draft"
-        to: "published"
-        action: "Publicar encuesta"
-      - from: "published"
-        to: "closed"
-        action: "Cerrar encuesta"
-
-  - id: "organization"
-    name: "Organización"
-    states: ["active"]
-    transitions: []
-
-  - id: "bi_report"
-    name: "Reporte BI"
-    states: ["generated", "shared"]
-    transitions:
-      - from: "generated"
-        to: "shared"
-        action: "Compartir reporte"
-
-  - id: "area"
-    name: "Área Organizacional"
-    states: ["active", "archived"]
-    transitions:
-      - from: "active"
-        to: "archived"
-        action: "Archivar área"
-      - from: "archived"
-        to: "active"
-        action: "Reactivar área"
-
-  - id: "contact_lead"
-    name: "Lead de Contacto"
-    states: ["received", "contacted", "converted"]
-    transitions:
-      - from: "received"
+      - from: "captured"
         to: "contacted"
-        action: "Contactar lead"
-      - from: "contacted"
-        to: "converted"
-        action: "Convertir a cliente"
+        action: "Asesor contacta al lead vía email/teléfono"
 
 stories:
   # ═══════════════════════════════════════════
-  # FASE 0 — PREPARACIÓN (secuencial, antes de cualquier vista)
-  # ═══════════════════════════════════════════
-
-  # ═══════════════════════════════════════════
-  # US-P01: Definición de Stack Tecnológico
-  # ═══════════════════════════════════════════
-  - id: "US-P01"
-    title: "Como equipo de desarrollo quiero definir el stack tecnológico y la estructura del proyecto para tener una base sólida antes de implementar vistas."
-    module: "global_state"
-    priority: "critical"
-    status: "implemented"
-    sprint: 1
-    flow_ids: ["FLOW-P01", "FLOW-P02"]
-    acceptance_criteria:
-      - id: "AC-001"
-        description: "El proyecto usa Next.js 15 con App Router + TypeScript strict. La raíz del proyecto es orq/ (no se crea subcarpeta)."
-        validated: true
-        flow_ids: ["FLOW-P01"]
-      - id: "AC-002"
-        description: "Se ha configurado Tailwind CSS como sistema de estilos, con tokens custom (colores, border-radius, tipografía) en tailwind.config."
-        validated: true
-        flow_ids: ["FLOW-P01"]
-      - id: "AC-003"
-        description: "Se ha instalado y configurado JSON Server como backend mock (db.json con datos iniciales, script en package.json)."
-        validated: true
-        flow_ids: ["FLOW-P01"]
-      - id: "AC-004"
-        description: "Se han instalado React Hook Form + Zod + @hookform/resolvers para validación de formularios."
-        validated: true
-        flow_ids: ["FLOW-P01"]
-      - id: "AC-005"
-        description: "El proyecto arranca en modo dev sin errores con npm run dev. JSON Server corre en paralelo (puerto 3001)."
-        validated: true
-        flow_ids: ["FLOW-P02"]
-      - id: "AC-006"
-        description: "Se ha definido la estructura de carpetas Next.js: app/ (rutas), components/, lib/, types/, mock/ (db.json)."
-        validated: true
-        flow_ids: ["FLOW-P01"]
-      - id: "AC-007"
-        description: "Se ha documentado la decisión de stack en un archivo STACK.md con justificación de cada elección."
-        validated: true
-        flow_ids: ["FLOW-P01"]
-      - id: "AC-008"
-        description: "Se ha configurado el App Router con rutas base: / (landing), /dashboard, /organizacion, /usuarios, /extensiones, /contacto."
-        validated: true
-        flow_ids: ["FLOW-P02"]
-      - id: "AC-009"
-        description: "Se ha configurado ESLint + path aliases (@/) en tsconfig.json."
-        validated: true
-        flow_ids: ["FLOW-P01"]
-
-  # ═══════════════════════════════════════════
-  # US-P02: Design System y Look & Feel
-  # ═══════════════════════════════════════════
-  - id: "US-P02"
-    title: "Como equipo de desarrollo quiero implementar el design system basado en el mockup de Figma para garantizar consistencia visual en toda la plataforma."
-    module: "app_shell"
-    priority: "critical"
-    status: "implemented"
-    sprint: 1
-    flow_ids: ["FLOW-P03", "FLOW-P04"]
-    acceptance_criteria:
-      - id: "AC-001"
-        description: "Se han definido 14 tokens de color en globals.css vía @theme inline de Tailwind v4: --color-primary (#2563EB), --color-primary-light (#EEF2FF), --color-primary-hover (#1D4ED8), --color-accent-green (#16A34A), --color-accent-green-light (#F0FDF4), --color-accent-red (#DC2626), --color-accent-red-light (#FEF2F2), --color-accent-amber (#D97706), --color-accent-amber-light (#FFFBEB), --color-surface (#FFFFFF), --color-bg (#F0F4FF), --color-border (#E2E8F0), --color-cta-dark (#0F172A), --color-text-primary (#0F172A), --color-text-secondary (#64748B), --color-text-muted (#94A3B8)."
-        validated: true
-        flow_ids: ["FLOW-P03"]
-      - id: "AC-002"
-        description: "Se ha configurado la tipografía con --font-sans: 'Inter' importada desde Google Fonts en layout.tsx, con escalas de tamaño de referencia: 32px hero H1, 24px page H1, 14px body, 13px card labels, 12px badges."
-        validated: true
-        flow_ids: ["FLOW-P03"]
-      - id: "AC-003"
-        description: "Se han definido 4 tokens de border-radius en globals.css: --radius-card (12px), --radius-pill (999px), --radius-button (8px), --radius-input (8px)."
-        validated: true
-        flow_ids: ["FLOW-P03"]
-      - id: "AC-004"
-        description: "Se han definido 2 tokens de sombra en globals.css: --shadow-card (0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)) y --shadow-card-hover (0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04))."
-        validated: true
-        flow_ids: ["FLOW-P03"]
-      - id: "AC-005"
-        description: "Se ha definido la iconografía con lucide-react, estilo outlined, color --color-primary, tamaño 20px para sidebar y 24px para cards."
-        validated: true
-        flow_ids: ["FLOW-P03"]
-      - id: "AC-006"
-        description: "Componente Button (components/ui/Button.tsx) con 4 variantes (primary, outline, dark, ghost), 3 tamaños (sm, md, lg), estado disabled con opacity 50%, forwardRef y clsx para composición de clases."
-        validated: true
-        flow_ids: ["FLOW-P04"]
-      - id: "AC-007"
-        description: "Componente Badge (components/ui/Badge.tsx) con 5 variantes (info, success, warning, error, neutral), forma pill (rounded-pill), padding horizontal 10px (px-2.5), tipografía 12px font-medium."
-        validated: true
-        flow_ids: ["FLOW-P04"]
-      - id: "AC-008"
-        description: "Componente Card (components/ui/Card.tsx) base con border-radius 12px (rounded-card), shadow --shadow-card, prop hover para shadow elevada (--shadow-card-hover), borde 1px --color-border y padding 24px (p-6)."
-        validated: true
-        flow_ids: ["FLOW-P04"]
-      - id: "AC-009"
-        description: "Componente Input (components/ui/Input.tsx) con slot de icono izquierdo opcional, border-radius 8px (rounded-input), focus ring azul (ring-primary), padding adaptativo cuando hay icono (pl-10)."
-        validated: true
-        flow_ids: ["FLOW-P04"]
-      - id: "AC-010"
-        description: "Componente KpiCard (components/ui/KpiCard.tsx) que compone Card + Badge + iconos Lucide (TrendingUp/TrendingDown/Minus), con props: title (string), value (string|number), change (string), trend (up/down/neutral), icon (ReactNode)."
-        validated: true
-        flow_ids: ["FLOW-P04"]
-      - id: "AC-011"
-        description: "Componente ExtensionCard (components/ui/ExtensionCard.tsx) con resolución dinámica de iconos Lucide por nombre, statusConfig (available/active/coming-soon → badge + botón), props: name, description, iconName, status, category, onToggle."
-        validated: true
-        flow_ids: ["FLOW-P04"]
-      - id: "AC-012"
-        description: "Componentes TableRow (components/ui/TableRow.tsx) y TreeItem (components/ui/TreeItem.tsx) para tablas de usuarios y árbol organizacional. Existe página de showcase (app/(app)/showcase/page.tsx) renderizando todos los componentes con sus variantes."
-        validated: true
-        flow_ids: ["FLOW-P04"]
-
-
-  # ═══════════════════════════════════════════
-  # US-P03: Datos Mock Realistas
-  # ═══════════════════════════════════════════
-  - id: "US-P03"
-    title: "Como equipo quiero datos mock realistas y coherentes para que todas las vistas se puedan implementar con datos representativos desde el inicio."
-    module: "global_state"
-    priority: "high"
-    status: "pending"
-    sprint: 1
-    flow_ids: ["FLOW-P05", "FLOW-P06"]
-    acceptance_criteria:
-      - id: "AC-001"
-        description: "Existen al menos 10 usuarios mock con nombres españoles, emails @orquestra.com y teléfonos +34 600 XXX XXX."
-        validated: false
-        flow_ids: ["FLOW-P05"]
-      - id: "AC-002"
-        description: "Existen al menos 14 áreas organizacionales mock con jerarquía (Dirección General como raíz), empleados y responsables."
-        validated: false
-        flow_ids: ["FLOW-P05"]
-      - id: "AC-003"
-        description: "Existen 5 extensiones mock: 3 disponibles (KPI, Formularios, Encuestas) y 2 próximamente (Colaboración, BI)."
-        validated: false
-        flow_ids: ["FLOW-P05"]
-      - id: "AC-004"
-        description: "Existen 3 roles mock: Directivo (todos los permisos), Responsable de área (parcial), Colaborador (solo lectura)."
-        validated: false
-        flow_ids: ["FLOW-P06"]
-      - id: "AC-005"
-        description: "Los KPIs mock incluyen: Resumen organización (12 áreas, 148 colaboradores), Actividad reciente (24 hoy, +18%), Estado del sistema (100% operativo)."
-        validated: false
-        flow_ids: ["FLOW-P05"]
-      - id: "AC-006"
-        description: "Cada entidad mock tiene IDs únicos y relaciones coherentes (usuarios asignados a áreas, áreas con responsables)."
-        validated: false
-        flow_ids: ["FLOW-P05"]
-      - id: "AC-007"
-        description: "Los datos se exportan desde un archivo centralizado (mock/data.ts) con tipos TypeScript."
-        validated: false
-        flow_ids: ["FLOW-P06"]
-      - id: "AC-008"
-        description: "El store React Context se inicializa con estos datos mock al montar la app."
-        validated: false
-        flow_ids: ["FLOW-P06"]
-
-  # ═══════════════════════════════════════════
-  # FASE 1 — VISTAS PRINCIPALES (secuencial)
-  # ═══════════════════════════════════════════
-
-  # ═══════════════════════════════════════════
-  # US-001: Landing Page Enterprise
+  # HISTORIAS DE USUARIO - LANDING & CONVERSIÓN
   # ═══════════════════════════════════════════
   
   - id: "US-001"
@@ -1184,70 +889,66 @@ stories:
       - Revisado por QA
 
 flows:
-  # ─── LANDING PAGE ────────────────────────────
+  # ─── NAVEGACIÓN Y EXPLORACIÓN ────────────────────────────
   - id: "FLOW-001"
-    name: "Visualizar Hero y CTA principal"
+    name: "Exploración de la Landing Page"
     type: "user_flow"
     module: "landing"
     actor: "visitante"
     priority: "high"
-    status: "pending"
-    test_status: "none"
-    sprint_status: "todo"
+    status: "implemented"
     story: "US-001"
-    story_points: 3
-    entities: []
-    trigger: "El visitante accede a la URL raíz (/)"
-    preconditions: ["Ninguna"]
+    trigger: "El usuario accede a la raíz (/)"
     steps:
-      - "El visitante accede a la URL raíz"
-      - "El sistema renderiza el hero section y botón CTA 'Ver demo'"
-      - "El visitante hace clic en 'Ver demo'"
-      - "El sistema navega a /demo"
-    alternatives:
-      - "Si el visitante hace clic en 'Hablar con Ventas', se muestra un modal de contacto (mock)"
-    errors: []
+      - "El sistema renderiza el Hero Section con posicionamiento enterprise."
+      - "El usuario hace scroll visualizando secciones de beneficios, arquitectura modular y capacidades."
+      - "El usuario interactúa con los CTAs (ej. 'Ver demo')."
 
   - id: "FLOW-002"
-    name: "Explorar secciones informativas"
+    name: "Navegación Cruzada y Scroll Suave"
     type: "user_flow"
-    module: "landing"
+    module: "navigation"
     actor: "visitante"
-    priority: "medium"
-    status: "pending"
-    test_status: "none"
-    sprint_status: "todo"
-    story: "US-001"
-    story_points: 3
-    entities: []
-    trigger: "El visitante hace scroll en la landing page"
-    preconditions: ["El visitante está en /"]
+    priority: "high"
+    status: "implemented"
+    story: "US-005"
+    trigger: "El usuario hace clic en el Navbar desde una ruta interna (ej. /contacto)"
     steps:
-      - "El visitante hace scroll hacia abajo"
-      - "Aparece la sección de beneficios con 6 cards (ícono, título, descripción)"
-      - "Aparece la sección 'Cómo Funciona' con 3 pasos numerados"
-      - "Aparece la sección de extensiones destacadas con preview de KPI, Encuestas y BI"
-      - "Aparece el CTA final con fondo oscuro y botón de acción"
-    alternatives: []
-    errors: []
+      - "El usuario hace clic en 'Plataforma' en el menú principal."
+      - "El sistema enruta a la landing (/) usando Next Link."
+      - "El navegador realiza un scroll suave hacia la sección '/#plataforma'."
+      - "El usuario no pierde contexto ni encuentra enlaces rotos."
 
+  # ─── EMBUDOS DE CONVERSIÓN ────────────────────────────
   - id: "FLOW-003"
-    name: "Navegar desde la barra sticky"
+    name: "Envío de Consulta de Contacto"
     type: "user_flow"
-    module: "landing"
+    module: "contact_flow"
     actor: "visitante"
-    priority: "low"
-    status: "pending"
-    test_status: "none"
-    sprint_status: "todo"
-    story: "US-001"
-    story_points: 1
-    entities: []
-    trigger: "El visitante interactúa con la navbar sticky"
-    preconditions: ["El visitante está en /"]
+    priority: "high"
+    status: "implemented"
+    story: "US-002"
+    trigger: "El usuario navega a /contacto y llena el formulario"
     steps:
-      - "El visitante carga la página y ve la navbar fija con logo y links"
-      - "Al hacer clic en 'Características' se navega con scroll suave a la sección de features"
-      - "Al hacer clic en 'Ir al Demo' se navega a /marketplace"
-    alternatives: []
-    errors: []
+      - "El usuario ve un formulario orientado a dudas generales con chips informativos."
+      - "El usuario completa el mensaje y hace clic en Enviar."
+      - "El sistema valida los datos con Zod y muestra estado de carga."
+      - "El sistema redirige a una pantalla de éxito confirmando la recepción."
+      - "Se registra el evento 'contact_request' originando un nuevo Lead en la plataforma."
+
+  - id: "FLOW-004"
+    name: "Solicitud de Demo Calificada"
+    type: "user_flow"
+    module: "demo_flow"
+    actor: "tomador_decision"
+    priority: "high"
+    status: "implemented"
+    story: "US-003, US-004"
+    trigger: "El usuario hace clic en 'Solicitar Demo' desde el Hero o Navbar"
+    steps:
+      - "El sistema navega a la ruta optimizada /demo sin footer para evitar distracciones."
+      - "El usuario ve propuesta de valor lateral y un formulario con un badge 'Sesión técnica'."
+      - "El usuario completa los campos, incluyendo 'Detalles de la demo' (específico para calificar ventas)."
+      - "El sistema valida e higieniza los datos mediante Zod."
+      - "El sistema muestra pantalla de éxito orientada a agendamiento en < 24h."
+      - "Se envía la metadata y se asigna el estado 'demo_request' al Lead."
