@@ -1073,6 +1073,116 @@ stories:
       - "Eventos analytics correctos"
       - "Copy aprobado por negocio"
 
+# ============================================================================
+# US-005  Navegación desde /contacto y /demo , BUG 
+# ============================================================================
+  - id: "US-005"
+    title: "Como usuario corporativo quiero que la navegación funcione correctamente desde /contacto y /demo para acceder al contenido sin errores."
+    module: "navigation"
+    priority: "high"
+    status: "reported"
+    sprint: 2
+    related_to: ["US-001", "US-002", "US-003", "US-004"]
+    persona: "Director de Tecnología / Evaluador de plataforma"
+
+    user_story: >
+      Como evaluador de la plataforma Orquestra,
+      cuando navego desde las páginas /contacto o /demo,
+      quiero que los enlaces del menú (Producto, Plataforma, Capacidades)
+      me lleven correctamente al contenido correspondiente,
+      para no perder contexto ni experimentar confusión durante la evaluación del producto.
+
+    problem_statement: >
+      Actualmente, al hacer clic en los enlaces de navegación desde /contacto o /demo,
+      la aplicación solo concatena anclas (por ejemplo: /contacto#producto),
+      lo que no muestra el contenido esperado porque dichas secciones existen únicamente en la landing (/).
+      Esto genera fricción, sensación de producto inmaduro y rompe el flujo de exploración.
+
+    expected_experience: >
+      La navegación debe sentirse consistente, corporativa y confiable.
+      Desde cualquier página, el usuario debe poder llegar a las secciones clave de la plataforma
+      sin importar en qué ruta se encuentre.
+
+    acceptance_criteria:
+      - id: "AC-001"
+        description: >
+          Desde /contacto y /demo, al hacer clic en "Producto",
+          el usuario es redirigido a la landing (/) con scroll automático a la sección #producto.
+        validated: false
+
+      - id: "AC-002"
+        description: >
+          Desde /contacto y /demo, al hacer clic en "Plataforma",
+          el usuario es redirigido a /#plataforma con desplazamiento suave.
+        validated: false
+
+      - id: "AC-003"
+        description: >
+          Desde /contacto y /demo, al hacer clic en "Capacidades",
+          el usuario es redirigido a /#capacidades mostrando el contenido correctamente.
+        validated: false
+
+      - id: "AC-004"
+        description: >
+          La navegación detecta automáticamente si el usuario está fuera de la landing
+          y ajusta el href para incluir la ruta base (/).
+        validated: false
+
+      - id: "AC-005"
+        description: >
+          El comportamiento es consistente en navegación desktop y móvil.
+        validated: false
+
+      - id: "AC-006"
+        description: >
+          Se implementa scroll suave (smooth scroll) al llegar a la sección destino.
+        validated: false
+
+      - id: "AC-007"
+        description: >
+          No se generan rutas inválidas como /contacto#producto o /demo#capacidades.
+        validated: false
+
+      - id: "AC-008"
+        description: >
+          La experiencia de navegación transmite calidad enterprise y continuidad de producto.
+        validated: false
+
+    technical_notes: |
+      Posibles soluciones técnicas:
+
+      Opción A (recomendada):
+        - Normalizar links del navbar:
+          /#producto
+          /#plataforma
+          /#capacidades
+
+      Opción B:
+        - Detectar pathname actual con usePathname()
+        - Si !== '/', hacer router.push('/#seccion')
+
+      Opción C (más robusta enterprise):
+        - Centralizar configuración de navegación
+        - NavigationMap.ts
+        - Scroll manager global
+
+      Considerar:
+        - next/link con scroll={false}
+        - manejo de hash después de navegación
+        - compatibilidad con App Router
+
+    business_value: >
+      Corrige un bug visible en la experiencia de navegación que afecta la percepción
+      de madurez del producto. Mejora la confianza del evaluador corporativo
+      y mantiene la continuidad del journey comercial.
+
+    definition_of_done:
+      - Navegación funcional desde cualquier ruta
+      - Scroll correcto a secciones de la landing
+      - Sin rutas con hash incorrectas
+      - Validado en móvil y desktop
+      - Revisado por QA
+
 flows:
   # ─── LANDING PAGE ────────────────────────────
   - id: "FLOW-001"

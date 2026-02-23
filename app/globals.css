@@ -49,6 +49,10 @@
   --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--color-bg);
   color: var(--color-foreground);
@@ -63,6 +67,7 @@ body {
     opacity: 0;
     transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

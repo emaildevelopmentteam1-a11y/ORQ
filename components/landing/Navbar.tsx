@@ -15,10 +15,10 @@ import { Menu, X } from "lucide-react";
    ═══════════════════════════════════════════════════════════════ */
 
 const navLinks = [
-    { href: "#producto", label: "Producto" },
-    { href: "#plataforma", label: "Plataforma" },
-    { href: "#capacidades", label: "Capacidades" },
-    { href: "/contacto", label: "Contacto", isRoute: true },
+    { href: "/#producto", label: "Producto" },
+    { href: "/#plataforma", label: "Plataforma" },
+    { href: "/#capacidades", label: "Capacidades" },
+    { href: "/contacto", label: "Contacto" },
 ];
 
 export function Navbar() {
@@ -39,25 +39,15 @@ export function Navbar() {
 
                 {/* ── Desktop Nav ── */}
                 <div className="hidden md:flex items-center gap-8">
-                    {navLinks.map((link) =>
-                        link.isRoute ? (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className="text-sm text-text-secondary hover:text-foreground transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-md px-1"
-                            >
-                                {link.label}
-                            </Link>
-                        ) : (
-                            <a
-                                key={link.href}
-                                href={link.href}
-                                className="text-sm text-text-secondary hover:text-foreground transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-md px-1"
-                            >
-                                {link.label}
-                            </a>
-                        )
-                    )}
+                    {navLinks.map((link) => (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            className="text-sm text-text-secondary hover:text-foreground transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-md px-1"
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
                     <Link
                         href="/demo"
                         className="inline-flex items-center justify-center px-4 py-2 text-sm bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary-hover transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
@@ -79,27 +69,16 @@ export function Navbar() {
             {/* ── Mobile Menu ── */}
             {mobileOpen && (
                 <div className="md:hidden border-t border-border/40 bg-white px-6 py-4 space-y-1 animate-fade-in-up">
-                    {navLinks.map((link) =>
-                        link.isRoute ? (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                onClick={() => setMobileOpen(false)}
-                                className="block py-2.5 text-sm font-medium text-text-secondary hover:text-foreground transition-colors"
-                            >
-                                {link.label}
-                            </Link>
-                        ) : (
-                            <a
-                                key={link.href}
-                                href={link.href}
-                                onClick={() => setMobileOpen(false)}
-                                className="block py-2.5 text-sm font-medium text-text-secondary hover:text-foreground transition-colors"
-                            >
-                                {link.label}
-                            </a>
-                        )
-                    )}
+                    {navLinks.map((link) => (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            onClick={() => setMobileOpen(false)}
+                            className="block py-2.5 text-sm font-medium text-text-secondary hover:text-foreground transition-colors"
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
                     <Link
                         href="/demo"
                         onClick={() => setMobileOpen(false)}
