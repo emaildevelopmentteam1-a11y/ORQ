@@ -19,7 +19,7 @@ export function CtaSection() {
                     ¿Listo para transformar la operación de tu empresa?
                 </h2>
                 <p className="text-base text-text-secondary leading-relaxed mb-8 max-w-xl mx-auto">
-                    Agenda una demostración personalizada y descubre cómo Orquestra puede
+                    Agenda una demostración personalizada y descubre cómo Prisma puede
                     adaptarse a las necesidades específicas de tu organización.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

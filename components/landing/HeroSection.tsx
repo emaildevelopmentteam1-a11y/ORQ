@@ -85,7 +85,7 @@ export function HeroSection() {
                     </h1>
 
                     <p className="text-base md:text-lg text-text-secondary leading-relaxed mb-8">
-                        Orquestra centraliza tu organización y activa capacidades de gestión
+                        Prisma centraliza tu organización y activa capacidades de gestión
                         bajo demanda mediante{" "}
                         <strong className="text-foreground font-semibold">extensiones modulares</strong>.
                         Usa solo lo que necesitas, cuando lo necesitas.

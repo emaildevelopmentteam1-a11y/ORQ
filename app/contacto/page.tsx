@@ -53,7 +53,7 @@ export default function ContactoPage() {
                             Hablemos sobre tu empresa
                         </h1>
                         <p className="text-base text-text-secondary max-w-xl mx-auto">
-                            Completa el formulario y un especialista de Orquestra te
+                            Completa el formulario y un especialista de Prisma te
                             contactará para explorar cómo podemos ayudarte.
                         </p>
                     </div>
@@ -89,7 +89,7 @@ export default function ContactoPage() {
                                         </div>
                                         <div>
                                             <p className="text-sm font-medium text-foreground">Email</p>
-                                            <p className="text-sm text-text-secondary">contacto@orquestra.com</p>
+                                            <p className="text-sm text-text-secondary">contacto@prisma.com</p>
                                         </div>
                                     </div>
 
@@ -109,7 +109,7 @@ export default function ContactoPage() {
                                         </div>
                                         <div>
                                             <p className="text-sm font-medium text-foreground">Sitio web</p>
-                                            <p className="text-sm text-text-secondary">www.orquestra.com</p>
+                                            <p className="text-sm text-text-secondary">www.prisma.com</p>
                                         </div>
                                     </div>
                                 </div>
@@ -118,7 +118,7 @@ export default function ContactoPage() {
                             {/* Card de confianza */}
                             <div className="bg-cta-dark rounded-xl p-6 text-white space-y-3">
                                 <h3 className="text-sm font-semibold">
-                                    ¿Por qué elegir Orquestra?
+                                    ¿Por qué elegir Prisma?
                                 </h3>
                                 <ul className="space-y-2 text-sm text-white/70">
                                     <li className="flex items-center gap-2">

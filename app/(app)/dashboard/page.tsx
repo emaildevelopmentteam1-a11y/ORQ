@@ -16,7 +16,7 @@ export default function DashboardPage() {
                     Dashboard
                 </h1>
                 <p className="text-sm text-text-secondary">
-                    Bienvenido a Orquestra
+                    Bienvenido a Prisma
                 </p>
             </div>
 

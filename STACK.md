@@ -1,4 +1,4 @@
-# Stack Tecnológico — Orquestra
+# Stack Tecnológico — Prisma
 
 ## Framework: Next.js 15 (App Router)
 - **Por qué**: SSR/SSG nativo, routing basado en filesystem, React Server Components, optimización automática de imágenes y fuentes.

@@ -245,7 +245,7 @@ export default function AppLayout({
                         <span className="text-sm font-bold text-primary-foreground">O</span>
                     </div>
                     <span className="text-base font-bold text-foreground tracking-tight">
-                        Orquestra
+                        Prisma
                     </span>
                 </Link>
             </div>
@@ -304,7 +304,7 @@ export default function AppLayout({
                     </div>
                     <div className="min-w-0">
                         <p className="text-sm font-medium text-foreground truncate">Carlos Mendoza</p>
-                        <p className="text-xs text-muted-foreground truncate">carlos@orquestra.com</p>
+                        <p className="text-xs text-muted-foreground truncate">carlos@prisma.com</p>
                     </div>
                 </div>
             </div>
@@ -355,7 +355,7 @@ export default function AppLayout({
                             <Menu className="size-5" />
                         </button>
                         <span className="text-sm font-medium text-muted-foreground hidden sm:block">
-                            Orquestra Inc.
+                            Prisma Inc.
                         </span>
                     </div>
 

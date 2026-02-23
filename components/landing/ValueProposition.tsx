@@ -44,7 +44,7 @@ export function ValueProposition() {
                         Construye la solución que tu empresa necesita, módulo a módulo
                     </h2>
                     <p className="text-base text-text-secondary leading-relaxed">
-                        Orquestra es una plataforma enterprise diseñada para activar
+                        Prisma es una plataforma enterprise diseñada para activar
                         capacidades operativas a través de{" "}
                         <strong className="text-foreground font-semibold">
                             extensiones especializadas

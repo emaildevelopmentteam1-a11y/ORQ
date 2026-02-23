@@ -12,7 +12,7 @@ import {
 } from "@/components/landing";
 
 /* ═══════════════════════════════════════════════════════════════
-   Landing Page — Orquestra
+   Landing Page — Prisma
    
    US-001: Landing enterprise orientada a decisión ejecutiva
    
@@ -33,16 +33,16 @@ import {
 
 /* ── SEO Metadata ── */
 export const metadata: Metadata = {
-  title: "Orquestra — Plataforma Enterprise Modular",
+  title: "Prisma — Plataforma Enterprise Modular",
   description:
     "Centraliza la operación de tu empresa y activa capacidades de gestión bajo demanda. Estructura organizacional, KPIs, encuestas y tableros BI en una sola plataforma.",
   openGraph: {
-    title: "Orquestra — Plataforma Enterprise Modular",
+    title: "Prisma — Plataforma Enterprise Modular",
     description:
       "Activa solo las capacidades que tu organización necesita. Plataforma enterprise con marketplace de extensiones.",
     type: "website",
     locale: "es_MX",
-    siteName: "Orquestra",
+    siteName: "Prisma",
   },
 };
 

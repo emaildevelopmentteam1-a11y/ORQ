@@ -65,7 +65,7 @@ export interface AppState {
 const defaultUser: User = {
     id: "usr-001",
     name: "Carlos Mendoza",
-    email: "carlos@orquestra.com",
+    email: "carlos@prisma.com",
     avatar: undefined,
 };
 

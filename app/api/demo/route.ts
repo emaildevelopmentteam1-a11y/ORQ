@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
     // 3. Email interno para el equipo comercial, etiqueta de "Alta Intención" (AC-003, AC-014)
     const internalEmail = await resend.emails.send({
-      from: "Orquestra Notificaciones <onboarding@resend.dev>",
+      from: "Prisma Notificaciones <onboarding@resend.dev>",
       to: [destinationEmail],
       subject: `[🚀 NUEVA SOLICITUD DE DEMO] ${parsedData.organizacion} - ${parsedData.nombre}`,
       html: `
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
             ${parsedData.detalles_demo ? parsedData.detalles_demo : 'No especificó detalles técnicos adicionales.'}
           </div>
           <br/>
-          <p style="font-size: 12px; color: #64748b;">Notificación automática de Orquestra Landing Page - Embudos de Conversión</p>
+          <p style="font-size: 12px; color: #64748b;">Notificación automática de Prisma Landing Page - Embudos de Conversión</p>
         </div>
       `,
     });
@@ -75,13 +75,13 @@ export async function POST(request: Request) {
 
     // 4. Correo automático de expectativa y agendamiento al usuario (AC-006, AC-007, AC-013)
     await resend.emails.send({
-      from: "Orquestra <onboarding@resend.dev>",
+      from: "Prisma <onboarding@resend.dev>",
       to: [parsedData.email],
-      subject: "Coordinemos tu sesión técnica - Orquestra",
+      subject: "Coordinemos tu sesión técnica - Prisma",
       html: `
         <div style="font-family: Arial, sans-serif; padding: 40px 20px; color: #1e293b; max-width: 600px; margin: 0 auto;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #2563EB; margin: 0; font-size: 24px;">Orquestra</h1>
+            <h1 style="color: #2563EB; margin: 0; font-size: 24px;">Prisma</h1>
           </div>
           <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 30px;">
             <h2 style="color: #0f172a; margin-top: 0;">Un paso más cerca, ${parsedData.nombre}</h2>
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
               Nos pondremos en contacto contigo vía correo electrónico en menos de 24 horas laborables para agendar la <strong>sesión técnica guiada</strong>.
             </p>
             <hr style="border-color: #e2e8f0; margin: 30px 0;" />
-            <p style="color: #0f172a; font-weight: bold; margin-bottom: 5px;">El equipo de Orquestra</p>
+            <p style="color: #0f172a; font-weight: bold; margin-bottom: 5px;">El equipo de Prisma</p>
             <p style="color: #64748b; font-size: 14px; margin-top: 0;">Soluciones Enterprise</p>
           </div>
         </div>

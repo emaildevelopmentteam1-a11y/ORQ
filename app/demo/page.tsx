@@ -38,7 +38,7 @@ export default function DemoPage() {
                                     Acelera tu transformación operativa
                                 </h1>
                                 <p className="text-lg text-text-secondary">
-                                    Descubre cómo <strong className="text-foreground font-semibold">Orquestra</strong> puede adaptar sus módulos a los procesos exactos de tu empresa.
+                                    Descubre cómo <strong className="text-foreground font-semibold">Prisma</strong> puede adaptar sus módulos a los procesos exactos de tu empresa.
                                 </p>
                             </div>
 
@@ -77,7 +77,7 @@ export default function DemoPage() {
                             <div className="bg-primary-light rounded-xl p-5 border border-primary/10 flex items-start gap-4">
                                 <BarChart3 className="size-6 text-primary shrink-0" />
                                 <p className="text-sm text-text-secondary">
-                                    <strong className="text-foreground font-semibold">El 85% de las empresas</strong> que evalúan Orquestra activan su primer módulo la misma semana de la demo técnica.
+                                    <strong className="text-foreground font-semibold">El 85% de las empresas</strong> que evalúan Prisma activan su primer módulo la misma semana de la demo técnica.
                                 </p>
                             </div>
                         </div>

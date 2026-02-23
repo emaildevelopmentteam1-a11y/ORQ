@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { PrismaLogo } from "@/components/ui/PrismaLogo";
 
 /* ═══════════════════════════════════════════════════════════════
    Navbar — Navegación corporativa sticky
@@ -29,11 +30,11 @@ export function Navbar() {
             <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                 {/* ── Logo ── */}
                 <Link href="/" className="flex items-center gap-2.5 group">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-sm">
-                        O
+                    <div className="w-8 h-8 flex items-center justify-center text-primary font-bold text-sm">
+                        <PrismaLogo />
                     </div>
                     <span className="text-lg font-bold text-foreground tracking-tight">
-                        Orquestra
+                        Prisma
                     </span>
                 </Link>
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PrismaLogo } from "@/components/ui/PrismaLogo";
 
 /* ═══════════════════════════════════════════════════════════════
    Footer — Footer institucional
@@ -27,11 +28,11 @@ export function Footer() {
                     {/* Logo + tagline */}
                     <div className="max-w-xs">
                         <Link href="/" className="flex items-center gap-2.5 mb-3">
-                            <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-white font-bold text-xs">
-                                O
+                            <div className="w-7 h-7 rounded-md flex items-center justify-center text-primary font-bold text-xs">
+                                <PrismaLogo />
                             </div>
                             <span className="text-base font-bold text-foreground">
-                                Orquestra
+                                Prisma
                             </span>
                         </Link>
                         <p className="text-sm text-text-secondary leading-relaxed">
@@ -67,7 +68,7 @@ export function Footer() {
                 {/* Copyright */}
                 <div className="pt-6 border-t border-border/40">
                     <p className="text-center text-xs text-muted-foreground">
-                        © {new Date().getFullYear()} Orquestra. Todos los derechos reservados.
+                        © {new Date().getFullYear()} Prisma. Todos los derechos reservados.
                     </p>
                 </div>
             </div>

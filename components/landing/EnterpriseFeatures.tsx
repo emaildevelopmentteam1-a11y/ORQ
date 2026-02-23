@@ -50,7 +50,7 @@ export function EnterpriseFeatures() {
                         Diseñada para los estándares de tu industria
                     </h2>
                     <p className="text-sm text-white/60 max-w-2xl mx-auto">
-                        Orquestra cumple con los requisitos técnicos y de seguridad que tu
+                        Prisma cumple con los requisitos técnicos y de seguridad que tu
                         equipo de TI necesita para aprobar la adopción.
                     </p>
                 </div>

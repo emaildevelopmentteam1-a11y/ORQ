@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Orquestra — Convierte tu operación en un sistema medible",
+  title: "Prisma — Convierte tu operación en un sistema medible",
   description:
     "Plataforma enterprise para gestión operacional con estructura jerárquica, KPIs e indicadores en tiempo real.",
 };

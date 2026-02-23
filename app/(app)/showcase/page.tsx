@@ -21,7 +21,7 @@ export default function ShowcasePage() {
                     Design System Showcase
                 </h1>
                 <p className="text-text-secondary">
-                    Todos los componentes base de Orquestra.
+                    Todos los componentes base de Prisma.
                 </p>
             </div>
 

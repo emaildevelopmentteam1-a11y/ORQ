@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
     // 3. Email interno para el equipo comercial (AC-002, AC-014)
     const internalEmail = await resend.emails.send({
-      from: "Orquestra Notificaciones <onboarding@resend.dev>", // Cambiar por dominio real en prod
+      from: "Prisma Notificaciones <onboarding@resend.dev>", // Cambiar por dominio real en prod
       to: [destinationEmail],
       subject: `[📥 NUEVO CONTACTO GENERAL] ${parsedData.organizacion} - ${parsedData.nombre}`,
       html: `
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
             ${parsedData.mensaje}
           </div>
           <br/>
-          <p style="font-size: 12px; color: #64748b;">Notificación automática de Orquestra Landing Page</p>
+          <p style="font-size: 12px; color: #64748b;">Notificación automática de Prisma Landing Page</p>
         </div>
       `,
     });
@@ -78,13 +78,13 @@ export async function POST(request: Request) {
 
     // 4. Correo automático de confirmación al usuario (AC-006, AC-007, AC-013)
     await resend.emails.send({
-      from: "Orquestra <onboarding@resend.dev>", // Cambiar por dominio corporativo
+      from: "Prisma <onboarding@resend.dev>", // Cambiar por dominio corporativo
       to: [parsedData.email],
-      subject: "Hemos recibido tu consulta - Orquestra",
+      subject: "Hemos recibido tu consulta - Prisma",
       html: `
         <div style="font-family: Arial, sans-serif; padding: 40px 20px; color: #1e293b; max-width: 600px; margin: 0 auto;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #2563EB; margin: 0; font-size: 24px;">Orquestra</h1>
+            <h1 style="color: #2563EB; margin: 0; font-size: 24px;">Prisma</h1>
           </div>
           <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 30px;">
             <h2 style="color: #0f172a; margin-top: 0;">Hola, ${parsedData.nombre}:</h2>
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
               El tiempo estimado de respuesta es de menos de 24 horas laborables.
             </p>
             <br/>
-            <p style="color: #0f172a; font-weight: bold; margin-bottom: 5px;">El equipo de Orquestra</p>
+            <p style="color: #0f172a; font-weight: bold; margin-bottom: 5px;">El equipo de Prisma</p>
             <p style="color: #64748b; font-size: 14px; margin-top: 0;">Soluciones Enterprise</p>
           </div>
         </div>
