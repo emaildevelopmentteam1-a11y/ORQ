@@ -85,6 +85,7 @@ interface LeadFormProps {
 
 export function LeadForm({ variant, onSuccess }: LeadFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [formError, setFormError] = useState<string | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const isDemo = variant === "demo";
 
@@ -121,6 +122,8 @@ export function LeadForm({ variant, onSuccess }: LeadFormProps) {
     };
 
     const onSubmit = async (data: LeadFormData) => {
+        setFormError(null);
+
         // Honeypot check
         if (data.website && data.website.length > 0) {
             await new Promise((r) => setTimeout(r, 1500));
@@ -130,11 +133,24 @@ export function LeadForm({ variant, onSuccess }: LeadFormProps) {
 
         setIsSubmitting(true);
         try {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            console.log(`[LeadForm - ${data.type}] Datos enviados:`, data);
+            const endpoint = isDemo ? "/api/demo" : "/api/contact";
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Ocurrió un error inesperado al enviar la solicitud.");
+            }
+
+            console.log(`[LeadForm - ${data.type}] Datos enviados exitosamente.`);
             onSuccess(data);
-        } catch (error) {
+        } catch (error: any) {
             console.error("[LeadForm] Error al enviar:", error);
+            setFormError(error.message || "No pudimos conectar con el servidor. Por favor, intenta de nuevo.");
         } finally {
             setIsSubmitting(false);
         }
@@ -170,6 +186,13 @@ export function LeadForm({ variant, onSuccess }: LeadFormProps) {
                     <span className="text-xs font-medium text-amber-800">
                         Sesión técnica guiada con un especialista
                     </span>
+                </div>
+            )}
+
+            {/* Error General de API */}
+            {formError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                    {formError}
                 </div>
             )}
 

@@ -38,6 +38,11 @@ modules:
     description: "Sistema de enrutamiento y anclaje (Navbar, Footer, enlaces cruzados) que garantiza la cohesión entre la landing, rutas dinámicas y secciones de contenido."
     actors: ["visitante", "todos"]
 
+  - id: "lead-capture"
+    name: "Captura de Leads y Notificaciones"
+    description: "Manejo de envíos de formulario, integración con servicio de correo (Resend) y notificaciones comerciales."
+    actors: ["visitante", "director", "tomador_decision"]
+
 entities:
   - id: "visitor"
     name: "Visitante Público"
@@ -888,6 +893,74 @@ stories:
       - Validado en móvil y desktop
       - Revisado por QA
 
+  - id: "US-006"
+    title: "Como director de tecnología quiero que los formularios de Contacto y Solicitar Demo envíen correos reales usando Resend para asegurar seguimiento oportuno de prospectos."
+    module: "lead-capture"
+    priority: "critical"
+    status: "todo"
+    sprint: 2
+    story_points: 8
+    actors: ["director", "tomador_decision", "visitante"]
+    description: >
+      Actualmente los formularios de Contacto y Solicitar Demo son visuales pero no funcionales.
+      Se requiere integrar el servicio de correo Resend para habilitar el envío real de mensajes,
+      confirmaciones automáticas al usuario y notificación interna al equipo comercial.
+      La experiencia debe ser enterprise, confiable y con feedback claro para el usuario.
+    business_value:
+      - "Captura real de leads interesados en Orquestra."
+      - "Mejora la confianza del prospecto mediante confirmación inmediata."
+      - "Permite seguimiento comercial oportuno."
+      - "Prepara la plataforma para escenarios productivos."
+    acceptance_criteria:
+      - id: "AC-001"
+        description: "Existe integración backend con Resend mediante API key segura en variables de entorno. No se expone la clave en el frontend."
+        validated: false
+        flow_ids: ["FLOW-011","FLOW-012"]
+      - id: "AC-002"
+        description: "El formulario de Contacto envía un correo al buzón comercial con los datos del prospecto."
+        validated: false
+        flow_ids: ["FLOW-011"]
+      - id: "AC-003"
+        description: "El formulario de Solicitar Demo envía un correo diferenciado al equipo comercial con datos de agendamiento."
+        validated: false
+        flow_ids: ["FLOW-012"]
+      - id: "AC-004"
+        description: "Tras el envío exitoso, el usuario visualiza un estado de éxito claro (toast o alert)."
+        validated: false
+        flow_ids: ["FLOW-011","FLOW-012"]
+      - id: "AC-005"
+        description: "El botón de envío muestra estado loading y se deshabilita para evitar envíos duplicados."
+        validated: false
+        flow_ids: ["FLOW-011","FLOW-012"]
+      - id: "AC-006"
+        description: "El sistema envía automáticamente un correo de confirmación al usuario."
+        validated: false
+        flow_ids: ["FLOW-013"]
+      - id: "AC-007"
+        description: "Los correos generados usan plantilla HTML estilo enterprise."
+        validated: false
+        flow_ids: ["FLOW-013","FLOW-014"]
+      - id: "AC-008"
+        description: "Validación de campos obligatorios en frontend y backend."
+        validated: false
+        flow_ids: ["FLOW-011","FLOW-012"]
+      - id: "AC-009"
+        description: "Manejo de errores amigable si el envío falla."
+        validated: false
+        flow_ids: ["FLOW-011","FLOW-012"]
+      - id: "AC-010"
+        description: "Se crean endpoints separados POST /api/contact y POST /api/demo."
+        validated: false
+        flow_ids: ["FLOW-011","FLOW-012"]
+      - id: "AC-011"
+        description: "Se implementa protección básica anti-spam."
+        validated: false
+        flow_ids: ["FLOW-011","FLOW-012"]
+      - id: "AC-012"
+        description: "Compatible con Next.js App Router y Tailwind."
+        validated: false
+        flow_ids: ["FLOW-011","FLOW-012"]
+
 flows:
   # ─── NAVEGACIÓN Y EXPLORACIÓN ────────────────────────────
   - id: "FLOW-001"
@@ -952,3 +1025,61 @@ flows:
       - "El sistema valida e higieniza los datos mediante Zod."
       - "El sistema muestra pantalla de éxito orientada a agendamiento en < 24h."
       - "Se envía la metadata y se asigna el estado 'demo_request' al Lead."
+
+  # ─── INTEGRACIÓN DE EMAILS (RESEND) ────────────────────────────
+  - id: "FLOW-011"
+    name: "Envío de formulario de contacto (Backend)"
+    type: "system_flow"
+    module: "lead-capture"
+    actor: "system"
+    priority: "critical"
+    status: "todo"
+    story: "US-006"
+    trigger: "Frontend hace POST a /api/contact"
+    steps:
+      - "Validación del payload con Zod en el servidor."
+      - "Instancia de Resend construye email interno comercial."
+      - "Dispara FLOW-013 (Confirmación automática al lead)."
+      - "Devuelve 200 OK."
+
+  - id: "FLOW-012"
+    name: "Envío de solicitud de demo (Backend)"
+    type: "system_flow"
+    module: "lead-capture"
+    actor: "system"
+    priority: "critical"
+    status: "todo"
+    story: "US-006"
+    trigger: "Frontend hace POST a /api/demo"
+    steps:
+      - "Validación del payload con Zod en el servidor."
+      - "Instancia de Resend construye email interno de ventas con prioridad."
+      - "Dispara FLOW-013 (Confirmación automática de agenda)."
+      - "Devuelve 200 OK."
+
+  - id: "FLOW-013"
+    name: "Confirmación automática al usuario"
+    type: "system_flow"
+    module: "lead-capture"
+    actor: "system"
+    priority: "high"
+    status: "todo"
+    story: "US-006"
+    trigger: "Llamada exitosa en FLOW-011 o FLOW-012"
+    steps:
+      - "Genera HTML renderizado (React Email o similar) de bienvenida."
+      - "Resend.emails.send() con template corporativo."
+      - "Actualiza estado del Lead a 'contacted' o 'qualified'."
+
+  - id: "FLOW-014"
+    name: "Notificación interna al equipo"
+    type: "system_flow"
+    module: "lead-capture"
+    actor: "system"
+    priority: "high"
+    status: "todo"
+    story: "US-006"
+    trigger: "Nuevo form submit"
+    steps:
+      - "Envía los datos al buzón general (o webhook)."
+      - "Asegura que el Subject contenga el contexto (ej. [Nuevo Lead - Demo])."
