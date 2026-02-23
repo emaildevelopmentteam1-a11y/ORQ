@@ -2,7 +2,21 @@
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 
+/* ═══════════════════════════════════════════════════════════════
+   AppContext — Estado global de la aplicación
+   
+   Gestiona:
+   - Usuario actual (mock)
+   - Rol actual (cambiable desde el header)
+   - Extensiones (activables/desactivables desde marketplace)
+   
+   El sidebar consume este contexto para:
+   - Filtrar ítems de navegación según el rol
+   - Inyectar módulos de extensiones activas dinámicamente
+   ═══════════════════════════════════════════════════════════════ */
+
 // ── Tipos ──────────────────────────────────
+
 export interface User {
     id: string;
     name: string;
@@ -12,13 +26,30 @@ export interface User {
 
 export type Role = "directivo" | "responsable_area" | "colaborador";
 
+/** Metadatos de un rol para UI (label, descripción) */
+export interface RoleMeta {
+    label: string;
+    description: string;
+}
+
+/** Mapa de roles con sus metadatos para el selector de rol */
+export const ROLE_META: Record<Role, RoleMeta> = {
+    directivo: { label: "Directivo", description: "Acceso total" },
+    responsable_area: { label: "Resp. de Área", description: "Gestión parcial" },
+    colaborador: { label: "Colaborador", description: "Solo lectura" },
+};
+
 export interface Extension {
     id: string;
     name: string;
     description: string;
-    icon: string;
+    icon: string;       // nombre del icono Lucide (e.g. "bar-chart-3")
     active: boolean;
     category: string;
+    /** Ruta del módulo en el sidebar cuando está activa */
+    route?: string;
+    /** Label corto para el sidebar */
+    sidebarLabel?: string;
 }
 
 export interface AppState {
@@ -30,13 +61,20 @@ export interface AppState {
 }
 
 // ── Datos iniciales ────────────────────────
+
 const defaultUser: User = {
     id: "usr-001",
     name: "Carlos Mendoza",
-    email: "carlos@empresa.com",
+    email: "carlos@orquestra.com",
     avatar: undefined,
 };
 
+/**
+ * Extensiones disponibles en el marketplace.
+ * 
+ * `route` y `sidebarLabel` definen cómo se inyectan en el sidebar
+ * cuando están activas. Solo extensiones con `route` aparecen en nav.
+ */
 const defaultExtensions: Extension[] = [
     {
         id: "ext-kpi",
@@ -45,6 +83,8 @@ const defaultExtensions: Extension[] = [
         icon: "bar-chart-3",
         active: false,
         category: "analytics",
+        route: "/modules/kpi",
+        sidebarLabel: "Indicadores KPI",
     },
     {
         id: "ext-forms",
@@ -53,6 +93,8 @@ const defaultExtensions: Extension[] = [
         icon: "file-text",
         active: false,
         category: "productivity",
+        route: "/modules/formularios",
+        sidebarLabel: "Formularios",
     },
     {
         id: "ext-reports",
@@ -61,10 +103,13 @@ const defaultExtensions: Extension[] = [
         icon: "file-bar-chart",
         active: false,
         category: "analytics",
+        route: "/modules/reportes",
+        sidebarLabel: "Reportes BI",
     },
 ];
 
 // ── Context ────────────────────────────────
+
 const AppContext = createContext<AppState | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
